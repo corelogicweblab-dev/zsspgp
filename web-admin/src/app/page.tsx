@@ -1,9 +1,9 @@
-import Image from "next/image";
 import { LandingHeroActions } from "@/components/landing/landing-hero-actions";
+import { HeroLogo } from "@/components/landing/hero-logo";
 import { NewsSection } from "@/components/news/news-section";
 import { PlatformModules } from "@/components/landing/platform-modules";
 import { getFeaturedNews, getPublishedNews } from "@/services/news.service";
-import { APP_NAME, LOGO_PATH } from "@/lib/constants";
+import { APP_NAME } from "@/lib/constants";
 
 export default async function LandingPage() {
   const [featured, recent] = await Promise.all([
@@ -29,16 +29,7 @@ export default async function LandingPage() {
             </p>
             <LandingHeroActions />
           </div>
-          <div className="shrink-0">
-            <Image
-              src={LOGO_PATH}
-              alt="Zamboanga Sibugay"
-              width={240}
-              height={240}
-              className="logo-glow logo-float rounded-full ring-2 ring-cyan-400/50"
-              priority
-            />
-          </div>
+          <HeroLogo />
         </div>
       </section>
 

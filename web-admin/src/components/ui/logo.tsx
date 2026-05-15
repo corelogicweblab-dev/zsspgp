@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
-import { LOGO_PATH, APP_SHORT } from "@/lib/constants";
+import { ProvincialLogo } from "./provincial-logo";
+import { APP_SHORT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
@@ -16,14 +16,7 @@ export function Logo({ className, showText = true, size = "md", href = "/" }: Lo
   const dim = sizes[size];
   const inner = (
     <div className={cn("flex items-center gap-3", className)}>
-      <Image
-        src={LOGO_PATH}
-        alt={`${APP_SHORT} Logo`}
-        width={dim}
-        height={dim}
-        className="logo-glow rounded-full object-contain"
-        priority
-      />
+      <ProvincialLogo size={dim} priority />
       {showText && (
         <div className="hidden flex-col sm:flex">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">

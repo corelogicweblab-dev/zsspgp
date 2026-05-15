@@ -1,16 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { SideNav } from "./side-nav";
+import { AppHeader } from "./app-header";
 import { AppFooter } from "./app-footer";
+import { InstallAppBanner } from "./install-app-banner";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <div className="relative z-10 flex min-h-screen">
-      <SideNav />
-      <div className="flex min-h-screen flex-1 flex-col pl-[260px]">
-        <main className="flex-1 p-6 sm:p-8">{children}</main>
-        <AppFooter />
-      </div>
+    <div className="relative z-10 flex min-h-screen flex-col">
+      <InstallAppBanner />
+      <AppHeader onMenuClick={() => setMenuOpen(true)} />
+      <SideNav open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+      <AppFooter />
     </div>
   );
 }

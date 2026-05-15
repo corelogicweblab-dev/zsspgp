@@ -18,6 +18,16 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: `${APP_SHORT} | Smart Provincial Governance`,
   description: APP_NAME,
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: APP_SHORT,
+    statusBarStyle: "black-translucent",
+  },
+  icons: {
+    icon: "/zamboangasibugaylogo.png",
+    apple: "/zamboangasibugaylogo.png",
+  },
 };
 
 export default function RootLayout({

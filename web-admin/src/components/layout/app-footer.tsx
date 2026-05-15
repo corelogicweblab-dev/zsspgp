@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
-import { LOGO_PATH, FOOTER_TEXT, POWERED_BY } from "@/lib/constants";
+import { ProvincialLogo } from "@/components/ui/provincial-logo";
+import { FOOTER_TEXT, POWERED_BY } from "@/lib/constants";
 
 export function AppFooter() {
   return (
@@ -14,13 +14,7 @@ export function AppFooter() {
     >
       <div className="mx-auto flex max-w-7xl flex-col items-center gap-3 px-6 py-5 sm:flex-row sm:justify-between">
         <div className="flex items-center gap-3">
-          <Image
-            src={LOGO_PATH}
-            alt="Zamboanga Sibugay"
-            width={40}
-            height={40}
-            className="logo-glow rounded-full object-contain"
-          />
+          <ProvincialLogo size={44} showGlow />
           <p className="text-sm text-slate-400">
             © {FOOTER_TEXT} — Powered by:{" "}
             <span className="font-semibold text-cyan-400">{POWERED_BY}</span>

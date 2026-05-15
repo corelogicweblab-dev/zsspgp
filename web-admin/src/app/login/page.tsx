@@ -101,12 +101,8 @@ function LoginForm() {
         </form>
 
         <p className="text-center text-sm text-slate-400">
-          <Link href="/login/information" className="text-cyan-400 hover:underline">
-            Information Office Login
-          </Link>
-          {" · "}
           <Link href="/register" className="text-cyan-400 hover:underline">
-            Create account
+            Create account with your role
           </Link>
         </p>
       </CardContent>

@@ -5,6 +5,8 @@ import type {
   IncidentSeverity,
   UserRole,
 } from "@/types";
+import type { LucideIcon } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
 export const APP_NAME = "Zamboanga Sibugay Smart Provincial Governance Platform";
 export const APP_SHORT = "ZSSPGP";
@@ -176,3 +178,24 @@ export const ADMIN_ROLES: UserRole[] = [
 
 export const GOVERNOR_ROLES: UserRole[] = ["governor_super_admin"];
 export const ICT_ROLES: UserRole[] = ["ict_admin", "governor_super_admin"];
+
+export const CONTACT_INFO: { label: string; value: string; icon: LucideIcon }[] = [
+  { label: "Provincial Capitol", value: "Ipil, Zamboanga Sibugay", icon: MapPin },
+  { label: "Hotline", value: "(062) 333-0000", icon: Phone },
+  { label: "Email", value: "info@zamboangasibugay.gov.ph", icon: Mail },
+  { label: "Office Hours", value: "Mon–Fri, 8:00 AM – 5:00 PM", icon: Clock },
+];
+
+export const SMART_FEATURES = [
+  { title: "Real-Time Monitoring", desc: "Live dashboards for complaints, incidents, and provincial KPIs." },
+  { title: "Executive Analytics", desc: "Governor command center with province-wide intelligence." },
+  { title: "Smart Notifications", desc: "Broadcast alerts to departments and citizens instantly." },
+  { title: "Biometric-Ready Auth", desc: "Secure RBAC with role-based registration and OAuth." },
+  { title: "Citizen Engagement", desc: "Complaint filing, tracking, and transparent resolution." },
+  { title: "Enterprise Security", desc: "RLS, rate limiting, encrypted sessions, audit trails." },
+  { title: "Cloud-Ready Scale", desc: "Modular architecture built for provincial-wide deployment." },
+  { title: "DRRM Command", desc: "Emergency incident reporting with severity workflows." },
+] as const;
+
+/** Hidden route — share only with Governor office; not in public menus. */
+export const GOVERNOR_EXECUTIVE_PATH = "/governor/executive-access";

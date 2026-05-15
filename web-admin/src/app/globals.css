@@ -115,3 +115,23 @@ body {
   pointer-events: none;
   z-index: 1;
 }
+
+@keyframes grid-shift {
+  0% { opacity: 0.25; transform: translateY(0); }
+  50% { opacity: 0.55; }
+  100% { opacity: 0.25; transform: translateY(24px); }
+}
+
+.grid-pulse {
+  background-image:
+    linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 45%, black, transparent);
+  animation: grid-shift 12s ease-in-out infinite;
+}
+
+.hex-overlay {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%2338bdf8' fill-opacity='0.06'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.2;
+}

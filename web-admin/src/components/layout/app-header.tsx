@@ -5,6 +5,7 @@ import { Menu } from "lucide-react";
 import { ProvincialLogo } from "@/components/ui/provincial-logo";
 import { APP_SHORT } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { LiveClock } from "@/components/layout/live-clock";
 
 interface AppHeaderProps {
   onMenuClick: () => void;
@@ -32,6 +33,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <p className="truncate text-base font-bold text-white">{APP_SHORT}</p>
         </div>
       </Link>
+      <LiveClock />
     </header>
   );
 }

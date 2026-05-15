@@ -22,11 +22,6 @@ export function LandingHeroActions() {
           Official Login
         </Button>
       </Link>
-      <Link href="/login/information">
-        <Button variant="secondary" size="lg">
-          Information Office Login
-        </Button>
-      </Link>
     </motion.div>
   );
 }

@@ -1,7 +1,10 @@
 import { LandingHeroActions } from "@/components/landing/landing-hero-actions";
+import { HeroDateTime } from "@/components/landing/hero-datetime";
 import { HeroLogo } from "@/components/landing/hero-logo";
+import { SmartFeatures } from "@/components/landing/smart-features";
 import { NewsSection } from "@/components/news/news-section";
 import { PlatformModules } from "@/components/landing/platform-modules";
+import { ContactSection } from "@/components/layout/contact-section";
 import { getFeaturedNews, getPublishedNews } from "@/services/news.service";
 import { APP_NAME } from "@/lib/constants";
 
@@ -27,6 +30,7 @@ export default async function LandingPage() {
             <p className="mt-5 text-lg text-cyan-100/90">
               Modern, premium, enterprise-grade provincial governance — government-ready.
             </p>
+            <HeroDateTime />
             <LandingHeroActions />
           </div>
           <HeroLogo />
@@ -35,7 +39,11 @@ export default async function LandingPage() {
 
       <NewsSection articles={newsItems} />
 
+      <SmartFeatures />
+
       <PlatformModules />
+
+      <ContactSection />
     </div>
   );
 }

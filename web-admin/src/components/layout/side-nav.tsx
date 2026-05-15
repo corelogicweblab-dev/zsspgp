@@ -17,7 +17,6 @@ import {
   Users,
   Bell,
   Settings,
-  Info,
   X,
 } from "lucide-react";
 import { ProvincialLogo } from "@/components/ui/provincial-logo";
@@ -36,7 +35,6 @@ const publicNav: NavItem[] = [
 
 const authNav: NavItem[] = [
   { href: "/login", label: "Login", icon: LogIn },
-  { href: "/login/information", label: "Information Office Login", icon: Info },
   { href: "/register", label: "Register", icon: UserPlus },
 ];
 

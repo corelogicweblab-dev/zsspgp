@@ -1,49 +1,50 @@
-import {
-  Shield,
-  MessageSquare,
-  AlertTriangle,
-  BarChart3,
-  Smartphone,
-  Building2,
-} from "lucide-react";
-import { PublicNav } from "@/components/layout/public-nav";
-import { LandingHero } from "@/components/landing/hero";
-import { Card, CardContent } from "@/components/ui/card";
+import Image from "next/image";
+import { LandingHeroActions } from "@/components/landing/landing-hero-actions";
+import { NewsSection } from "@/components/news/news-section";
+import { PlatformModules } from "@/components/landing/platform-modules";
+import { getFeaturedNews, getPublishedNews } from "@/services/news.service";
+import { APP_NAME, LOGO_PATH } from "@/lib/constants";
 
-const features = [
-  { icon: BarChart3, title: "Governor Command Center", desc: "Real-time provincial analytics and executive oversight." },
-  { icon: Building2, title: "Department Portals", desc: "DRRM, Health, Tourism, Agriculture, and ICT unified." },
-  { icon: MessageSquare, title: "Citizen Complaints", desc: "Track and resolve citizen concerns efficiently." },
-  { icon: AlertTriangle, title: "DRRM Incidents", desc: "Emergency reporting with severity-based alerts." },
-  { icon: Shield, title: "Role-Based Security", desc: "Enterprise RBAC with Supabase Auth and RLS." },
-  { icon: Smartphone, title: "Mobile App", desc: "Citizen access via React Native Expo." },
-];
+export default async function LandingPage() {
+  const [featured, recent] = await Promise.all([
+    getFeaturedNews(3),
+    getPublishedNews(6),
+  ]);
+  const newsItems = featured.length > 0 ? featured : recent.slice(0, 3);
 
-export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50/40">
-      <PublicNav />
-      <LandingHero />
-      <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-        <h2 className="text-center text-3xl font-bold text-slate-900">Integrated Governance Modules</h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-slate-600">
-          Enterprise-grade digital transformation for provincial government operations.
-        </p>
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((f) => (
-            <Card key={f.title} className="transition hover:shadow-lg">
-              <CardContent className="p-6">
-                <f.icon className="mb-4 h-10 w-10 text-blue-600" />
-                <h3 className="text-lg font-semibold text-slate-900">{f.title}</h3>
-                <p className="mt-2 text-sm text-slate-600">{f.desc}</p>
-              </CardContent>
-            </Card>
-          ))}
+    <div className="space-y-16">
+      <section className="gradient-hero relative overflow-hidden rounded-2xl px-6 py-16 sm:px-10 sm:py-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(56,189,248,0.25),transparent_50%)]" aria-hidden />
+        <div className="relative flex flex-col items-center gap-10 lg:flex-row lg:justify-between">
+          <div className="max-w-2xl text-center lg:text-left">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.25em] text-cyan-300">
+              Province of Zamboanga Sibugay
+            </p>
+            <h1 className="text-3xl font-bold leading-tight text-white text-glow sm:text-4xl lg:text-5xl">
+              {APP_NAME}
+            </h1>
+            <p className="mt-5 text-lg text-cyan-100/90">
+              Modern, premium, enterprise-grade provincial governance — government-ready.
+            </p>
+            <LandingHeroActions />
+          </div>
+          <div className="shrink-0">
+            <Image
+              src={LOGO_PATH}
+              alt="Zamboanga Sibugay"
+              width={240}
+              height={240}
+              className="logo-glow logo-float rounded-full ring-2 ring-cyan-400/50"
+              priority
+            />
+          </div>
         </div>
       </section>
-      <footer className="border-t border-slate-200 bg-white py-8 text-center text-sm text-slate-500">
-        © 2026 Province of Zamboanga Sibugay — ZSSPGP MVP
-      </footer>
+
+      <NewsSection articles={newsItems} />
+
+      <PlatformModules />
     </div>
   );
 }

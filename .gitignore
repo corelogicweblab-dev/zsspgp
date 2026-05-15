@@ -19,7 +19,7 @@ mobile-app/dist/
 # Build / logs
 *.log
 .DS_Store
-.vercel
+.render
 *.tsbuildinfo
 
 # IDE

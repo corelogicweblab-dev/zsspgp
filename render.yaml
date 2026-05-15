@@ -1,0 +1,23 @@
+# Render Blueprint — ZSSPGP Web Admin
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: zsspgp-web
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: web-admin
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_USE_MOCK_DATA
+        value: "true"
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false

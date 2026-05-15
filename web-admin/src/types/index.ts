@@ -2,6 +2,7 @@ export type UserRole =
   | "governor_super_admin"
   | "ict_admin"
   | "department_admin"
+  | "information_office"
   | "staff"
   | "citizen";
 
@@ -62,6 +63,21 @@ export interface UserProfile {
   is_active: boolean;
   created_at: string;
   department?: Department;
+}
+
+export interface NewsArticle {
+  id: string;
+  title: string;
+  summary: string | null;
+  content: string;
+  cover_image_url: string | null;
+  author_id: string | null;
+  department_id: string | null;
+  is_published: boolean;
+  is_featured: boolean;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface Complaint {

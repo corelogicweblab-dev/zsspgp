@@ -28,6 +28,8 @@ export function getRoleDashboardPath(role: string): string {
       return "/admin/governor";
     case "ict_admin":
       return "/admin/users";
+    case "information_office":
+      return "/admin/news";
     case "department_admin":
     case "staff":
       return "/admin/department";

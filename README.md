@@ -6,7 +6,7 @@ Enterprise-grade MVP for provincial digital governance — governor command cent
 
 ```
 ZSSPGP/
-├── web-admin/          # Next.js 15 App Router (Vercel)
+├── web-admin/          # Next.js App Router (Render)
 ├── mobile-app/         # React Native Expo (Expo Router)
 ├── database/           # PostgreSQL migrations & seed (Supabase)
 ├── backend/            # Supabase edge functions & API notes
@@ -20,7 +20,7 @@ ZSSPGP/
 | Web | Next.js 15, TypeScript, Tailwind CSS, shadcn-style UI, Framer Motion, Recharts |
 | Mobile | React Native Expo, Expo Router |
 | Backend | Supabase (Auth, PostgreSQL, RLS, Realtime, Storage) |
-| Deploy | Vercel, Supabase Cloud, Cloudflare-ready |
+| Deploy | Render, Supabase Cloud, Cloudflare-ready |
 
 ## Quick Start (Demo Mode)
 
@@ -93,14 +93,23 @@ Regenerate placeholder: `node web-admin/public/generate-logo.mjs`
 
 ## Deployment
 
-### Vercel (Web)
+### Render (Web)
 
-```bash
-cd web-admin
-vercel
-```
+**Option A — Blueprint (repo root `render.yaml`)**
 
-Set environment variables in Vercel dashboard.
+1. [Render Dashboard](https://dashboard.render.com) → **New** → **Blueprint**
+2. Connect `corelogicweblab-dev/zsspgp`
+3. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in the service env
+
+**Option B — Manual Web Service**
+
+| Setting | Value |
+|---------|--------|
+| Root Directory | `web-admin` |
+| Build Command | `npm install && npm run build` |
+| Start Command | `npm start` |
+
+Set the same env vars as in `web-admin/.env.local.example` in the Render service **Environment** tab.
 
 ### Supabase
 

@@ -2,25 +2,22 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
-import { getAuthRedirectPath } from "@/lib/auth";
-import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { CitizenPage } from "@/components/layout/citizen-page";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LOGO_PATH } from "@/lib/constants";
 
-function LoginForm() {
+function InformationLoginForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const authError = searchParams.get("error");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(
-    authError === "auth" ? "Authentication failed. Please try again." : null
-  );
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -46,7 +43,14 @@ function LoginForm() {
         .eq("id", data.user.id)
         .single();
 
-      router.push(getAuthRedirectPath(profile?.role ?? "citizen"));
+      const allowed = ["information_office", "governor_super_admin", "ict_admin"];
+      if (!profile?.role || !allowed.includes(profile.role)) {
+        setError("This portal is for Provincial Information Office accounts only.");
+        await supabase.auth.signOut();
+        return;
+      }
+
+      router.push("/admin/news");
     } catch {
       setError("Unable to sign in. Please try again.");
     } finally {
@@ -56,15 +60,19 @@ function LoginForm() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Account Login</CardTitle>
+      <CardHeader className="items-center text-center">
+        <Image src={LOGO_PATH} alt="Logo" width={64} height={64} className="logo-glow mb-2 rounded-full" />
+        <CardTitle>Information Office Login</CardTitle>
+        <p className="text-sm text-slate-400">
+          Provincial Information Office — news and public information management
+        </p>
       </CardHeader>
       <CardContent className="space-y-6">
-        <GoogleSignInButton mode="login" />
+        <GoogleSignInButton mode="login" label="Sign in with Google (Gmail)" />
 
         <div className="relative text-center text-xs text-slate-500">
           <div className="absolute inset-x-0 top-1/2 border-t border-slate-700" />
-          <span className="relative px-3">or sign in with email</span>
+          <span className="relative px-3">or email login</span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,11 +82,10 @@ function LoginForm() {
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">Official Email</Label>
             <Input
               id="email"
               type="email"
-              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -89,7 +96,6 @@ function LoginForm() {
             <Input
               id="password"
               type="password"
-              autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -101,12 +107,12 @@ function LoginForm() {
         </form>
 
         <p className="text-center text-sm text-slate-400">
-          <Link href="/login/information" className="text-cyan-400 hover:underline">
-            Information Office Login
+          <Link href="/login" className="text-cyan-400 hover:underline">
+            General login
           </Link>
           {" · "}
           <Link href="/register" className="text-cyan-400 hover:underline">
-            Create account
+            Register as Information Office
           </Link>
         </p>
       </CardContent>
@@ -114,15 +120,21 @@ function LoginForm() {
   );
 }
 
-export default function LoginPage() {
+export default function InformationLoginPage() {
   return (
     <CitizenPage
-      title="Sign In"
-      subtitle="Zamboanga Sibugay Smart Provincial Governance Platform"
+      title="Information Office"
+      subtitle="Official news publishing portal"
       maxWidth="md"
     >
-      <Suspense fallback={<Card><CardContent className="py-8 text-center text-slate-400">Loading…</CardContent></Card>}>
-        <LoginForm />
+      <Suspense
+        fallback={
+          <Card>
+            <CardContent className="py-8 text-center text-slate-400">Loading…</CardContent>
+          </Card>
+        }
+      >
+        <InformationLoginForm />
       </Suspense>
     </CitizenPage>
   );

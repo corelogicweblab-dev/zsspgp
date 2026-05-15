@@ -10,7 +10,7 @@ interface LogoProps {
   href?: string;
 }
 
-const sizes = { sm: 36, md: 48, lg: 64 };
+const sizes = { sm: 40, md: 52, lg: 72 };
 
 export function Logo({ className, showText = true, size = "md", href = "/" }: LogoProps) {
   const dim = sizes[size];
@@ -21,15 +21,15 @@ export function Logo({ className, showText = true, size = "md", href = "/" }: Lo
         alt={`${APP_SHORT} Logo`}
         width={dim}
         height={dim}
-        className="rounded-full object-contain"
+        className="logo-glow rounded-full object-contain"
         priority
       />
       {showText && (
         <div className="hidden flex-col sm:flex">
-          <span className="text-xs font-medium uppercase tracking-wider text-blue-600">
+          <span className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400">
             Province of Zamboanga Sibugay
           </span>
-          <span className="text-sm font-bold text-slate-900">{APP_SHORT}</span>
+          <span className="text-sm font-bold text-white">{APP_SHORT}</span>
         </div>
       )}
     </div>

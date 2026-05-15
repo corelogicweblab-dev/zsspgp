@@ -1,10 +1,13 @@
-import { PublicNav } from "@/components/layout/public-nav";
+"use client";
+
+import { motion } from "framer-motion";
+import { PageHeader } from "./page-header";
 
 interface CitizenPageProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  maxWidth?: "md" | "lg" | "xl" | "2xl" | "4xl" | "7xl";
+  maxWidth?: "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "7xl";
 }
 
 const widthClass = {
@@ -12,6 +15,7 @@ const widthClass = {
   lg: "max-w-lg",
   xl: "max-w-xl",
   "2xl": "max-w-2xl",
+  "3xl": "max-w-3xl",
   "4xl": "max-w-4xl",
   "7xl": "max-w-7xl",
 };
@@ -23,18 +27,14 @@ export function CitizenPage({
   maxWidth = "2xl",
 }: CitizenPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-blue-50/40">
-      <PublicNav />
-      <main className={`mx-auto px-4 py-10 sm:px-6 lg:px-8 ${widthClass[maxWidth]}`}>
-        <header className="mb-8 text-center">
-          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">{title}</h1>
-          {subtitle && <p className="mt-2 text-slate-600">{subtitle}</p>}
-        </header>
-        {children}
-      </main>
-      <footer className="border-t border-slate-200 bg-white py-6 text-center text-sm text-slate-500">
-        © 2026 Province of Zamboanga Sibugay — ZSSPGP
-      </footer>
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className={`mx-auto w-full ${widthClass[maxWidth]}`}
+    >
+      <PageHeader title={title} subtitle={subtitle} />
+      {children}
+    </motion.div>
   );
 }

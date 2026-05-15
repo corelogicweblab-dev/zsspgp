@@ -20,4 +20,4 @@ Recommended Supabase Edge Functions:
 
 ## Environment
 
-Configure in Supabase Dashboard and mirror in `web-admin/.env.local`.
+Configure in Supabase Dashboard and mirror in `web-admin/.env.local` (or Render service environment variables).

@@ -4,14 +4,16 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { isMockMode } from "@/lib/env";
-import { MUNICIPALITIES } from "@/lib/constants";
+import { getAuthRedirectPath } from "@/lib/auth";
+import { MUNICIPALITIES, SIGNUP_ROLES } from "@/lib/constants";
 import { CitizenPage } from "@/components/layout/citizen-page";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
+import type { UserRole } from "@/types";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -21,9 +23,9 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [municipality, setMunicipality] = useState("");
   const [barangay, setBarangay] = useState("");
+  const [role, setRole] = useState<UserRole>("citizen");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const mock = isMockMode();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -31,23 +33,17 @@ export default function RegisterPage() {
     setLoading(true);
 
     try {
-      if (mock) {
-        await new Promise((r) => setTimeout(r, 500));
-        router.push("/dashboard");
-        return;
-      }
-
       const supabase = createClient();
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
           data: {
             full_name: fullName.trim(),
             phone: phone.trim() || null,
-            municipality,
+            municipality: municipality || null,
             barangay: barangay.trim() || null,
-            role: "citizen",
+            role,
           },
         },
       });
@@ -57,7 +53,11 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push("/dashboard");
+      if (data.user) {
+        await supabase.from("users").update({ role }).eq("id", data.user.id);
+      }
+
+      router.push(getAuthRedirectPath(role));
     } catch {
       setError("Registration failed. Please try again.");
     } finally {
@@ -67,26 +67,48 @@ export default function RegisterPage() {
 
   return (
     <CitizenPage
-      title="Citizen Registration"
-      subtitle="Register to file complaints and track provincial services"
+      title="Create Account"
+      subtitle="Zamboanga Sibugay Smart Provincial Governance Platform"
       maxWidth="lg"
     >
       <Card>
         <CardHeader>
-          <CardTitle>Create Account</CardTitle>
-          <CardDescription>
-            {mock
-              ? "Demo mode: submit the form to access your citizen dashboard."
-              : "All fields marked required must be completed."}
-          </CardDescription>
+          <CardTitle>Register</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          <GoogleSignInButton mode="signup" role={role} />
+
+          <div className="relative text-center text-xs text-slate-500">
+            <div className="absolute inset-x-0 top-1/2 border-t border-slate-700" />
+            <span className="relative px-3">or register with email</span>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
                 {error}
               </div>
             )}
+
+            <div className="space-y-2">
+              <Label htmlFor="role">Account Role</Label>
+              <Select
+                id="role"
+                value={role}
+                onChange={(e) => setRole(e.target.value as UserRole)}
+                required
+              >
+                {SIGNUP_ROLES.map((r) => (
+                  <option key={r.value} value={r.value}>
+                    {r.label}
+                  </option>
+                ))}
+              </Select>
+              <p className="text-xs text-slate-500">
+                {SIGNUP_ROLES.find((r) => r.value === role)?.description}
+              </p>
+            </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="fullName">Full Name</Label>
@@ -94,7 +116,6 @@ export default function RegisterPage() {
                   id="fullName"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Juan Dela Cruz"
                   required
                 />
               </div>
@@ -115,7 +136,6 @@ export default function RegisterPage() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="09XX XXX XXXX"
                 />
               </div>
               <div className="space-y-2 sm:col-span-2">
@@ -125,43 +145,48 @@ export default function RegisterPage() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required={!mock}
+                  required
                   minLength={8}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="municipality">Municipality</Label>
-                <Select
-                  id="municipality"
-                  value={municipality}
-                  onChange={(e) => setMunicipality(e.target.value)}
-                  required
-                >
-                  <option value="">Select municipality</option>
-                  {MUNICIPALITIES.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="barangay">Barangay</Label>
-                <Input
-                  id="barangay"
-                  value={barangay}
-                  onChange={(e) => setBarangay(e.target.value)}
-                  placeholder="Poblacion"
-                />
-              </div>
+              {role === "citizen" && (
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="municipality">Municipality</Label>
+                    <Select
+                      id="municipality"
+                      value={municipality}
+                      onChange={(e) => setMunicipality(e.target.value)}
+                      required
+                    >
+                      <option value="">Select municipality</option>
+                      {MUNICIPALITIES.map((m) => (
+                        <option key={m} value={m}>
+                          {m}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="barangay">Barangay</Label>
+                    <Input
+                      id="barangay"
+                      value={barangay}
+                      onChange={(e) => setBarangay(e.target.value)}
+                    />
+                  </div>
+                </>
+              )}
             </div>
+
             <Button type="submit" variant="gov" className="w-full" disabled={loading}>
-              {loading ? "Creating account…" : "Register"}
+              {loading ? "Creating account…" : "Create Account"}
             </Button>
           </form>
-          <p className="mt-6 text-center text-sm text-slate-600">
-            Already registered?{" "}
-            <Link href="/login" className="font-medium text-blue-600 hover:underline">
+
+          <p className="text-center text-sm text-slate-400">
+            Already have an account?{" "}
+            <Link href="/login" className="font-medium text-cyan-400 hover:underline">
               Sign in
             </Link>
           </p>

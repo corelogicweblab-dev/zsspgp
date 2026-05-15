@@ -37,7 +37,7 @@ export async function GET(request: Request) {
         .from("users")
         .select("role")
         .eq("id", data.user.id)
-        .single();
+        .maybeSingle();
 
       return NextResponse.redirect(`${origin}${getAuthRedirectPath(profile?.role ?? role)}`);
     }

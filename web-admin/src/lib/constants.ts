@@ -117,8 +117,8 @@ export const PLATFORM_MODULES = [
   {
     title: "Realtime Dashboard",
     desc: "Live updates on complaints, incidents, and provincial activity.",
-    href: "/admin/governor",
-    menuLabel: "Governor Dashboard",
+    href: "/admin/complaints",
+    menuLabel: "Complaint operations",
   },
   {
     title: "Scalable Enterprise Architecture",

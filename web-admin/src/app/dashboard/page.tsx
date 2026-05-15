@@ -1,15 +1,51 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { MessageSquareWarning, PlusCircle, Megaphone } from "lucide-react";
 import { MOCK_COMPLAINTS } from "@/lib/mock-data";
 import { COMPLAINT_STATUSES } from "@/lib/constants";
+import { isMockMode } from "@/lib/env";
 import { formatDate, formatRelative } from "@/lib/utils";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import type { Complaint } from "@/types";
+
 export default function DashboardPage() {
-  const complaints = MOCK_COMPLAINTS;
+  const [complaints, setComplaints] = useState<Complaint[]>(isMockMode() ? MOCK_COMPLAINTS : []);
+  const [loading, setLoading] = useState(!isMockMode());
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const load = useCallback(async () => {
+    if (isMockMode()) {
+      setComplaints(MOCK_COMPLAINTS);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const res = await fetch("/api/complaints");
+      const json = await res.json();
+      if (!res.ok) {
+        setLoadError(json.error ?? "Could not load your complaints.");
+        setComplaints([]);
+        return;
+      }
+      setComplaints((json.data as Complaint[]) ?? []);
+    } catch {
+      setLoadError("Could not load your complaints.");
+      setComplaints([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    void load();
+  }, [load]);
+
   const pending = complaints.filter((c) => c.status === "pending").length;
   const inReview = complaints.filter((c) => c.status === "under_review").length;
   const resolved = complaints.filter((c) => c.status === "resolved").length;
@@ -69,15 +105,31 @@ export default function DashboardPage() {
             Announcements
           </Button>
         </Link>
+        {!isMockMode() && (
+          <Button type="button" variant="outline" onClick={() => void load()}>
+            Refresh list
+          </Button>
+        )}
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Your Complaints</CardTitle>
-          <CardDescription>Demo tracking data — sign in with Supabase for live records</CardDescription>
+          <CardDescription>
+            {isMockMode()
+              ? "Demo sample data — connect Supabase for your real filings."
+              : "Records visible to you based on your account."}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
-          {complaints.length === 0 ? (
+          {loadError && (
+            <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
+              {loadError}
+            </div>
+          )}
+          {loading ? (
+            <p className="py-8 text-center text-sm text-slate-500">Loading…</p>
+          ) : complaints.length === 0 ? (
             <p className="py-8 text-center text-sm text-slate-500">No complaints yet.</p>
           ) : (
             complaints.map((c) => {

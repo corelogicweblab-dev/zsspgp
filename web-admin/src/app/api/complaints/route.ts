@@ -90,9 +90,17 @@ export async function POST(request: Request) {
 
   try {
     const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Sign in to submit a complaint." }, { status: 401 });
+    }
+
     const { data, error } = await supabase
       .from("complaints")
       .insert({
+        user_id: user.id,
         title: title.trim(),
         description: description.trim(),
         category,

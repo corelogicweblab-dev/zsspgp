@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getAuthRedirectPath } from "@/lib/auth";
+import { resolveSafeRedirectPath } from "@/lib/admin-access";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { SupabaseConfigHint } from "@/components/auth/supabase-config-hint";
@@ -13,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
+import type { UserRole } from "@/types";
 
 function LoginForm() {
   const router = useRouter();
@@ -57,9 +59,12 @@ function LoginForm() {
         .from("users")
         .select("role")
         .eq("id", data.user.id)
-        .single();
+        .maybeSingle();
 
-      router.push(getAuthRedirectPath(profile?.role ?? "citizen"));
+      const role = (profile?.role as UserRole) ?? "citizen";
+      const rawNext = searchParams.get("redirect");
+      const nextPath = resolveSafeRedirectPath(rawNext, role);
+      router.push(nextPath ?? getAuthRedirectPath(role));
     } catch {
       setError("Unable to sign in. Please try again.");
     } finally {

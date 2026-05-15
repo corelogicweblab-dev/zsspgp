@@ -59,6 +59,7 @@ export interface UserProfile {
   phone: string | null;
   municipality: string | null;
   barangay: string | null;
+  purok_or_street: string | null;
   avatar_url: string | null;
   is_active: boolean;
   created_at: string;
@@ -90,6 +91,7 @@ export interface Complaint {
   status: ComplaintStatus;
   municipality: string;
   barangay: string | null;
+  purok_or_street: string | null;
   image_url: string | null;
   assigned_department_id: string | null;
   admin_response: string | null;

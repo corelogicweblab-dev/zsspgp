@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   MessageSquareWarning,
   AlertTriangle,
@@ -8,6 +9,7 @@ import {
   Building2,
   Bell,
 } from "lucide-react";
+import { GovernorCommandHub } from "@/components/dashboard/governor-command-hub";
 import { StatCard } from "@/components/dashboard/stat-card";
 import {
   ComplaintsByCategoryChart,
@@ -43,6 +45,7 @@ export function GovernorDashboardBody({
 }: GovernorDashboardBodyProps) {
   return (
     <>
+      <GovernorCommandHub />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           title="Total Complaints"
@@ -84,8 +87,14 @@ export function GovernorDashboardBody({
         <div className="space-y-6">
           <RecentActivity activities={activity} />
           <Card>
-            <CardHeader>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle>Notifications</CardTitle>
+              <Link
+                href="/admin/notifications"
+                className="text-xs font-medium text-cyan-400 hover:underline"
+              >
+                Manage all
+              </Link>
             </CardHeader>
             <CardContent className="space-y-3">
               {notifications.map((n) => (
@@ -100,47 +109,63 @@ export function GovernorDashboardBody({
       </div>
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>Recent Complaints</CardTitle>
+            <Link
+              href="/admin/complaints"
+              className="text-xs font-medium text-cyan-400 hover:underline"
+            >
+              Full workspace
+            </Link>
           </CardHeader>
           <CardContent className="space-y-3">
             {complaints.map((c) => {
               const status = COMPLAINT_STATUSES.find((s) => s.value === c.status);
               return (
-                <div key={c.id} className="flex justify-between rounded-lg border p-3">
-                  <div>
-                    <p className="text-sm font-medium">{c.title}</p>
-                    <p className="text-xs text-slate-500">
-                      {c.reference_number} • {c.municipality}
-                    </p>
+                <Link key={c.id} href="/admin/complaints" className="block rounded-lg border border-transparent transition-colors hover:border-cyan-500/30 hover:bg-cyan-500/5">
+                  <div className="flex justify-between p-3">
+                    <div>
+                      <p className="text-sm font-medium">{c.title}</p>
+                      <p className="text-xs text-slate-500">
+                        {c.reference_number} • {c.municipality}
+                      </p>
+                    </div>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${status?.color}`}>
+                      {status?.label}
+                    </span>
                   </div>
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${status?.color}`}>
-                    {status?.label}
-                  </span>
-                </div>
+                </Link>
               );
             })}
           </CardContent>
         </Card>
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
             <CardTitle>Active Incidents</CardTitle>
+            <Link
+              href="/admin/incidents"
+              className="text-xs font-medium text-cyan-400 hover:underline"
+            >
+              Full workspace
+            </Link>
           </CardHeader>
           <CardContent className="space-y-3">
             {incidents.map((i) => {
               const sev = INCIDENT_SEVERITIES.find((s) => s.value === i.severity);
               return (
-                <div key={i.id} className="flex justify-between rounded-lg border p-3">
-                  <div>
-                    <p className="text-sm font-medium">{i.title}</p>
-                    <p className="text-xs text-slate-500">
-                      {i.reference_number} • {capitalize(i.category)}
-                    </p>
+                <Link key={i.id} href="/admin/incidents" className="block rounded-lg border border-transparent transition-colors hover:border-cyan-500/30 hover:bg-cyan-500/5">
+                  <div className="flex justify-between p-3">
+                    <div>
+                      <p className="text-sm font-medium">{i.title}</p>
+                      <p className="text-xs text-slate-500">
+                        {i.reference_number} • {capitalize(i.category)}
+                      </p>
+                    </div>
+                    <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${sev?.color}`}>
+                      {sev?.label}
+                    </span>
                   </div>
-                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${sev?.color}`}>
-                    {sev?.label}
-                  </span>
-                </div>
+                </Link>
               );
             })}
           </CardContent>

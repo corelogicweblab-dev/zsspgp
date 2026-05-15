@@ -6,6 +6,7 @@ import { ProvincialLogo } from "@/components/ui/provincial-logo";
 import { APP_SHORT } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { LiveClock } from "@/components/layout/live-clock";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 interface AppHeaderProps {
   onMenuClick: () => void;
@@ -33,7 +34,10 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <p className="truncate text-base font-bold text-white">{APP_SHORT}</p>
         </div>
       </Link>
-      <LiveClock />
+      <div className="flex shrink-0 items-center gap-2">
+        <LiveClock />
+        <LogoutButton />
+      </div>
     </header>
   );
 }

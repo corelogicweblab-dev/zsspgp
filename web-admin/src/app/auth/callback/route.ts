@@ -23,6 +23,10 @@ export async function GET(request: Request) {
           email: data.user.email!,
           full_name: meta?.full_name ?? data.user.email?.split("@")[0] ?? "User",
           role,
+          phone: meta?.phone ?? null,
+          municipality: meta?.municipality ?? null,
+          barangay: meta?.barangay ?? null,
+          purok_or_street: meta?.purok_or_street ?? null,
         });
       }
 

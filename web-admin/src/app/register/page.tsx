@@ -5,12 +5,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { getAuthRedirectPath } from "@/lib/auth";
-import { MUNICIPALITIES, SIGNUP_ROLES } from "@/lib/constants";
+import { SIGNUP_ROLES } from "@/lib/constants";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { MunicipalityBarangayFields } from "@/components/forms/municipality-barangay-fields";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
 import type { UserRole } from "@/types";
@@ -23,6 +25,7 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState("");
   const [municipality, setMunicipality] = useState("");
   const [barangay, setBarangay] = useState("");
+  const [purokOrStreet, setPurokOrStreet] = useState("");
   const [role, setRole] = useState<UserRole>("citizen");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,9 +43,10 @@ export default function RegisterPage() {
         options: {
           data: {
             full_name: fullName.trim(),
-            phone: phone.trim() || null,
-            municipality: municipality || null,
-            barangay: barangay.trim() || null,
+            phone: phone.trim(),
+            municipality: municipality.trim(),
+            barangay: barangay.trim(),
+            purok_or_street: purokOrStreet.trim(),
             role,
           },
         },
@@ -54,7 +58,16 @@ export default function RegisterPage() {
       }
 
       if (data.user) {
-        await supabase.from("users").update({ role }).eq("id", data.user.id);
+        await supabase
+          .from("users")
+          .update({
+            role,
+            phone: phone.trim(),
+            municipality: municipality.trim(),
+            barangay: barangay.trim(),
+            purok_or_street: purokOrStreet.trim(),
+          })
+          .eq("id", data.user.id);
       }
 
       router.push(getAuthRedirectPath(role));
@@ -117,6 +130,7 @@ export default function RegisterPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
+                  autoComplete="name"
                 />
               </div>
               <div className="space-y-2">
@@ -127,56 +141,45 @@ export default function RegisterPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  autoComplete="email"
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
+                <Label htmlFor="phone">Mobile number</Label>
                 <Input
                   id="phone"
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  required
+                  autoComplete="tel"
+                  placeholder="09XXXXXXXXX"
                 />
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={8}
+                  autoComplete="new-password"
                 />
+                <p className="text-xs text-slate-500">Minimum 8 characters.</p>
               </div>
-              {role === "citizen" && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="municipality">Municipality</Label>
-                    <Select
-                      id="municipality"
-                      value={municipality}
-                      onChange={(e) => setMunicipality(e.target.value)}
-                      required
-                    >
-                      <option value="">Select municipality</option>
-                      {MUNICIPALITIES.map((m) => (
-                        <option key={m} value={m}>
-                          {m}
-                        </option>
-                      ))}
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="barangay">Barangay</Label>
-                    <Input
-                      id="barangay"
-                      value={barangay}
-                      onChange={(e) => setBarangay(e.target.value)}
-                    />
-                  </div>
-                </>
-              )}
+
+              <MunicipalityBarangayFields
+                municipality={municipality}
+                barangay={barangay}
+                purokOrStreet={purokOrStreet}
+                onMunicipalityChange={setMunicipality}
+                onBarangayChange={setBarangay}
+                onPurokOrStreetChange={setPurokOrStreet}
+                municipalityId="reg-municipality"
+                barangayId="reg-barangay"
+                purokId="reg-purok"
+              />
             </div>
 
             <Button type="submit" variant="gov" className="w-full" disabled={loading}>

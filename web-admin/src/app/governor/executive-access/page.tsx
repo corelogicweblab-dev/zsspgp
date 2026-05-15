@@ -6,6 +6,7 @@ import { Shield } from "lucide-react";
 import { ProvincialLogo } from "@/components/ui/provincial-logo";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -76,9 +77,8 @@ export default function GovernorExecutiveAccessPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="exec-password">Executive Password</Label>
-              <Input
+              <PasswordInput
                 id="exec-password"
-                type="password"
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

@@ -36,17 +36,28 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { title, description, category, municipality, barangay } = body as {
+  const { title, description, category, municipality, barangay, purok_or_street } = body as {
     title?: string;
     description?: string;
     category?: ComplaintCategory;
     municipality?: string;
     barangay?: string | null;
+    purok_or_street?: string | null;
   };
 
-  if (!title?.trim() || !description?.trim() || !category || !municipality?.trim()) {
+  if (
+    !title?.trim() ||
+    !description?.trim() ||
+    !category ||
+    !municipality?.trim() ||
+    !barangay?.trim() ||
+    !purok_or_street?.trim()
+  ) {
     return NextResponse.json(
-      { error: "title, description, category, and municipality are required" },
+      {
+        error:
+          "title, description, category, municipality, barangay, and purok/street details are required",
+      },
       { status: 400 }
     );
   }
@@ -64,7 +75,8 @@ export async function POST(request: Request) {
       category,
       status: "pending",
       municipality: municipality.trim(),
-      barangay: barangay?.trim() || null,
+      barangay: barangay.trim(),
+      purok_or_street: purok_or_street.trim(),
       image_url: null,
       assigned_department_id: null,
       admin_response: null,
@@ -85,7 +97,8 @@ export async function POST(request: Request) {
         description: description.trim(),
         category,
         municipality: municipality.trim(),
-        barangay: barangay?.trim() || null,
+        barangay: barangay.trim(),
+        purok_or_street: purok_or_street.trim(),
         reference_number,
         status: "pending",
       })
@@ -107,7 +120,8 @@ export async function POST(request: Request) {
       category,
       status: "pending",
       municipality: municipality.trim(),
-      barangay: barangay?.trim() || null,
+      barangay: barangay.trim(),
+      purok_or_street: purok_or_street.trim(),
       image_url: null,
       assigned_department_id: null,
       admin_response: null,

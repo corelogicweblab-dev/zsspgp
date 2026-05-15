@@ -3,7 +3,8 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { Upload, X, ImageIcon } from "lucide-react";
-import { COMPLAINT_CATEGORIES, MUNICIPALITIES } from "@/lib/constants";
+import { COMPLAINT_CATEGORIES } from "@/lib/constants";
+import { MunicipalityBarangayFields } from "@/components/forms/municipality-barangay-fields";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ export default function ComplaintsPage() {
   const [category, setCategory] = useState<ComplaintCategory | "">("");
   const [municipality, setMunicipality] = useState("");
   const [barangay, setBarangay] = useState("");
+  const [purokOrStreet, setPurokOrStreet] = useState("");
   const [preview, setPreview] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,7 +61,8 @@ export default function ComplaintsPage() {
           description: description.trim(),
           category,
           municipality,
-          barangay: barangay.trim() || null,
+          barangay: barangay.trim(),
+          purok_or_street: purokOrStreet.trim(),
         }),
       });
 
@@ -75,6 +78,7 @@ export default function ComplaintsPage() {
       setCategory("");
       setMunicipality("");
       setBarangay("");
+      setPurokOrStreet("");
       clearImage();
     } catch {
       setError("Network error. Please try again.");
@@ -99,14 +103,14 @@ export default function ComplaintsPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
                 {error}
               </div>
             )}
             {success && (
-              <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+              <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">
                 {success}{" "}
-                <Link href="/dashboard" className="font-medium underline">
+                <Link href="/dashboard" className="font-medium text-cyan-400 underline">
                   View dashboard
                 </Link>
               </div>
@@ -138,31 +142,17 @@ export default function ComplaintsPage() {
               </Select>
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-2">
-                <Label htmlFor="municipality">Municipality</Label>
-                <Select
-                  id="municipality"
-                  value={municipality}
-                  onChange={(e) => setMunicipality(e.target.value)}
-                  required
-                >
-                  <option value="">Select municipality</option>
-                  {MUNICIPALITIES.map((m) => (
-                    <option key={m} value={m}>
-                      {m}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="barangay">Barangay</Label>
-                <Input
-                  id="barangay"
-                  value={barangay}
-                  onChange={(e) => setBarangay(e.target.value)}
-                  placeholder="Barangay name"
-                />
-              </div>
+              <MunicipalityBarangayFields
+                municipality={municipality}
+                barangay={barangay}
+                purokOrStreet={purokOrStreet}
+                onMunicipalityChange={setMunicipality}
+                onBarangayChange={setBarangay}
+                onPurokOrStreetChange={setPurokOrStreet}
+                municipalityId="cmp-municipality"
+                barangayId="cmp-barangay"
+                purokId="cmp-purok"
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
@@ -184,10 +174,10 @@ export default function ComplaintsPage() {
                 onChange={handleFileChange}
               />
               {preview ? (
-                <div className="relative overflow-hidden rounded-xl border border-slate-200">
+                <div className="relative overflow-hidden rounded-xl border border-slate-600/40">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={preview} alt="Upload preview" className="max-h-48 w-full object-cover" />
-                  <div className="flex items-center justify-between border-t bg-slate-50 px-3 py-2 text-sm text-slate-600">
+                  <div className="flex items-center justify-between border-t border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-300">
                     <span className="truncate">{fileName}</span>
                     <Button type="button" variant="ghost" size="sm" onClick={clearImage}>
                       <X className="h-4 w-4" />
@@ -199,7 +189,7 @@ export default function ComplaintsPage() {
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
-                  className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/50 px-4 py-8 text-slate-500 transition hover:border-blue-300 hover:bg-blue-50/30 hover:text-blue-600"
+                  className="flex w-full flex-col items-center gap-2 rounded-xl border-2 border-dashed border-cyan-500/25 bg-slate-900/40 px-4 py-8 text-slate-400 transition hover:border-cyan-400/40 hover:bg-cyan-500/5 hover:text-cyan-200"
                 >
                   <Upload className="h-8 w-8" />
                   <span className="text-sm font-medium">Click to upload image</span>
@@ -207,7 +197,7 @@ export default function ComplaintsPage() {
                 </button>
               )}
               {!preview && (
-                <p className="flex items-center gap-1 text-xs text-slate-400">
+                <p className="flex items-center gap-1 text-xs text-slate-500">
                   <ImageIcon className="h-3 w-3" />
                   Image upload UI — storage connects when Supabase is configured
                 </p>

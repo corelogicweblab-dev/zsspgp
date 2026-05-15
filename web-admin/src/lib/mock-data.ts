@@ -29,6 +29,7 @@ export const MOCK_COMPLAINTS: Complaint[] = [
     status: "pending",
     municipality: "Ipil",
     barangay: "Poblacion",
+    purok_or_street: null,
     image_url: null,
     assigned_department_id: null,
     admin_response: null,
@@ -46,6 +47,7 @@ export const MOCK_COMPLAINTS: Complaint[] = [
     status: "under_review",
     municipality: "Ipil",
     barangay: "Lower Taway",
+    purok_or_street: null,
     image_url: null,
     assigned_department_id: null,
     admin_response: "DRRM team dispatched for assessment.",
@@ -63,6 +65,7 @@ export const MOCK_COMPLAINTS: Complaint[] = [
     status: "resolved",
     municipality: "Kabasalan",
     barangay: "Poblacion",
+    purok_or_street: null,
     image_url: null,
     assigned_department_id: null,
     admin_response: "Collection schedule restored.",
@@ -207,7 +210,7 @@ export const MOCK_ACTIVITY: ActivityLog[] = [
     entity_id: "1",
     details: { reference: "CMP-20260515-A1B2C3" },
     created_at: new Date(Date.now() - 3600000).toISOString(),
-    user: { id: "u1", email: "citizen@email.com", full_name: "Juan Dela Cruz", role: "citizen", department_id: null, phone: null, municipality: "Ipil", barangay: null, avatar_url: null, is_active: true, created_at: "" },
+    user: { id: "u1", email: "citizen@email.com", full_name: "Juan Dela Cruz", role: "citizen", department_id: null, phone: null, municipality: "Ipil", barangay: null, purok_or_street: null, avatar_url: null, is_active: true, created_at: "" },
   },
   {
     id: "2",
@@ -217,7 +220,7 @@ export const MOCK_ACTIVITY: ActivityLog[] = [
     entity_id: "1",
     details: { severity: "critical" },
     created_at: new Date(Date.now() - 1800000).toISOString(),
-    user: { id: "u2", email: "drrm@zsspgp.gov.ph", full_name: "Maria Santos", role: "department_admin", department_id: null, phone: null, municipality: null, barangay: null, avatar_url: null, is_active: true, created_at: "" },
+    user: { id: "u2", email: "drrm@zsspgp.gov.ph", full_name: "Maria Santos", role: "department_admin", department_id: null, phone: null, municipality: null, barangay: null, purok_or_street: null, avatar_url: null, is_active: true, created_at: "" },
   },
   {
     id: "3",
@@ -227,7 +230,7 @@ export const MOCK_ACTIVITY: ActivityLog[] = [
     entity_id: "3",
     details: { status: "resolved" },
     created_at: new Date(Date.now() - 7200000).toISOString(),
-    user: { id: "u3", email: "admin@zsspgp.gov.ph", full_name: "Gov. Admin", role: "governor_super_admin", department_id: null, phone: null, municipality: null, barangay: null, avatar_url: null, is_active: true, created_at: "" },
+    user: { id: "u3", email: "admin@zsspgp.gov.ph", full_name: "Gov. Admin", role: "governor_super_admin", department_id: null, phone: null, municipality: null, barangay: null, purok_or_street: null, avatar_url: null, is_active: true, created_at: "" },
   },
 ];
 

@@ -22,6 +22,7 @@ import {
 import { ProvincialLogo } from "@/components/ui/provincial-logo";
 import { APP_SHORT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 type NavItem = { href: string; label: string; icon: LucideIcon };
 
@@ -147,6 +148,7 @@ export function SideNav({ open, onClose }: SideNavProps) {
               <NavSection title="Account" items={authNav} onNavigate={onClose} />
               <NavSection title="Governance" items={adminNav} onNavigate={onClose} />
             </div>
+            <LogoutButton block onAfterSignOut={onClose} />
           </motion.aside>
         </>
       )}

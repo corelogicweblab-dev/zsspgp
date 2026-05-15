@@ -85,6 +85,7 @@ export default function AdminComplaintsPage() {
                       <td className="px-4 py-3 text-slate-600">
                         {c.municipality}
                         {c.barangay ? `, ${c.barangay}` : ""}
+                        {c.purok_or_street ? ` · ${c.purok_or_street}` : ""}
                       </td>
                       <td className="px-4 py-3">
                         <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${status?.color}`}>

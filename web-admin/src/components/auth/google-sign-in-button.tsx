@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { getBrowserSiteOrigin } from "@/lib/site-url";
 import { Button } from "@/components/ui/button";
 import type { UserRole } from "@/types";
 
@@ -24,13 +25,14 @@ export function GoogleSignInButton({
     setError(null);
     try {
       const supabase = createClient();
-      const origin = window.location.origin;
+      const origin = getBrowserSiteOrigin();
       const params = new URLSearchParams();
       if (mode === "signup") {
         params.set("role", role);
         params.set("signup", "true");
       }
-      const redirectTo = `${origin}/auth/callback${params.toString() ? `?${params}` : ""}`;
+      const qs = params.toString();
+      const redirectTo = `${origin}/auth/callback${qs ? `?${qs}` : ""}`;
 
       const { error: oauthError } = await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -40,7 +42,16 @@ export function GoogleSignInButton({
         },
       });
 
-      if (oauthError) setError(oauthError.message);
+      if (oauthError) {
+        const m = oauthError.message;
+        if (m.includes("redirect_uri") || m.includes("Redirect URI")) {
+          setError(
+            "Google OAuth redirect mismatch. In Google Cloud Console, add this exact Authorized redirect URI: https://YOUR_PROJECT_REF.supabase.co/auth/v1/callback (from Supabase Settings → API). Also add your Site URL under Supabase → Authentication → URL Configuration."
+          );
+        } else {
+          setError(m);
+        }
+      }
     } catch {
       setError("Google sign-in is unavailable. Configure Google provider in Supabase.");
     } finally {

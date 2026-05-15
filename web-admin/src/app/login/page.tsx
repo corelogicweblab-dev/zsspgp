@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { getAuthRedirectPath } from "@/lib/auth";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { SupabaseConfigHint } from "@/components/auth/supabase-config-hint";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +21,11 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(
-    authError === "auth" ? "Authentication failed. Please try again." : null
+    authError === "auth"
+      ? "Authentication failed. Please try again."
+      : authError === "confirm"
+        ? "Email confirmation failed or the link expired. Try signing in or register again."
+        : null
   );
   const [loading, setLoading] = useState(false);
 
@@ -37,7 +42,14 @@ function LoginForm() {
       });
 
       if (signInError) {
-        setError(signInError.message);
+        const msg = signInError.message;
+        if (msg.toLowerCase().includes("invalid api key")) {
+          setError(
+            "Invalid API key — check NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local (full key from Supabase Dashboard, no line breaks)."
+          );
+          return;
+        }
+        setError(msg);
         return;
       }
 
@@ -61,6 +73,7 @@ function LoginForm() {
         <CardTitle>Account Login</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
+        <SupabaseConfigHint />
         <GoogleSignInButton mode="login" />
 
         <div className="relative text-center text-xs text-slate-500">

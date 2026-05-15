@@ -10,7 +10,7 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+**Production:** [https://zsspgp.onrender.com](https://zsspgp.onrender.com). Local dev opens at [http://localhost:3000](http://localhost:3000).
 
 ## Environment
 

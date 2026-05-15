@@ -8,6 +8,7 @@ import { getAuthRedirectPath } from "@/lib/auth";
 import { SIGNUP_ROLES } from "@/lib/constants";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
+import { SupabaseConfigHint } from "@/components/auth/supabase-config-hint";
 import { MunicipalityBarangayFields } from "@/components/forms/municipality-barangay-fields";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,12 @@ export default function RegisterPage() {
       });
 
       if (signUpError) {
+        if (signUpError.message.toLowerCase().includes("invalid api key")) {
+          setError(
+            "Invalid API key — paste the full anon key from Supabase → Settings → API into NEXT_PUBLIC_SUPABASE_ANON_KEY."
+          );
+          return;
+        }
         setError(signUpError.message);
         return;
       }
@@ -89,6 +96,7 @@ export default function RegisterPage() {
           <CardTitle>Register</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
+          <SupabaseConfigHint />
           <GoogleSignInButton mode="signup" role={role} />
 
           <div className="relative text-center text-xs text-slate-500">

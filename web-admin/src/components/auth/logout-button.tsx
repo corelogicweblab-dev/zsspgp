@@ -23,7 +23,7 @@ export function LogoutButton({ block, onAfterSignOut, className }: LogoutButtonP
     const supabase = createClient();
     await supabase.auth.signOut({ scope: "local" });
     onAfterSignOut?.();
-    router.push("/login");
+    router.push("/");
     router.refresh();
   }
 

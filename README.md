@@ -35,7 +35,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+**Production:** [https://zsspgp.onrender.com](https://zsspgp.onrender.com) — local dev: `npm run dev` → [http://localhost:3000](http://localhost:3000)
 
 - **Landing:** `/`
 - **Governor Dashboard:** `/admin/governor`

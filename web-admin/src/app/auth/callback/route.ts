@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthRedirectPath } from "@/lib/auth";
+import { getRedirectOriginFromRequest } from "@/lib/site-url";
 import type { UserRole } from "@/types";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const code = searchParams.get("code");
   const roleParam = searchParams.get("role") as UserRole | null;
   const isSignup = searchParams.get("signup") === "true";
+
+  const origin = getRedirectOriginFromRequest(request);
 
   if (code) {
     const supabase = await createClient();

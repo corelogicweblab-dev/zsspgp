@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Next.js
+web-admin/.next/
+web-admin/out/
+
+# Expo
+mobile-app/.expo/
+mobile-app/dist/
+
+# Env (keep examples)
+.env
+.env.local
+.env.*.local
+!.env*.example
+!**/.env*.example
+
+# Build / logs
+*.log
+.DS_Store
+.vercel
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/

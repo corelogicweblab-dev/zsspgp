@@ -1,0 +1,121 @@
+import { NextResponse } from "next/server";
+import { MOCK_COMPLAINTS } from "@/lib/mock-data";
+import { isMockMode } from "@/lib/env";
+import { createClient } from "@/lib/supabase/server";
+import type { Complaint, ComplaintCategory } from "@/types";
+
+let mockStore = [...MOCK_COMPLAINTS];
+
+function generateReference() {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  const rand = Math.random().toString(36).slice(2, 8).toUpperCase();
+  return `CMP-${date}-${rand}`;
+}
+
+export async function GET() {
+  if (isMockMode()) {
+    return NextResponse.json({ data: mockStore });
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("complaints")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ data: data ?? [] });
+  } catch {
+    return NextResponse.json({ data: mockStore });
+  }
+}
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const { title, description, category, municipality, barangay } = body as {
+    title?: string;
+    description?: string;
+    category?: ComplaintCategory;
+    municipality?: string;
+    barangay?: string | null;
+  };
+
+  if (!title?.trim() || !description?.trim() || !category || !municipality?.trim()) {
+    return NextResponse.json(
+      { error: "title, description, category, and municipality are required" },
+      { status: 400 }
+    );
+  }
+
+  const now = new Date().toISOString();
+  const reference_number = generateReference();
+
+  if (isMockMode()) {
+    const complaint: Complaint = {
+      id: String(Date.now()),
+      reference_number,
+      user_id: "demo",
+      title: title.trim(),
+      description: description.trim(),
+      category,
+      status: "pending",
+      municipality: municipality.trim(),
+      barangay: barangay?.trim() || null,
+      image_url: null,
+      assigned_department_id: null,
+      admin_response: null,
+      resolved_at: null,
+      created_at: now,
+      updated_at: now,
+    };
+    mockStore = [complaint, ...mockStore];
+    return NextResponse.json(complaint, { status: 201 });
+  }
+
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from("complaints")
+      .insert({
+        title: title.trim(),
+        description: description.trim(),
+        category,
+        municipality: municipality.trim(),
+        barangay: barangay?.trim() || null,
+        reference_number,
+        status: "pending",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json(data, { status: 201 });
+  } catch {
+    const complaint: Complaint = {
+      id: String(Date.now()),
+      reference_number,
+      user_id: "demo",
+      title: title.trim(),
+      description: description.trim(),
+      category,
+      status: "pending",
+      municipality: municipality.trim(),
+      barangay: barangay?.trim() || null,
+      image_url: null,
+      assigned_department_id: null,
+      admin_response: null,
+      resolved_at: null,
+      created_at: now,
+      updated_at: now,
+    };
+    mockStore = [complaint, ...mockStore];
+    return NextResponse.json(complaint, { status: 201 });
+  }
+}

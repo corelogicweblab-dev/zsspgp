@@ -1,8 +1,13 @@
--- Fix: "Database error creating new user" in Supabase Auth
--- Cause: handle_new_user() trigger fails (RLS, invalid role cast, or missing profile row).
+-- Fix: Supabase Auth "Database error creating new user"
+--
+-- Root cause is almost always the AFTER INSERT trigger on auth.users that INSERTs into public.users.
+-- Typical failures: RLS blocking the insert, invalid ::user_role cast from metadata, or duplicate id.
+--
+-- SAFE: This script does NOT use DROP TYPE ... CASCADE (that would destroy your whole schema).
 -- Run in Supabase SQL Editor AFTER 001 and 002.
+--
+-- If it still fails: Dashboard → Logs → Postgres (exact error at create-user time).
 
--- Safe role cast + conflict handling
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -13,7 +18,7 @@ DECLARE
   assigned_role public.user_role := 'citizen';
   meta_role text;
 BEGIN
-  meta_role := NULLIF(trim(NEW.raw_user_meta_data->>'role'), '');
+  meta_role := NULLIF(btrim(NEW.raw_user_meta_data->>'role'), '');
 
   IF meta_role IS NOT NULL THEN
     BEGIN
@@ -27,10 +32,11 @@ BEGIN
   INSERT INTO public.users (id, email, full_name, role)
   VALUES (
     NEW.id,
-    COALESCE(NEW.email, ''),
+    COALESCE(NULLIF(btrim(COALESCE(NEW.email, '')), ''), 'unknown@pending.local'),
     COALESCE(
-      NULLIF(trim(NEW.raw_user_meta_data->>'full_name'), ''),
-      split_part(COALESCE(NEW.email, 'user@local'), '@', 1)
+      NULLIF(btrim(NEW.raw_user_meta_data->>'full_name'), ''),
+      NULLIF(btrim(split_part(COALESCE(NEW.email, 'user@local'), '@', 1)), ''),
+      'User'
     ),
     assigned_role
   )
@@ -43,7 +49,7 @@ BEGIN
 END;
 $$;
 
--- Allow Auth service to create profile rows (dashboard + signup)
+-- Triggers run under Supabase Auth context; RLS can block inserts without an explicit policy.
 DROP POLICY IF EXISTS "Auth service inserts users" ON public.users;
 CREATE POLICY "Auth service inserts users"
   ON public.users
@@ -58,7 +64,14 @@ CREATE POLICY "Service role inserts users"
   TO service_role
   WITH CHECK (true);
 
--- Re-attach trigger if missing
+-- Defensive grants (policies above are what Postgres enforces under RLS)
+GRANT USAGE ON SCHEMA public TO supabase_auth_admin;
+GRANT INSERT ON TABLE public.users TO supabase_auth_admin;
+
+REVOKE ALL ON FUNCTION public.handle_new_user() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.handle_new_user() TO postgres;
+GRANT EXECUTE ON FUNCTION public.handle_new_user() TO service_role;
+
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users

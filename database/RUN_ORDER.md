@@ -10,3 +10,14 @@ Run migrations **in this order** in the Supabase SQL Editor:
 If you see `type "user_role" does not exist`, you skipped step 1. Run `001_initial_schema.sql` first, then re-run `002`.
 
 If Supabase Auth shows **“Database error creating new user”**, run `003_fix_auth_user_trigger.sql`, then check **Logs → Postgres** for the exact error.
+
+**Do not** run `DROP TYPE user_role CASCADE` (or similar) to “fix” enums — it drops dependent tables and breaks the project. Use Postgres logs + migration `003` instead.
+
+Optional metadata when creating the Governor user in the dashboard:
+
+```json
+{
+  "full_name": "Provincial Governor",
+  "role": "governor_super_admin"
+}
+```

@@ -19,9 +19,10 @@ CREATE TABLE IF NOT EXISTS news (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_news_published ON news(is_published, published_at DESC);
-CREATE INDEX IF NOT EXISTS idx_news_featured ON news(is_featured) WHERE is_featured = true;
+CREATE INDEX IF NOT EXISTS idx_news_published ON news (is_published, published_at DESC);
+CREATE INDEX IF NOT EXISTS idx_news_featured ON news (is_featured) WHERE is_featured = true;
 
+DROP TRIGGER IF EXISTS tr_news_updated ON news;
 CREATE TRIGGER tr_news_updated BEFORE UPDATE ON news
   FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 

@@ -1,4 +1,5 @@
 export const GOVERNOR_IMAGE_PATH = "/governorannhofer.png";
+export const GOVERNOR_HEADER_IMAGE_PATH = "/governorannhoferheader.png";
 export const KNOW_YOUR_GOVERNOR_PATH = "/know-your-governor";
 
 export const GOVERNOR_PROFILE = {

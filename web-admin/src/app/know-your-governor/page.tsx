@@ -58,10 +58,7 @@ export default function KnowYourGovernorPage() {
               Know Your Governor
             </p>
             <h1 className="mt-2 text-3xl font-bold text-white text-glow sm:text-4xl">{p.name}</h1>
-            <p className="mt-1 text-cyan-300/90">
-              {p.nicknames} · {p.alsoKnownAs}
-            </p>
-            <p className="mt-1 text-sm text-slate-400">{p.title}</p>
+            <p className="mt-2 text-sm text-cyan-200/90 sm:text-base">{p.title}</p>
             <p className="mt-4 text-lg font-medium text-amber-100/95">{p.tagline}</p>
           </div>
         </div>

@@ -5,6 +5,7 @@ import { SmartFeatures } from "@/components/landing/smart-features";
 import { NewsSection } from "@/components/news/news-section";
 import { PlatformModules } from "@/components/landing/platform-modules";
 import { ContactSection } from "@/components/layout/contact-section";
+import { GovernorSpotlight } from "@/components/landing/governor-spotlight";
 import { getFeaturedNews, getPublishedNews } from "@/services/news.service";
 import { APP_NAME } from "@/lib/constants";
 
@@ -44,6 +45,8 @@ export default async function LandingPage() {
       <PlatformModules />
 
       <ContactSection />
+
+      <GovernorSpotlight />
     </div>
   );
 }

@@ -1,12 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #030712;
+  --background: #020617;
   --foreground: #e2e8f0;
   --primary: #38bdf8;
   --primary-glow: rgba(56, 189, 248, 0.45);
   --accent: #6366f1;
-  --card: rgba(15, 23, 42, 0.72);
+  --gold: #fbbf24;
+  --gold-muted: rgba(251, 191, 36, 0.35);
+  --card: rgba(15, 23, 42, 0.78);
   --border: rgba(56, 189, 248, 0.22);
   --radius: 0.875rem;
 }
@@ -24,6 +26,32 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+/* Site-wide header */
+.app-header {
+  background: linear-gradient(
+    180deg,
+    rgba(2, 6, 23, 0.92) 0%,
+    rgba(15, 23, 42, 0.88) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.2);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.18);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.app-header-accent {
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(251, 191, 36, 0.85) 20%,
+    rgba(56, 189, 248, 0.9) 50%,
+    rgba(99, 102, 241, 0.85) 80%,
+    transparent 100%
+  );
+}
+
 /* Futuristic grid background */
 .futuristic-bg {
   position: fixed;
@@ -31,9 +59,11 @@ body {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.18), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 50%, rgba(99, 102, 241, 0.12), transparent),
-    linear-gradient(180deg, #030712 0%, #0f172a 50%, #030712 100%);
+    radial-gradient(ellipse 70% 45% at 15% 85%, rgba(251, 191, 36, 0.08), transparent 55%),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(56, 189, 248, 0.2), transparent),
+    radial-gradient(ellipse 55% 40% at 100% 40%, rgba(99, 102, 241, 0.14), transparent),
+    radial-gradient(ellipse 50% 35% at 0% 30%, rgba(16, 185, 129, 0.06), transparent),
+    linear-gradient(180deg, #020617 0%, #0f172a 48%, #020617 100%);
 }
 
 .futuristic-bg::before {
@@ -147,4 +177,26 @@ input.password-input-field[type="password"]::-ms-clear {
 input.password-input-field[type="password"]::-webkit-textfield-decoration-container {
   visibility: hidden;
   pointer-events: none;
+}
+
+/* Landing — Working Governor spotlight */
+.governor-spotlight {
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  background:
+    linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.92) 45%, rgba(2, 6, 23, 0.98) 100%),
+    radial-gradient(ellipse 80% 60% at 100% 100%, rgba(251, 191, 36, 0.12), transparent 55%);
+  box-shadow:
+    0 0 48px rgba(251, 191, 36, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.governor-hero-card {
+  border: 1px solid rgba(251, 191, 36, 0.22);
+  background: linear-gradient(
+    145deg,
+    rgba(30, 58, 138, 0.35) 0%,
+    rgba(15, 23, 42, 0.9) 50%,
+    rgba(2, 6, 23, 0.95) 100%
+  );
+  box-shadow: 0 0 40px rgba(56, 189, 248, 0.1);
 }

@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   LogIn,
   UserPlus,
+  UserCircle,
   Building2,
   AlertTriangle,
   Users,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 import { ProvincialLogo } from "@/components/ui/provincial-logo";
 import { APP_SHORT } from "@/lib/constants";
+import { KNOW_YOUR_GOVERNOR_PATH } from "@/lib/governor-profile";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/auth/logout-button";
 
@@ -32,6 +34,7 @@ const publicNav: NavItem[] = [
   { href: "/announcements", label: "Announcements", icon: Megaphone },
   { href: "/complaints", label: "File Complaint", icon: MessageSquareWarning },
   { href: "/dashboard", label: "My Dashboard", icon: LayoutDashboard },
+  { href: KNOW_YOUR_GOVERNOR_PATH, label: "Know Your Governor", icon: UserCircle },
 ];
 
 const authNav: NavItem[] = [

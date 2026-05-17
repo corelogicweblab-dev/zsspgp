@@ -14,7 +14,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <InstallAppBanner />
       <AppHeader onMenuClick={() => setMenuOpen(true)} />
       <SideNav open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
+      <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       <AppFooter />
     </div>
   );

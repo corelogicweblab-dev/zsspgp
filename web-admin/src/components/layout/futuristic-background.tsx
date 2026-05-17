@@ -3,10 +3,11 @@
 import { motion } from "framer-motion";
 
 const orbs = [
-  { size: 420, x: "10%", y: "15%", color: "rgba(56,189,248,0.35)", duration: 22 },
-  { size: 320, x: "75%", y: "55%", color: "rgba(99,102,241,0.28)", duration: 18 },
-  { size: 280, x: "45%", y: "80%", color: "rgba(14,165,233,0.22)", duration: 26 },
-  { size: 200, x: "85%", y: "10%", color: "rgba(6,182,212,0.2)", duration: 20 },
+  { size: 480, x: "8%", y: "12%", color: "rgba(56,189,248,0.32)", duration: 24 },
+  { size: 360, x: "78%", y: "50%", color: "rgba(99,102,241,0.26)", duration: 20 },
+  { size: 300, x: "42%", y: "82%", color: "rgba(14,165,233,0.2)", duration: 28 },
+  { size: 220, x: "88%", y: "8%", color: "rgba(6,182,212,0.18)", duration: 22 },
+  { size: 260, x: "5%", y: "72%", color: "rgba(251,191,36,0.14)", duration: 26 },
 ];
 
 export function FuturisticBackground() {

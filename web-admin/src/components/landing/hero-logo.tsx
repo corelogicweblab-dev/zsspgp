@@ -34,7 +34,7 @@ export function HeroLogo() {
           />
           <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-t from-slate-950/50 via-transparent to-cyan-400/10" />
         </div>
-        <p className="mt-2 text-center text-[10px] font-semibold uppercase tracking-wider text-cyan-300/80 sm:text-xs">
+        <p className="hero-governor-label mt-3 text-center text-[11px] font-bold uppercase tracking-[0.2em] sm:text-xs">
           Working Governor
         </p>
       </Link>

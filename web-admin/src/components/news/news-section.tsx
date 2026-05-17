@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Newspaper, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/utils";
+import { NewsArticleCard } from "@/components/news/news-article-card";
 import type { NewsArticle } from "@/types";
 
 interface NewsSectionProps {
@@ -56,28 +56,7 @@ export function NewsSection({ articles }: NewsSectionProps) {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
             >
-              <Link href={`/news/${article.id}`}>
-                <Card className="h-full">
-                  <CardContent className="p-6">
-                    {article.is_featured && (
-                      <span className="mb-3 inline-block rounded-full bg-cyan-500/20 px-2.5 py-0.5 text-xs font-semibold text-cyan-300">
-                        Featured
-                      </span>
-                    )}
-                    <h3 className="text-lg font-semibold text-cyan-50 line-clamp-2">
-                      {article.title}
-                    </h3>
-                    <p className="mt-2 text-sm text-slate-400 line-clamp-3">
-                      {article.summary ?? article.content}
-                    </p>
-                    <p className="mt-4 text-xs text-slate-500">
-                      {article.published_at
-                        ? formatDate(article.published_at)
-                        : formatDate(article.created_at)}
-                    </p>
-                  </CardContent>
-                </Card>
-              </Link>
+              <NewsArticleCard article={article} />
             </motion.div>
           ))}
         </div>

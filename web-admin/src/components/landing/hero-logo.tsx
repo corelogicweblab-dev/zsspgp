@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { DesignatedImage } from "@/components/ui/designated-image";
 import {
   GOVERNOR_HEADER_IMAGE_PATH,
@@ -9,38 +8,36 @@ import {
   GOVERNOR_PROFILE,
   KNOW_YOUR_GOVERNOR_PATH,
 } from "@/lib/governor-profile";
+import { usePerformanceMode } from "@/lib/use-performance-mode";
 
 export function HeroLogo() {
+  const lite = usePerformanceMode();
+
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.92 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ type: "spring", stiffness: 220, delay: 0.12 }}
-      className="hero-governor-portrait shrink-0"
-    >
+    <div className="hero-governor-portrait mx-auto max-w-[11rem] sm:max-w-none">
       <Link
         href={KNOW_YOUR_GOVERNOR_PATH}
-        className="group relative isolate block"
+        className="group relative isolate flex flex-col items-center"
         aria-label={`Know Your Governor — ${GOVERNOR_PROFILE.name}`}
       >
-        <div className="hero-portrait-ring" aria-hidden />
-        <div className="relative z-10 h-[7.5rem] w-[7.5rem] overflow-hidden rounded-full border-2 border-cyan-400/40 bg-slate-950 shadow-[0_0_40px_rgba(56,189,248,0.35)] sm:h-36 sm:w-36 lg:h-44 lg:w-44">
-          <DesignatedImage
-            src={GOVERNOR_HEADER_IMAGE_PATH}
-            fallbackSrc={GOVERNOR_HEADER_FALLBACK}
-            alt={GOVERNOR_PROFILE.name}
-            fill
-            className="object-cover object-top transition duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 120px, 176px"
-            priority
-            loading="eager"
-          />
-          <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-t from-slate-950/50 via-transparent to-cyan-400/10" />
+        <div className="relative">
+          {!lite && <div className="hero-portrait-ring motion-safe-only" aria-hidden />}
+          <div className="relative z-10 mx-auto h-28 w-28 overflow-hidden rounded-full border-2 border-cyan-400/40 bg-slate-950 sm:h-36 sm:w-36 lg:h-44 lg:w-44">
+            <DesignatedImage
+              src={GOVERNOR_HEADER_IMAGE_PATH}
+              fallbackSrc={GOVERNOR_HEADER_FALLBACK}
+              alt={GOVERNOR_PROFILE.name}
+              fill
+              className="object-cover object-top"
+              sizes="(max-width: 640px) 112px, 176px"
+              priority
+            />
+          </div>
         </div>
-        <p className="hero-governor-label mt-3 text-center text-[11px] font-bold uppercase tracking-[0.2em] sm:text-xs">
+        <p className="hero-governor-label mt-3 w-full max-w-[11rem] text-center text-[10px] font-bold uppercase tracking-[0.18em] sm:text-xs">
           Working Governor
         </p>
       </Link>
-    </motion.div>
+    </div>
   );
 }

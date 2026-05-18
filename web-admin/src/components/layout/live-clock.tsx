@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 import { format } from "date-fns";
 
@@ -14,12 +13,20 @@ export function LiveClock({ className }: { className?: string }) {
     return () => clearInterval(id);
   }, []);
 
-  if (!now) return null;
+  if (!now) {
+    return (
+      <div
+        className={
+          className ??
+          "hidden h-9 min-w-[7rem] animate-pulse rounded-lg border border-cyan-500/20 bg-slate-900/50 sm:block"
+        }
+        aria-hidden
+      />
+    );
+  }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+    <div
       className={
         className ??
         "hidden items-center gap-2 rounded-lg border border-cyan-500/25 bg-slate-900/60 px-3 py-1.5 text-xs sm:flex"
@@ -30,6 +37,6 @@ export function LiveClock({ className }: { className?: string }) {
         <p className="font-mono font-semibold text-cyan-100">{format(now, "hh:mm:ss a")}</p>
         <p className="text-[10px] text-slate-400">{format(now, "EEEE, MMMM d, yyyy")}</p>
       </div>
-    </motion.div>
+    </div>
   );
 }

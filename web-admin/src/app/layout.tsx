@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <head>
-        <link rel="preload" as="image" href="/governorannhoferheader.png" />
+        <link rel="preload" as="image" href="/governorannhofer-hero.webp" type="image/webp" />
         <link rel="preload" as="image" href="/zamboangasibugaylogo.png" />
       </head>
       <body className="min-h-full overflow-x-hidden bg-slate-950 text-slate-200">

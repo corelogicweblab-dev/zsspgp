@@ -34,8 +34,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
 
         <ProvincialBrand
           href="/"
-          logoSize={48}
-          className="min-w-0 flex-1 sm:flex-none"
+          logoSize={40}
+          className="min-w-0 flex-1 sm:flex-none lg:[&_img]:!h-12 lg:[&_img]:!w-12"
         />
 
         <div className="ml-auto flex shrink-0 items-center gap-2">

@@ -2,106 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
-import {
-  Home,
-  Newspaper,
-  Megaphone,
-  MessageSquareWarning,
-  LayoutDashboard,
-  LogIn,
-  UserPlus,
-  UserCircle,
-  Building2,
-  AlertTriangle,
-  Users,
-  Bell,
-  Settings,
-  X,
-} from "lucide-react";
-import { ProvincialLogo } from "@/components/ui/provincial-logo";
-import { APP_SHORT } from "@/lib/constants";
-import { KNOW_YOUR_GOVERNOR_PATH } from "@/lib/governor-profile";
+import { useState } from "react";
+import { ChevronDown, X } from "lucide-react";
+import { ProvincialBrand } from "@/components/ui/provincial-brand";
+import { SITE_MEGA_NAV } from "@/lib/site-navigation";
 import { cn } from "@/lib/utils";
 import { LogoutButton } from "@/components/auth/logout-button";
-
-type NavItem = { href: string; label: string; icon: LucideIcon };
-
-const publicNav: NavItem[] = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/news", label: "News & Information", icon: Newspaper },
-  { href: "/announcements", label: "Announcements", icon: Megaphone },
-  { href: "/complaints", label: "File Complaint", icon: MessageSquareWarning },
-  { href: "/dashboard", label: "My Dashboard", icon: LayoutDashboard },
-  { href: KNOW_YOUR_GOVERNOR_PATH, label: "Know Your Governor", icon: UserCircle },
-];
-
-const authNav: NavItem[] = [
-  { href: "/login", label: "Login", icon: LogIn },
-  { href: "/register", label: "Register", icon: UserPlus },
-];
-
-const adminNav: NavItem[] = [
-  { href: "/admin/governor", label: "Governor Dashboard", icon: LayoutDashboard },
-  { href: "/admin/department", label: "Department Portals", icon: Building2 },
-  { href: "/admin/department/drrm", label: "DRRM Super Dashboard Ops", icon: AlertTriangle },
-  { href: "/admin/news", label: "Manage News (Info Office)", icon: Newspaper },
-  { href: "/admin/complaints", label: "Complaints", icon: MessageSquareWarning },
-  { href: "/admin/incidents", label: "DRRM Incidents", icon: AlertTriangle },
-  { href: "/admin/users", label: "User Management", icon: Users },
-  { href: "/admin/notifications", label: "Notifications", icon: Bell },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
-];
-
-function NavSection({
-  title,
-  items,
-  onNavigate,
-}: {
-  title: string;
-  items: NavItem[];
-  onNavigate: () => void;
-}) {
-  const pathname = usePathname();
-
-  return (
-    <div className="mb-4">
-      <p className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-500/80">
-        {title}
-      </p>
-      <nav className="space-y-0.5">
-        {items.map((item, i) => {
-          const active =
-            pathname === item.href ||
-            (item.href !== "/" && pathname.startsWith(item.href));
-          const Icon = item.icon;
-          return (
-            <Link key={item.href} href={item.href} onClick={onNavigate}>
-              <motion.div
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.03 }}
-                className={cn(
-                  "relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium",
-                  active
-                    ? "bg-gradient-to-r from-cyan-500/25 to-indigo-500/20 text-cyan-100"
-                    : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-                )}
-              >
-                {active && (
-                  <span className="absolute left-0 top-1/2 h-8 w-1 -translate-y-1/2 rounded-r-full bg-cyan-400" />
-                )}
-                <Icon className={cn("h-4 w-4 shrink-0", active && "text-cyan-400")} />
-                <span className="truncate">{item.label}</span>
-              </motion.div>
-            </Link>
-          );
-        })}
-      </nav>
-    </div>
-  );
-}
 
 interface SideNavProps {
   open: boolean;
@@ -109,53 +15,110 @@ interface SideNavProps {
 }
 
 export function SideNav({ open, onClose }: SideNavProps) {
+  const pathname = usePathname();
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  if (!open) return null;
+
   return (
-    <AnimatePresence>
-      {open && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-black/60 backdrop-blur-sm lg:bg-black/50"
+    <>
+      <button
+        type="button"
+        className="fixed inset-0 z-[70] bg-black/60 lg:hidden"
+        aria-label="Close menu"
+        onClick={onClose}
+      />
+      <aside className="fixed left-0 top-0 z-[80] flex h-full w-[min(320px,92vw)] flex-col border-r border-cyan-500/20 bg-slate-950/98 shadow-2xl lg:hidden">
+        <div className="flex items-center justify-between border-b border-cyan-500/15 p-4">
+          <Link href="/" onClick={onClose} className="min-w-0">
+            <ProvincialBrand href={undefined} logoSize={44} showText />
+          </Link>
+          <button
+            type="button"
             onClick={onClose}
-            aria-hidden
-          />
-          <motion.aside
-            initial={{ x: "-100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
-            transition={{ type: "spring", stiffness: 380, damping: 36 }}
-            className="fixed left-0 top-0 z-[80] flex h-full w-[min(300px,88vw)] flex-col border-r border-cyan-500/20 glass-panel shadow-2xl"
+            className="rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-white"
+            aria-label="Close menu"
           >
-            <div className="flex items-center justify-between border-b border-cyan-500/15 p-4">
-              <Link href="/" className="flex items-center gap-3" onClick={onClose}>
-                <ProvincialLogo size={48} priority />
-                <div className="min-w-0">
-                  <p className="truncate text-[10px] font-semibold uppercase tracking-wider text-cyan-400">
-                    Zamboanga Sibugay
-                  </p>
-                  <p className="truncate text-sm font-bold text-white">{APP_SHORT}</p>
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-3">
+          <p className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.2em] text-cyan-500/80">
+            Provincial Portal
+          </p>
+          <nav className="site-mega-nav-mobile space-y-1" aria-label="Mobile portal menu">
+            {SITE_MEGA_NAV.map((group) => {
+              const hasChildren = Boolean(group.children?.length);
+              const isExpanded = expanded === group.label;
+              const groupActive =
+                group.href &&
+                (pathname === group.href || pathname.startsWith(`${group.href}/`));
+
+              if (!hasChildren) {
+                return (
+                  <Link
+                    key={group.label}
+                    href={group.href ?? "/"}
+                    onClick={onClose}
+                    className={cn(
+                      "site-mega-nav-mobile-item block rounded-lg px-3 py-2.5 text-sm font-semibold uppercase tracking-wide",
+                      groupActive && "site-mega-nav-mobile-item-active"
+                    )}
+                  >
+                    {group.label}
+                  </Link>
+                );
+              }
+
+              return (
+                <div key={group.label} className="rounded-lg border border-white/5">
+                  <button
+                    type="button"
+                    className="site-mega-nav-mobile-item flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold uppercase tracking-wide"
+                    aria-expanded={isExpanded}
+                    onClick={() =>
+                      setExpanded((prev) => (prev === group.label ? null : group.label))
+                    }
+                  >
+                    {group.label}
+                    <ChevronDown
+                      className={cn("h-4 w-4 shrink-0 transition", isExpanded && "rotate-180")}
+                    />
+                  </button>
+                  {isExpanded && (
+                    <ul className="space-y-0.5 border-t border-white/5 px-2 py-2">
+                      {group.children!.map((child) => {
+                        const active =
+                          pathname === child.href ||
+                          (child.href !== "/" && pathname.startsWith(child.href));
+                        return (
+                          <li key={child.href + child.label}>
+                            <Link
+                              href={child.href}
+                              onClick={onClose}
+                              className={cn(
+                                "block rounded-md px-3 py-2 text-sm",
+                                active
+                                  ? "bg-cyan-500/15 text-cyan-100"
+                                  : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                              )}
+                            >
+                              {child.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
                 </div>
-              </Link>
-              <button
-                type="button"
-                onClick={onClose}
-                className="rounded-lg p-2 text-slate-400 hover:bg-white/10 hover:text-white"
-                aria-label="Close menu"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto p-3 pt-4">
-              <NavSection title="Public" items={publicNav} onNavigate={onClose} />
-              <NavSection title="Account" items={authNav} onNavigate={onClose} />
-              <NavSection title="Governance" items={adminNav} onNavigate={onClose} />
-            </div>
-            <LogoutButton block onAfterSignOut={onClose} />
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
+              );
+            })}
+          </nav>
+        </div>
+
+        <LogoutButton block onAfterSignOut={onClose} />
+      </aside>
+    </>
   );
 }

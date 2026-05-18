@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { DesignatedImage } from "@/components/ui/designated-image";
 import {
   GOVERNOR_HEADER_IMAGE_PATH,
+  GOVERNOR_HEADER_FALLBACK,
   GOVERNOR_PROFILE,
   KNOW_YOUR_GOVERNOR_PATH,
 } from "@/lib/governor-profile";
@@ -24,8 +25,9 @@ export function HeroLogo() {
       >
         <div className="hero-portrait-ring" aria-hidden />
         <div className="relative z-10 h-[7.5rem] w-[7.5rem] overflow-hidden rounded-full border-2 border-cyan-400/40 bg-slate-950 shadow-[0_0_40px_rgba(56,189,248,0.35)] sm:h-36 sm:w-36 lg:h-44 lg:w-44">
-          <Image
+          <DesignatedImage
             src={GOVERNOR_HEADER_IMAGE_PATH}
+            fallbackSrc={GOVERNOR_HEADER_FALLBACK}
             alt={GOVERNOR_PROFILE.name}
             fill
             className="object-cover object-top transition duration-500 group-hover:scale-105"

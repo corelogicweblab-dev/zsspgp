@@ -1,9 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
+import { DesignatedImage } from "@/components/ui/designated-image";
 import { ArrowLeft, GraduationCap, Landmark, Sparkles, Target } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { GOVERNOR_IMAGE_PATH, GOVERNOR_PROFILE } from "@/lib/governor-profile";
+import {
+  GOVERNOR_IMAGE_PATH,
+  GOVERNOR_IMAGE_FALLBACK,
+  GOVERNOR_PROFILE,
+} from "@/lib/governor-profile";
 
 function BioSection({
   title,
@@ -44,8 +48,9 @@ export default function KnowYourGovernorPage() {
       <section className="governor-hero-card overflow-hidden rounded-2xl">
         <div className="flex flex-col items-center gap-8 p-6 sm:flex-row sm:p-10">
           <div className="relative h-48 w-48 shrink-0 overflow-hidden rounded-2xl border border-amber-400/30 bg-slate-900/80 shadow-[0_0_40px_rgba(251,191,36,0.15)] sm:h-56 sm:w-56">
-            <Image
+            <DesignatedImage
               src={GOVERNOR_IMAGE_PATH}
+              fallbackSrc={GOVERNOR_IMAGE_FALLBACK}
               alt={p.name}
               fill
               className="object-cover object-top"

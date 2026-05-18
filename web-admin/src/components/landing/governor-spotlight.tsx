@@ -1,12 +1,13 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DesignatedImage } from "@/components/ui/designated-image";
 import {
   GOVERNOR_IMAGE_PATH,
+  GOVERNOR_IMAGE_FALLBACK,
   GOVERNOR_PROFILE,
   KNOW_YOUR_GOVERNOR_PATH,
 } from "@/lib/governor-profile";
@@ -34,8 +35,9 @@ export function GovernorSpotlight() {
           className="order-1 flex w-full shrink-0 justify-center lg:order-2 lg:absolute lg:bottom-0 lg:right-0 lg:w-auto lg:justify-end"
         >
           <div className="relative mx-auto h-52 w-full max-w-[240px] sm:h-60 sm:max-w-[280px] lg:h-[380px] lg:max-w-[420px]">
-            <Image
+            <DesignatedImage
               src={GOVERNOR_IMAGE_PATH}
+              fallbackSrc={GOVERNOR_IMAGE_FALLBACK}
               alt={`${GOVERNOR_PROFILE.name}, ${GOVERNOR_PROFILE.title}`}
               fill
               className="object-contain object-bottom"

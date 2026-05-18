@@ -1,0 +1,29 @@
+import type { UserRole } from "@/types";
+import { getDepartmentDashboardPath, getDepartmentSlugFromCode } from "@/lib/department-portals";
+import { getAuthRedirectPath } from "@/lib/auth";
+
+export type AuthProfile = {
+  role: UserRole;
+  email?: string | null;
+  departmentCode?: string | null;
+};
+
+export function resolvePostLoginPath(
+  profile: AuthProfile,
+  redirectParam?: string | null
+): string {
+  const deptPath = getDepartmentDashboardPath(profile.role, {
+    email: profile.email,
+    departmentCode: profile.departmentCode,
+  });
+
+  if (deptPath) return deptPath;
+
+  if (profile.role === "department_admin" || profile.role === "staff") {
+    const slug = getDepartmentSlugFromCode(profile.departmentCode);
+    if (slug) return `/admin/department/${slug}`;
+    return "/admin/department";
+  }
+
+  return getAuthRedirectPath(profile.role);
+}

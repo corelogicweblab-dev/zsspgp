@@ -2,10 +2,13 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Building2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
-import { getAuthRedirectPath } from "@/lib/auth";
+import { resolvePostLoginPath } from "@/lib/auth-redirect";
 import { resolveSafeRedirectPath } from "@/lib/admin-access";
+import { DEPARTMENT_PORTALS } from "@/lib/department-portals";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { SupabaseConfigHint } from "@/components/auth/supabase-config-hint";
@@ -57,14 +60,23 @@ function LoginForm() {
 
       const { data: profile } = await supabase
         .from("users")
-        .select("role")
+        .select("role, email, department_id, departments:department_id (code)")
         .eq("id", data.user.id)
         .maybeSingle();
 
+      const deptRow = profile?.departments as { code?: string } | { code?: string }[] | null;
+      const departmentCode = Array.isArray(deptRow) ? deptRow[0]?.code : deptRow?.code;
+
       const role = (profile?.role as UserRole) ?? "citizen";
+      const session = {
+        role,
+        email: profile?.email ?? data.user.email ?? email.trim(),
+        departmentCode: departmentCode ?? null,
+      };
+
       const rawNext = searchParams.get("redirect");
-      const nextPath = resolveSafeRedirectPath(rawNext, role);
-      router.push(nextPath ?? getAuthRedirectPath(role));
+      const nextPath = resolveSafeRedirectPath(rawNext, session);
+      router.push(nextPath ?? resolvePostLoginPath(session));
     } catch {
       setError("Unable to sign in. Please try again.");
     } finally {
@@ -75,7 +87,11 @@ function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Account Login</CardTitle>
+        <CardTitle>Official Login</CardTitle>
+        <p className="text-sm text-slate-400">
+          One login for citizens, departments, and provincial offices. Use your designated office email
+          and password — you will be routed directly to your dashboard.
+        </p>
       </CardHeader>
       <CardContent className="space-y-6">
         <SupabaseConfigHint />
@@ -100,6 +116,7 @@ function LoginForm() {
               autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="office@zamboangasibugay.gov.ph"
               required
             />
           </div>
@@ -117,6 +134,28 @@ function LoginForm() {
             {loading ? "Signing in…" : "Sign In"}
           </Button>
         </form>
+
+        <div className="rounded-xl border border-cyan-500/20 bg-slate-900/50 p-4">
+          <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-300">
+            <Building2 className="h-4 w-4" />
+            Department portal emails
+          </p>
+          <ul className="space-y-2 text-xs text-slate-400">
+            {DEPARTMENT_PORTALS.map((dept) => (
+              <li key={dept.code} className="flex items-center gap-2">
+                <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full border border-cyan-500/20 bg-slate-950">
+                  <Image src={dept.imagePath} alt="" fill className="object-contain p-0.5" sizes="28px" />
+                </div>
+                <span className="font-medium text-slate-300">{dept.code}</span>
+                <span className="truncate text-cyan-200/90">{dept.email}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[11px] text-slate-500">
+            Each department has its own email and password (set in Supabase Auth). After login you go
+            straight to that department&apos;s dashboard.
+          </p>
+        </div>
 
         <p className="text-center text-sm text-slate-400">
           <Link href="/register" className="text-cyan-400 hover:underline">

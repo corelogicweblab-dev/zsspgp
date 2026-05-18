@@ -7,7 +7,7 @@ interface CitizenPageProps {
   children: React.ReactNode;
   title: string;
   subtitle?: string;
-  maxWidth?: "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "7xl";
+  maxWidth?: "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "7xl";
 }
 
 const widthClass = {
@@ -17,6 +17,7 @@ const widthClass = {
   "2xl": "max-w-2xl",
   "3xl": "max-w-3xl",
   "4xl": "max-w-4xl",
+  "5xl": "max-w-5xl",
   "7xl": "max-w-7xl",
 };
 

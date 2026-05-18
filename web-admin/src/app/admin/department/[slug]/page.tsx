@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { DepartmentDashboard } from "@/components/admin/department-dashboard";
 import { DrrmOpsDashboard } from "@/components/admin/drrm-ops-dashboard";
+import { InformationOfficeDashboard } from "@/components/admin/information-office-dashboard";
 import { findDepartmentPortalBySlug } from "@/lib/department-portals";
 
 interface PageProps {
@@ -17,6 +18,10 @@ export default async function DepartmentSlugPage({ params }: PageProps) {
 
   if (slug === "drrm") {
     return <DrrmOpsDashboard />;
+  }
+
+  if (slug === "information") {
+    return <InformationOfficeDashboard />;
   }
 
   return <DepartmentDashboard portal={portal} />;

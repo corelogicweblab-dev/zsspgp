@@ -9,7 +9,7 @@ type DesignatedImageProps = Omit<ImageProps, "src" | "onError"> & {
   fallbackSrc?: string;
 };
 
-/** WebP-first provincial images with PNG fallback; shows placeholder if both fail. */
+/** Designated PNG first; WebP fallback on error. PNG uses unoptimized for reliability. */
 export function DesignatedImage({
   src,
   fallbackSrc,
@@ -43,7 +43,7 @@ export function DesignatedImage({
       src={currentSrc}
       alt={alt}
       className={cn(className)}
-      unoptimized={currentSrc.endsWith(".webp")}
+      unoptimized={/\.(png|webp)$/i.test(currentSrc)}
       onError={() => {
         if (fallbackSrc && currentSrc !== fallbackSrc) {
           setCurrentSrc(fallbackSrc);

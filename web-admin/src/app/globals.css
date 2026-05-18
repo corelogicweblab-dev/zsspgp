@@ -385,6 +385,38 @@ body {
   scrollbar-width: thin;
 }
 
+/* Provincial Information Office — news prose */
+.news-article-prose h2 {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.news-article-prose p {
+  margin-bottom: 0.75rem;
+}
+
+.news-article-prose ul,
+.news-article-prose ol {
+  margin: 0.75rem 0 0.75rem 1.25rem;
+}
+
+.news-article-prose a {
+  color: #67e8f9;
+  text-decoration: underline;
+}
+
+.news-rich-editor ul,
+.news-rich-editor ol {
+  margin-left: 1.25rem;
+}
+
+.pio-headlines {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -645,6 +677,14 @@ input.password-input-field[type="password"]::-webkit-textfield-decoration-contai
   box-shadow:
     0 0 48px rgba(251, 191, 36, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@media (max-width: 1023px) {
+  .governor-spotlight {
+    background:
+      linear-gradient(180deg, rgba(30, 41, 59, 0.95) 0%, rgba(2, 6, 23, 0.98) 100%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(251, 191, 36, 0.1), transparent 60%);
+  }
 }
 
 .governor-hero-card {

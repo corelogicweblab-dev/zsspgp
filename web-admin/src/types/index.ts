@@ -66,12 +66,16 @@ export interface UserProfile {
   department?: Department;
 }
 
+export type NewsMediaType = "image" | "video" | null;
+
 export interface NewsArticle {
   id: string;
   title: string;
   summary: string | null;
   content: string;
   cover_image_url: string | null;
+  media_url: string | null;
+  media_type: NewsMediaType;
   author_id: string | null;
   department_id: string | null;
   is_published: boolean;
@@ -79,6 +83,7 @@ export interface NewsArticle {
   published_at: string | null;
   created_at: string;
   updated_at: string;
+  author?: { full_name: string; email: string } | null;
 }
 
 export interface Complaint {

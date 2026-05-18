@@ -38,10 +38,12 @@ export function canAccessAdminPath(
   }
 
   if (role === "department_admin" || role === "staff") {
+    const isInfoDept = departmentCode === "INFO";
     const allowedPrefixes = [
       "/admin/complaints",
       "/admin/incidents",
       "/admin/notifications",
+      ...(isInfoDept ? ["/admin/news"] : []),
     ];
 
     const deptMatch = p.match(/^\/admin\/department(?:\/([^/]+))?/);

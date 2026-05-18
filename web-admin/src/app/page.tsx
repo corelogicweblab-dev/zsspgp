@@ -1,6 +1,6 @@
 import { LandingHero } from "@/components/landing/landing-hero";
 import { SmartFeatures } from "@/components/landing/smart-features";
-import { NewsSection } from "@/components/news/news-section";
+import { NewsHeadlinesSection } from "@/components/news/news-headlines-section";
 import { PlatformModules } from "@/components/landing/platform-modules";
 import { ContactSection } from "@/components/layout/contact-section";
 import { GovernorSpotlight } from "@/components/landing/governor-spotlight";
@@ -17,7 +17,7 @@ export default async function LandingPage() {
     <div className="space-y-10 sm:space-y-14 lg:space-y-16">
       <LandingHero />
 
-      <NewsSection articles={newsItems} />
+      <NewsHeadlinesSection articles={newsItems} maxItems={4} />
 
       <SmartFeatures />
 

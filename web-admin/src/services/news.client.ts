@@ -1,31 +1,31 @@
 "use client";
 
 import { createClient } from "@/lib/supabase/client";
-import type { NewsArticle } from "@/types";
+import type { NewsArticle, NewsMediaType } from "@/types";
 
 const NEWS_COVER_BUCKET = "news-covers";
 
-export type CreateNewsInput = {
-  title: string;
-  summary: string | null;
+export type NewsWritePayload = {
+  headline: string;
+  summary?: string | null;
   content: string;
-  cover_image_url: string | null;
-  is_published: boolean;
-  is_featured: boolean;
-  /** ISO datetime from form; defaults to now when publishing */
-  published_at: string | null;
+  cover_image_url?: string | null;
+  media_url?: string | null;
+  media_type?: NewsMediaType;
+  is_published?: boolean;
+  is_featured?: boolean;
+  published_at?: string | null;
 };
 
-export async function uploadNewsCoverImage(file: File): Promise<string> {
+async function uploadToBucket(file: File): Promise<string> {
   const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) throw new Error("Sign in to upload images.");
+  if (!user) throw new Error("Sign in to upload files.");
 
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const safeExt = ["jpg", "jpeg", "png", "webp", "gif"].includes(ext) ? ext : "jpg";
-  const path = `${user.id}/${Date.now()}.${safeExt}`;
+  const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
+  const path = `${user.id}/${Date.now()}.${ext}`;
 
   const { error: uploadError } = await supabase.storage
     .from(NEWS_COVER_BUCKET)
@@ -34,7 +34,7 @@ export async function uploadNewsCoverImage(file: File): Promise<string> {
   if (uploadError) {
     throw new Error(
       uploadError.message.includes("Bucket not found")
-        ? "Image storage is not configured. Create a public bucket named \"news-covers\" in Supabase Storage, or paste an image URL instead."
+        ? 'Create a public "news-covers" bucket in Supabase Storage, or paste a URL instead.'
         : uploadError.message
     );
   }
@@ -43,36 +43,86 @@ export async function uploadNewsCoverImage(file: File): Promise<string> {
   return data.publicUrl;
 }
 
-export async function createNewsArticle(article: CreateNewsInput) {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) throw new Error("Not authenticated");
+export async function uploadNewsCoverImage(file: File): Promise<string> {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("Cover must be an image.");
+  }
+  return uploadToBucket(file);
+}
 
-  const publishedAt =
-    article.is_published
-      ? article.published_at ?? new Date().toISOString()
-      : article.published_at;
+export async function uploadNewsMedia(file: File): Promise<{
+  url: string;
+  mediaType: NewsMediaType;
+}> {
+  const mediaType: NewsMediaType = file.type.startsWith("video/") ? "video" : "image";
+  const url = await uploadToBucket(file);
+  return { url, mediaType };
+}
 
-  const payload = {
-    title: article.title,
+export async function fetchNewsAdmin(): Promise<NewsArticle[]> {
+  const res = await fetch("/api/news?admin=true", { credentials: "include" });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error ?? "Failed to load news.");
+  return json.data as NewsArticle[];
+}
+
+export async function createNewsViaApi(payload: NewsWritePayload): Promise<NewsArticle> {
+  const res = await fetch("/api/news", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error ?? "Failed to create article.");
+  return json.data as NewsArticle;
+}
+
+export async function updateNewsViaApi(
+  id: string,
+  payload: NewsWritePayload
+): Promise<NewsArticle> {
+  const res = await fetch(`/api/news/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error ?? "Failed to update article.");
+  return json.data as NewsArticle;
+}
+
+export async function deleteNewsViaApi(id: string): Promise<void> {
+  const res = await fetch(`/api/news/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.error ?? "Failed to delete article.");
+}
+
+/** @deprecated Use API — kept for legacy callers */
+export async function createNewsArticle(article: {
+  title: string;
+  summary: string | null;
+  content: string;
+  cover_image_url: string | null;
+  is_published: boolean;
+  is_featured: boolean;
+  published_at: string | null;
+}) {
+  return createNewsViaApi({
+    headline: article.title,
     summary: article.summary,
     content: article.content,
     cover_image_url: article.cover_image_url,
     is_published: article.is_published,
     is_featured: article.is_featured,
-    author_id: user.id,
-    published_at: publishedAt,
-  };
-
-  const { data, error } = await supabase.from("news").insert(payload).select().single();
-  if (error) throw error;
-  return data as NewsArticle;
+    published_at: article.published_at,
+  });
 }
 
 export async function fetchAllNewsClient(): Promise<NewsArticle[]> {
-  const supabase = createClient();
-  const { data } = await supabase.from("news").select("*").order("created_at", { ascending: false });
-  return (data as NewsArticle[]) ?? [];
+  return fetchNewsAdmin();
 }

@@ -1,5 +1,5 @@
 import { CitizenPage } from "@/components/layout/citizen-page";
-import { Card, CardContent } from "@/components/ui/card";
+import { NewsHeadlinesSection } from "@/components/news/news-headlines-section";
 import { NewsArticleCard } from "@/components/news/news-article-card";
 import { getPublishedNews } from "@/services/news.service";
 
@@ -9,21 +9,20 @@ export default async function NewsPage() {
   return (
     <CitizenPage
       title="News & Information"
-      subtitle="Official releases from the Provincial Information Office"
-      maxWidth="4xl"
+      subtitle="Official headlines from the Provincial Information Office of Zamboanga Sibugay"
+      maxWidth="5xl"
     >
-      {articles.length === 0 ? (
-        <Card>
-          <CardContent className="py-16 text-center text-slate-400">
-            No published news articles yet. Official provincial updates will appear here.
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2">
-          {articles.map((article, i) => (
-            <NewsArticleCard key={article.id} article={article} priority={i < 4} />
-          ))}
-        </div>
+      <NewsHeadlinesSection articles={articles} maxItems={6} showViewAll={false} />
+
+      {articles.length > 1 && (
+        <section className="mt-10">
+          <h2 className="mb-6 text-xl font-bold text-white">More headlines</h2>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {articles.slice(1).map((article, i) => (
+              <NewsArticleCard key={article.id} article={article} priority={i < 3} />
+            ))}
+          </div>
+        </section>
       )}
     </CitizenPage>
   );

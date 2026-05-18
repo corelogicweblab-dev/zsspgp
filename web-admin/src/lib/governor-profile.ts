@@ -1,8 +1,8 @@
-/** Optimized WebP first (slow networks); smaller PNG only if WebP fails. */
-export const GOVERNOR_IMAGE_PATH = "/governorannhofer-spotlight.webp";
-export const GOVERNOR_HEADER_IMAGE_PATH = "/governorannhofer-hero.webp";
-export const GOVERNOR_IMAGE_FALLBACK = "/governorannhoferheader.png";
-export const GOVERNOR_HEADER_FALLBACK = "/governorannhoferheader.png";
+/** Designated official images (PNG). WebP used only if PNG fails to load. */
+export const GOVERNOR_IMAGE_PATH = "/governorannhofer.png";
+export const GOVERNOR_HEADER_IMAGE_PATH = "/governorannhoferheader.png";
+export const GOVERNOR_IMAGE_FALLBACK = "/governorannhofer-spotlight.webp";
+export const GOVERNOR_HEADER_FALLBACK = "/governorannhofer-hero.webp";
 export const KNOW_YOUR_GOVERNOR_PATH = "/know-your-governor";
 
 export const GOVERNOR_PROFILE = {

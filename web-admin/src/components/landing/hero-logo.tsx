@@ -31,6 +31,7 @@ export function HeroLogo() {
             className="object-cover object-top transition duration-500 group-hover:scale-105"
             sizes="(max-width: 640px) 120px, 176px"
             priority
+            loading="eager"
           />
           <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-t from-slate-950/50 via-transparent to-cyan-400/10" />
         </div>

@@ -56,7 +56,7 @@ export function NewsSection({ articles }: NewsSectionProps) {
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
             >
-              <NewsArticleCard article={article} />
+              <NewsArticleCard article={article} priority={i < 3} />
             </motion.div>
           ))}
         </div>

@@ -187,6 +187,7 @@ export const CONTACT_INFO: { label: string; value: string; icon: LucideIcon }[] 
 ];
 
 export const SMART_FEATURES = [
+  { title: "24/7 AI Support", desc: "AI-powered assistance for citizens and staff — register, report, and get guidance anytime." },
   { title: "Real-Time Monitoring", desc: "Live dashboards for complaints, incidents, and provincial KPIs." },
   { title: "Executive Analytics", desc: "Governor command center with province-wide intelligence." },
   { title: "Smart Notifications", desc: "Broadcast alerts to departments and citizens instantly." },

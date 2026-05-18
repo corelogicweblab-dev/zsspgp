@@ -20,8 +20,8 @@ export default async function NewsPage() {
         </Card>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2">
-          {articles.map((article) => (
-            <NewsArticleCard key={article.id} article={article} />
+          {articles.map((article, i) => (
+            <NewsArticleCard key={article.id} article={article} priority={i < 4} />
           ))}
         </div>
       )}

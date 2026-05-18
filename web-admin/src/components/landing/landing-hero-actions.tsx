@@ -1,27 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { useSupport } from "@/components/support/support-provider";
 
 export function LandingHeroActions() {
+  const { openSupport } = useSupport();
+
   return (
-    <motion.div
-      className="mt-5 flex flex-wrap justify-center gap-2.5 sm:mt-7 sm:gap-3 lg:justify-start"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3 }}
-    >
+    <div className="mt-5 flex flex-wrap justify-center gap-2.5 sm:mt-7 sm:gap-3 lg:justify-start">
+      <Button
+        variant="gov"
+        size="default"
+        className="sm:h-12 sm:px-8 sm:text-base"
+        onClick={() => openSupport("welcome")}
+      >
+        Get Started
+      </Button>
       <Link href="/register">
-        <Button variant="gov" size="default" className="sm:h-12 sm:px-8 sm:text-base">
+        <Button variant="outline" size="default" className="sm:h-12 sm:px-8 sm:text-base">
           Create Account
         </Button>
       </Link>
       <Link href="/login">
-        <Button variant="outline" size="default" className="sm:h-12 sm:px-8 sm:text-base">
+        <Button variant="ghost" size="default" className="sm:h-12 sm:px-6 sm:text-base text-cyan-200/90">
           Official Login
         </Button>
       </Link>
-    </motion.div>
+    </div>
   );
 }

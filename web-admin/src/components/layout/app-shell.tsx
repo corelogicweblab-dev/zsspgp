@@ -5,6 +5,7 @@ import { SideNav } from "./side-nav";
 import { AppHeader } from "./app-header";
 import { AppFooter } from "./app-footer";
 import { InstallAppBanner } from "./install-app-banner";
+import { SupportFab } from "@/components/support/support-fab";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -16,6 +17,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <SideNav open={menuOpen} onClose={() => setMenuOpen(false)} />
       <main className="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       <AppFooter />
+      <SupportFab />
     </div>
   );
 }

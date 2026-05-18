@@ -7,9 +7,14 @@ import type { NewsArticle } from "@/types";
 interface NewsArticleCardProps {
   article: NewsArticle;
   showFeaturedBadge?: boolean;
+  priority?: boolean;
 }
 
-export function NewsArticleCard({ article, showFeaturedBadge = true }: NewsArticleCardProps) {
+export function NewsArticleCard({
+  article,
+  showFeaturedBadge = true,
+  priority = false,
+}: NewsArticleCardProps) {
   const when = article.published_at ?? article.created_at;
 
   return (
@@ -21,6 +26,7 @@ export function NewsArticleCard({ article, showFeaturedBadge = true }: NewsArtic
               src={article.cover_image_url}
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 400px"
+              priority={priority}
             />
           </div>
         )}

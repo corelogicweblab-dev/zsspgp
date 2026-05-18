@@ -18,16 +18,25 @@ function isSupabaseStorageUrl(url: string) {
   }
 }
 
-/** Cover image — Next/Image for Supabase storage, native img for other HTTPS URLs. */
+function isOptimizableRemoteUrl(url: string) {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" || u.protocol === "http:";
+  } catch {
+    return false;
+  }
+}
+
+/** Cover image — Next/Image when optimizable; native img with eager load otherwise. */
 export function NewsCoverImage({
   src,
   alt = "",
   className,
   sizes,
-  priority,
+  priority = false,
   fill = true,
 }: NewsCoverImageProps) {
-  if (isSupabaseStorageUrl(src)) {
+  if (isSupabaseStorageUrl(src) || src.startsWith("/")) {
     return (
       <Image
         src={src}
@@ -36,6 +45,22 @@ export function NewsCoverImage({
         className={className}
         sizes={sizes}
         priority={priority}
+        loading={priority ? "eager" : undefined}
+      />
+    );
+  }
+
+  if (isOptimizableRemoteUrl(src)) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        fill={fill}
+        className={className}
+        sizes={sizes}
+        priority={priority}
+        loading={priority ? "eager" : undefined}
+        unoptimized
       />
     );
   }
@@ -45,6 +70,9 @@ export function NewsCoverImage({
     <img
       src={src}
       alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
       className={cn(fill && "absolute inset-0 h-full w-full object-cover", className)}
     />
   );

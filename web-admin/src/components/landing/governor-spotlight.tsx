@@ -40,6 +40,8 @@ export function GovernorSpotlight() {
               fill
               className="object-contain object-bottom"
               sizes="(max-width: 1024px) 280px, 420px"
+              priority
+              loading="eager"
             />
           </div>
         </motion.div>

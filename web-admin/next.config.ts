@@ -14,7 +14,7 @@ const securityHeaders = [
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.supabase.co",
-      "connect-src 'self' https://*.supabase.co wss://*.supabase.co",
+      "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com",
       "font-src 'self'",
       "frame-ancestors 'self'",
     ].join("; "),

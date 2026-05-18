@@ -44,7 +44,7 @@ export function ProvincialLogo({
       width={size}
       height={size}
       priority={priority}
-      unoptimized
+      loading={priority ? "eager" : undefined}
       className={cn(
         "rounded-full object-contain",
         showGlow && "logo-glow logo-float",

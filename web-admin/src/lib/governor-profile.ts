@@ -1,5 +1,6 @@
-export const GOVERNOR_IMAGE_PATH = "/governorannhofer.png";
-export const GOVERNOR_HEADER_IMAGE_PATH = "/governorannhoferheader.png";
+/** Web-optimized assets (avoid loading multi‑MB originals on pages). */
+export const GOVERNOR_IMAGE_PATH = "/governorannhofer-spotlight.webp";
+export const GOVERNOR_HEADER_IMAGE_PATH = "/governorannhofer-hero.webp";
 export const KNOW_YOUR_GOVERNOR_PATH = "/know-your-governor";
 
 export const GOVERNOR_PROFILE = {

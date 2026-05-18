@@ -24,3 +24,19 @@ export const MUNICIPALITY_COORDINATES: Record<string, { lat: number; lng: number
 export function getMunicipalityCoords(name: string) {
   return MUNICIPALITY_COORDINATES[name] ?? null;
 }
+
+/** Ensure incidents have map coordinates (DB may omit lat/lng). */
+export function enrichIncidentCoordinates<T extends {
+  municipality: string;
+  latitude?: number | null;
+  longitude?: number | null;
+}>(incident: T): T {
+  if (incident.latitude != null && incident.longitude != null) return incident;
+  const coords = getMunicipalityCoords(incident.municipality);
+  if (!coords) return incident;
+  return {
+    ...incident,
+    latitude: coords.lat,
+    longitude: coords.lng,
+  };
+}

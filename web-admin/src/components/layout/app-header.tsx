@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { Menu } from "lucide-react";
-import { ProvincialLogo } from "@/components/ui/provincial-logo";
-import { APP_SHORT } from "@/lib/constants";
+import { ProvincialBrand } from "@/components/ui/provincial-brand";
 import { SiteMegaNav } from "@/components/layout/site-mega-nav";
 import { Button } from "@/components/ui/button";
 import { LiveClock } from "@/components/layout/live-clock";
@@ -33,15 +32,11 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <Menu className="h-6 w-6" />
         </Button>
 
-        <Link href="/" className="flex min-w-0 flex-1 items-center gap-3 sm:flex-none">
-          <ProvincialLogo size={48} priority />
-          <div className="min-w-0 leading-tight">
-            <p className="truncate text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300/90">
-              Province of Zamboanga Sibugay
-            </p>
-            <p className="truncate text-base font-bold text-white sm:text-lg">{APP_SHORT}</p>
-          </div>
-        </Link>
+        <ProvincialBrand
+          href="/"
+          logoSize={48}
+          className="min-w-0 flex-1 sm:flex-none"
+        />
 
         <div className="ml-auto flex shrink-0 items-center gap-2">
           <Button

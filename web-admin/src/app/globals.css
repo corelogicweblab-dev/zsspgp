@@ -333,14 +333,14 @@ body {
   100% { transform: translateX(100%); }
 }
 
-/* Provincial footer (reference columns) */
-.provincial-footer {
-  background: linear-gradient(180deg, #2a1f1c 0%, #1a1210 100%);
-  border-top: 3px solid rgba(251, 191, 36, 0.25);
-}
-
-.provincial-footer-glow {
-  background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(251, 191, 36, 0.08), transparent);
+.provincial-footer-accent {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(56, 189, 248, 0.6),
+    rgba(251, 191, 36, 0.5),
+    transparent
+  );
 }
 
 .provincial-footer-heading {
@@ -360,6 +360,15 @@ body {
 .drrm-ops-map .leaflet-container {
   background: #0f172a;
   font-family: inherit;
+}
+
+@keyframes live-map-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.live-map-dot {
+  animation: live-map-pulse 1.2s ease-in-out infinite;
 }
 
 /* One custom eye toggle: hide native password reveal (Edge/IE) and WebKit decoration strip */

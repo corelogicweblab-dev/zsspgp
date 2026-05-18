@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
@@ -8,23 +7,19 @@ import { useAuthSession } from "@/hooks/use-auth-session";
 import { cn } from "@/lib/utils";
 
 interface LogoutButtonProps {
-  /** Full width, for drawer footer */
   block?: boolean;
-  /** Called after sign-out (e.g. close mobile menu) */
   onAfterSignOut?: () => void;
   className?: string;
 }
 
 export function LogoutButton({ block, onAfterSignOut, className }: LogoutButtonProps) {
-  const router = useRouter();
   const { session, loading } = useAuthSession();
 
   async function handleLogout() {
     const supabase = createClient();
-    await supabase.auth.signOut({ scope: "local" });
+    await supabase.auth.signOut({ scope: "global" });
     onAfterSignOut?.();
-    router.push("/");
-    router.refresh();
+    window.location.assign("/");
   }
 
   if (loading || !session) return null;

@@ -3,6 +3,7 @@ import { MOCK_INCIDENTS } from "@/lib/mock-data";
 import { isMockMode } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 import type { Incident, IncidentCategory, IncidentSeverity } from "@/types";
+import { enrichIncidentCoordinates } from "@/lib/zamboanga-sibugay-geo";
 
 let mockStore = [...MOCK_INCIDENTS];
 
@@ -14,7 +15,9 @@ function generateReference() {
 
 export async function GET() {
   if (isMockMode()) {
-    return NextResponse.json({ data: mockStore });
+    return NextResponse.json({
+      data: mockStore.map((i) => enrichIncidentCoordinates(i)),
+    });
   }
 
   try {
@@ -28,9 +31,14 @@ export async function GET() {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ data: data ?? [] });
+    const enriched = (data ?? []).map((row) =>
+      enrichIncidentCoordinates(row as Incident)
+    );
+    return NextResponse.json({ data: enriched });
   } catch {
-    return NextResponse.json({ data: mockStore });
+    return NextResponse.json({
+      data: mockStore.map((i) => enrichIncidentCoordinates(i)),
+    });
   }
 }
 

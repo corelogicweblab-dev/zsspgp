@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { getNewsDataClient } from "@/lib/news-db";
 import { requireNewsManager } from "@/lib/news-auth";
 import { newsWriteSchema, toNewsRow } from "@/lib/news-api-schemas";
 import { sanitizeNewsHtml, isHtmlContent } from "@/lib/sanitize-html";
@@ -23,7 +24,8 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: auth.message }, { status: auth.status });
     }
 
-    const { data, error } = await auth.supabase
+    const db = getNewsDataClient(auth.supabase);
+    const { data, error } = await db
       .from("news")
       .select(NEWS_SELECT)
       .order("created_at", { ascending: false })
@@ -89,11 +91,8 @@ export async function POST(request: Request) {
     ...toNewsRow({ ...input, content }, auth.profile.userId, departmentId),
   };
 
-  const { data, error } = await auth.supabase
-    .from("news")
-    .insert(row)
-    .select(NEWS_SELECT)
-    .single();
+  const db = getNewsDataClient(auth.supabase);
+  const { data, error } = await db.from("news").insert(row).select(NEWS_SELECT).single();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });

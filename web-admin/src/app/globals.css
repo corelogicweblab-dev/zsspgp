@@ -347,6 +347,7 @@ body {
 .provincial-nav-bar,
 .site-mega-nav {
   position: relative;
+  overflow: visible;
   border-top: 1px solid rgba(56, 189, 248, 0.25);
   background:
     linear-gradient(
@@ -411,7 +412,16 @@ body {
 }
 
 .provincial-nav-track {
-  overflow: hidden;
+  overflow: visible;
+}
+
+.provincial-nav-bar-inner {
+  overflow: visible;
+}
+
+.provincial-nav-item--more {
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.08);
 }
 
 .provincial-nav-item,

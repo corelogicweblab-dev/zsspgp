@@ -3,8 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
-import { ChevronDown, Menu, X } from "lucide-react";
-import { PROVINCIAL_NAV_ITEMS, type NavItem } from "@/lib/site-navigation";
+import { ChevronDown, X } from "lucide-react";
+import {
+  PROVINCIAL_NAV_ITEMS,
+  PROVINCIAL_NAV_MORE,
+  PROVINCIAL_NAV_PRIMARY,
+  navDisplayTitle,
+  type NavItem,
+} from "@/lib/site-navigation";
 import { cn } from "@/lib/utils";
 import { usePerformanceMode } from "@/lib/use-performance-mode";
 
@@ -37,6 +43,13 @@ function resolveActiveTab(pathname: string, items: NavItem[]): string | null {
   return null;
 }
 
+function resolveBarActiveTab(pathname: string): string | null {
+  const primary = resolveActiveTab(pathname, PROVINCIAL_NAV_PRIMARY);
+  if (primary) return primary;
+  if (resolveActiveTab(pathname, PROVINCIAL_NAV_MORE)) return "More";
+  return null;
+}
+
 function slugify(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
@@ -55,10 +68,16 @@ export function toggleDropdown(
   setter(current === tab ? null : tab);
 }
 
-export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
+export function createNavItem(
+  item: NavItem,
+  ctx: NavRenderContext,
+  options?: { alignDropdown?: "left" | "right" }
+): ReactNode {
+  const label = navDisplayTitle(item);
   const isActive = ctx.activeTab === item.title;
   const isOpen = ctx.openDropdown === item.title;
   const isAlert = item.title === "Emergency Alerts";
+  const alignRight = options?.alignDropdown === "right";
 
   if (!item.hasDropdown) {
     return (
@@ -67,7 +86,7 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
           href={item.link}
           role="menuitem"
           className={cn(
-            "provincial-nav-item flex items-center whitespace-nowrap px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 xl:px-3.5 xl:py-2.5 xl:text-xs",
+            "provincial-nav-item flex items-center whitespace-nowrap px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] transition-all duration-200 sm:px-3 lg:px-3.5 lg:text-xs",
             isAlert && "provincial-nav-item--alert",
             isActive && "provincial-nav-item-active"
           )}
@@ -76,7 +95,7 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
             ctx.onNavigate?.();
           }}
         >
-          {item.title}
+          {label}
         </Link>
       </li>
     );
@@ -96,13 +115,13 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
         aria-expanded={isOpen}
         aria-controls={`nav-submenu-${slugify(item.title)}`}
         className={cn(
-          "provincial-nav-item flex items-center gap-0.5 whitespace-nowrap px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 xl:gap-1 xl:px-3.5 xl:py-2.5 xl:text-xs",
+          "provincial-nav-item flex items-center gap-0.5 whitespace-nowrap px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] transition-all duration-200 sm:px-3 lg:px-3.5 lg:text-xs",
           (isActive || isOpen) && "provincial-nav-item-active"
         )}
         onClick={() => ctx.toggleDropdown(item.title)}
         onFocus={() => !ctx.lite && ctx.openDropdownFor(item.title)}
       >
-        {item.title}
+        {label}
         <ChevronDown
           className={cn("h-3.5 w-3.5 transition-transform duration-200", isOpen && "rotate-180")}
           aria-hidden
@@ -114,7 +133,8 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
         role="menu"
         aria-label={`${item.title} submenu`}
         className={cn(
-          "provincial-nav-dropdown absolute left-0 top-full z-[60] min-w-[260px] pt-1 transition-all duration-200",
+          "provincial-nav-dropdown absolute top-full z-[60] min-w-[240px] pt-1 transition-all duration-200",
+          alignRight ? "right-0 left-auto" : "left-0",
           isOpen
             ? "pointer-events-auto translate-y-0 opacity-100"
             : "pointer-events-none -translate-y-1 opacity-0"
@@ -150,26 +170,111 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
   );
 }
 
-export function renderNavBar(items: NavItem[], ctx: NavRenderContext): ReactNode {
+const MORE_MENU_ID = "More";
+
+function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNode {
+  const isOpen = ctx.openDropdown === MORE_MENU_ID;
+  const isActive = ctx.activeTab === MORE_MENU_ID;
+
   return (
-    <ul role="menubar" className="flex flex-nowrap items-center justify-center gap-1">
-      {items.map((item) => createNavItem(item, ctx))}
+    <li
+      role="none"
+      className="relative flex shrink-0 items-stretch"
+      onMouseEnter={() => !ctx.lite && ctx.openDropdownFor(MORE_MENU_ID)}
+    >
+      <button
+        type="button"
+        role="menuitem"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+        aria-controls="nav-submenu-more"
+        className={cn(
+          "provincial-nav-item provincial-nav-item--more flex items-center gap-0.5 whitespace-nowrap px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] transition-all duration-200 sm:px-3 lg:px-3.5 lg:text-xs",
+          (isActive || isOpen) && "provincial-nav-item-active"
+        )}
+        onClick={() => ctx.toggleDropdown(MORE_MENU_ID)}
+      >
+        More
+        <ChevronDown
+          className={cn("h-3.5 w-3.5 transition-transform duration-200", isOpen && "rotate-180")}
+          aria-hidden
+        />
+      </button>
+
+      <div
+        id="nav-submenu-more"
+        role="menu"
+        aria-label="More provincial sections"
+        className={cn(
+          "provincial-nav-dropdown absolute right-0 left-auto top-full z-[60] min-w-[min(100vw-2rem,22rem)] pt-1 transition-all duration-200 sm:min-w-[20rem]",
+          isOpen
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-1 opacity-0"
+        )}
+      >
+        <div className="provincial-nav-dropdown-panel provincial-nav-mega-panel max-h-[min(70vh,28rem)] overflow-y-auto rounded-xl border border-cyan-400/25 bg-slate-950/98 p-3 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">
+          {moreItems.map((section) => (
+            <div key={section.title} className="border-b border-white/5 py-2 last:border-0 last:pb-0 first:pt-0">
+              <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-cyan-400">
+                {section.title}
+              </p>
+              <ul className="space-y-0.5">
+                {section.children?.map((child) => {
+                  const childActive = isChildActive(ctx.pathname, child.href);
+                  return (
+                    <li key={child.href + child.label}>
+                      <Link
+                        href={child.href}
+                        role="menuitem"
+                        className={cn(
+                          "block rounded-md px-2.5 py-2 text-sm transition-colors",
+                          childActive
+                            ? "bg-amber-400/15 text-amber-100"
+                            : "text-slate-300 hover:bg-white/10 hover:text-white"
+                        )}
+                        onClick={ctx.onNavigate}
+                      >
+                        {child.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </li>
+  );
+}
+
+export function renderNavBar(
+  primaryItems: NavItem[],
+  moreItems: NavItem[],
+  ctx: NavRenderContext
+): ReactNode {
+  return (
+    <ul role="menubar" className="flex flex-nowrap items-center justify-center gap-0.5 sm:gap-1">
+      {primaryItems.map((item, index) =>
+        createNavItem(item, ctx, {
+          alignDropdown: index >= primaryItems.length - 2 ? "right" : "left",
+        })
+      )}
+      {moreItems.length > 0 && createMoreNavItem(moreItems, ctx)}
     </ul>
   );
 }
 
 type ProvincialNavBarProps = {
-  variant?: "desktop" | "tablet";
   className?: string;
 };
 
-export function ProvincialNavBar({ variant = "desktop", className }: ProvincialNavBarProps) {
+export function ProvincialNavBar({ className }: ProvincialNavBarProps) {
   const pathname = usePathname();
   const lite = usePerformanceMode();
-  const routeActive = useMemo(() => resolveActiveTab(pathname, PROVINCIAL_NAV_ITEMS), [pathname]);
+  const routeActive = useMemo(() => resolveBarActiveTab(pathname), [pathname]);
   const [activeTab, setActiveTabState] = useState<string | null>(routeActive);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [tabletOpen, setTabletOpen] = useState(false);
 
   useEffect(() => {
     setActiveTabState(routeActive);
@@ -201,53 +306,6 @@ export function ProvincialNavBar({ variant = "desktop", className }: ProvincialN
     onNavigate: () => setOpenDropdown(null),
   };
 
-  if (variant === "tablet") {
-    return (
-      <nav
-        className={cn("provincial-nav-bar provincial-nav-bar--tablet", className)}
-        role="navigation"
-        aria-label="Provincial navigation (tablet)"
-      >
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <button
-            type="button"
-            className="provincial-nav-tablet-toggle flex w-full items-center justify-between px-3 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-colors duration-200 hover:bg-white/5"
-            aria-expanded={tabletOpen}
-            aria-controls="provincial-nav-tablet-panel"
-            onClick={() => setTabletOpen((v) => !v)}
-          >
-            <span className="flex items-center gap-2">
-              <Menu className="h-4 w-4 text-amber-300" aria-hidden />
-              Browse sections
-            </span>
-            <ChevronDown
-              className={cn("h-4 w-4 transition-transform duration-200", tabletOpen && "rotate-180")}
-              aria-hidden
-            />
-          </button>
-          <div
-            id="provincial-nav-tablet-panel"
-            className={cn(
-              "overflow-hidden transition-all duration-300 ease-out",
-              tabletOpen ? "max-h-[70vh] opacity-100" : "max-h-0 opacity-0"
-            )}
-          >
-            <ul className="space-y-1 border-t border-white/10 px-2 py-3" role="menu">
-              {PROVINCIAL_NAV_ITEMS.map((item) => (
-                <TabletNavRow
-                  key={item.title}
-                  item={item}
-                  ctx={ctx}
-                  onClose={() => setTabletOpen(false)}
-                />
-              ))}
-            </ul>
-          </div>
-        </div>
-      </nav>
-    );
-  }
-
   return (
     <nav
       className={cn("provincial-nav-bar", className)}
@@ -258,89 +316,10 @@ export function ProvincialNavBar({ variant = "desktop", className }: ProvincialN
       <div className="provincial-nav-beam" aria-hidden />
       <div className="provincial-nav-bar-inner mx-auto flex max-w-7xl items-center justify-center px-4 py-1.5 sm:px-6">
         <div className="provincial-nav-track w-full min-w-0">
-          {renderNavBar(PROVINCIAL_NAV_ITEMS, ctx)}
+          {renderNavBar(PROVINCIAL_NAV_PRIMARY, PROVINCIAL_NAV_MORE, ctx)}
         </div>
       </div>
     </nav>
-  );
-}
-
-function TabletNavRow({
-  item,
-  ctx,
-  onClose,
-}: {
-  item: NavItem;
-  ctx: NavRenderContext;
-  onClose: () => void;
-}) {
-  const isExpanded = ctx.openDropdown === item.title;
-  const isActive = ctx.activeTab === item.title;
-
-  if (!item.hasDropdown) {
-    return (
-      <li role="none">
-        <Link
-          href={item.link}
-          role="menuitem"
-          className={cn(
-            "provincial-nav-mobile-item block rounded-lg px-3 py-2.5 text-sm font-semibold uppercase tracking-wide transition-colors duration-200",
-            isActive && "provincial-nav-mobile-item-active"
-          )}
-          onClick={onClose}
-        >
-          {item.title}
-        </Link>
-      </li>
-    );
-  }
-
-  return (
-    <li role="none" className="rounded-lg border border-white/5">
-      <button
-        type="button"
-        role="menuitem"
-        aria-haspopup="true"
-        aria-expanded={isExpanded}
-        className={cn(
-          "provincial-nav-mobile-item flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold uppercase tracking-wide transition-colors duration-200",
-          (isActive || isExpanded) && "provincial-nav-mobile-item-active"
-        )}
-        onClick={() => ctx.toggleDropdown(item.title)}
-      >
-        {item.title}
-        <ChevronDown
-          className={cn("h-4 w-4 shrink-0 transition-transform duration-200", isExpanded && "rotate-180")}
-          aria-hidden
-        />
-      </button>
-      <ul
-        className={cn(
-          "space-y-0.5 overflow-hidden border-t border-white/5 px-2 transition-all duration-200",
-          isExpanded ? "max-h-96 py-2 opacity-100" : "max-h-0 border-transparent py-0 opacity-0"
-        )}
-        role="menu"
-        aria-label={`${item.title} submenu`}
-      >
-        {item.children?.map((child) => (
-          <li key={child.href + child.label} role="none">
-            <Link
-              href={child.href}
-              role="menuitem"
-              className={cn(
-                "block rounded-md px-3 py-2 text-sm transition-colors duration-200",
-                isChildActive(ctx.pathname, child.href)
-                  ? "bg-amber-400/15 text-amber-100"
-                  : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-              )}
-              onClick={onClose}
-            >
-              {child.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </li>
   );
 }
 
@@ -512,5 +491,5 @@ function DrawerNavRow({ item, ctx }: { item: NavItem; ctx: NavRenderContext }) {
 
 /** @deprecated Use ProvincialNavBar */
 export function SiteMegaNav() {
-  return <ProvincialNavBar variant="desktop" className="hidden xl:block" />;
+  return <ProvincialNavBar className="hidden md:block" />;
 }

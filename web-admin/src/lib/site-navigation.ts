@@ -4,6 +4,8 @@ export type NavChild = { label: string; href: string; description?: string };
 
 export type NavItem = {
   title: string;
+  /** Shorter label for the top bar (fits all screens) */
+  shortTitle?: string;
   link: string;
   hasDropdown: boolean;
   children?: NavChild[];
@@ -16,9 +18,10 @@ export type NavGroup = {
   children?: NavChild[];
 };
 
-export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
+const ALL_NAV_ITEMS: NavItem[] = [
   {
     title: "Our Province",
+    shortTitle: "Province",
     link: "/",
     hasDropdown: true,
     children: [
@@ -41,6 +44,7 @@ export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
   },
   {
     title: "Public Assistance",
+    shortTitle: "Assistance",
     link: "/complaints",
     hasDropdown: true,
     children: [
@@ -52,7 +56,25 @@ export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
+    title: "Provincial Updates",
+    shortTitle: "Updates",
+    link: "/news",
+    hasDropdown: true,
+    children: [
+      { label: "Headlines & News", href: "/news" },
+      { label: "Announcements & Hiring", href: "/announcements" },
+      { label: "Information Office", href: "/admin/news", description: "Authorized PIO staff" },
+    ],
+  },
+  {
+    title: "Emergency Alerts",
+    shortTitle: "Alerts",
+    link: "/announcements",
+    hasDropdown: false,
+  },
+  {
     title: "Safety & Resilience",
+    shortTitle: "DRRM",
     link: "/admin/incidents",
     hasDropdown: true,
     children: [
@@ -62,21 +84,11 @@ export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
         description: "Live map, incidents, and command overview",
       },
       { label: "Incident Reports", href: "/admin/incidents" },
-      { label: "Emergency Alerts", href: "/announcements", description: "Advisories and warnings" },
-    ],
-  },
-  {
-    title: "Provincial Updates",
-    link: "/news",
-    hasDropdown: true,
-    children: [
-      { label: "Headlines & News", href: "/news" },
-      { label: "Announcements", href: "/announcements" },
-      { label: "Information Office", href: "/admin/news", description: "Authorized PIO staff" },
     ],
   },
   {
     title: "Open Governance",
+    shortTitle: "Governance",
     link: "/announcements",
     hasDropdown: true,
     children: [
@@ -88,6 +100,7 @@ export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
   },
   {
     title: "Provincial Programs",
+    shortTitle: "Programs",
     link: "/#modules",
     hasDropdown: true,
     children: [
@@ -101,12 +114,22 @@ export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
       },
     ],
   },
-  {
-    title: "Emergency Alerts",
-    link: "/announcements",
-    hasDropdown: false,
-  },
 ];
+
+/** Shown in the top bar — most used by citizens */
+export const PROVINCIAL_NAV_PRIMARY: NavItem[] = ALL_NAV_ITEMS.filter((i) =>
+  ["Our Province", "Leadership", "Public Assistance", "Provincial Updates", "Emergency Alerts"].includes(
+    i.title
+  )
+);
+
+/** Secondary sections — inside the “More” menu on desktop; full list in mobile drawer */
+export const PROVINCIAL_NAV_MORE: NavItem[] = ALL_NAV_ITEMS.filter(
+  (i) => !PROVINCIAL_NAV_PRIMARY.some((p) => p.title === i.title)
+);
+
+/** Complete menu (mobile drawer + route matching) */
+export const PROVINCIAL_NAV_ITEMS: NavItem[] = ALL_NAV_ITEMS;
 
 export const SITE_MEGA_NAV: NavGroup[] = PROVINCIAL_NAV_ITEMS.map((item) => ({
   label: item.title,
@@ -142,3 +165,7 @@ export const OFFICE_HOURS = {
   weekend: "Saturday and Sunday",
   weekendStatus: "CLOSED",
 } as const;
+
+export function navDisplayTitle(item: NavItem): string {
+  return item.shortTitle ?? item.title;
+}

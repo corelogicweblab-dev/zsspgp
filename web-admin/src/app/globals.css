@@ -568,6 +568,21 @@ body {
   min-height: 0;
 }
 
+/* News headlines — show full titles in card layout */
+.news-headline-title {
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.news-headlines-grid {
+  align-items: stretch;
+}
+
+.news-headline-card {
+  min-height: 0;
+}
+
 /* Compact footer panels on desktop */
 @media (min-width: 1024px) {
   .footer-panel {
@@ -772,17 +787,19 @@ body {
 /* Provincial Digital Gateway — single row on all breakpoints (horizontal scroll when narrow) */
 .footer-gateway-row {
   display: grid;
-  grid-template-columns: repeat(4, minmax(9.5rem, 1fr));
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(9.5rem, 1fr);
-  gap: 0.65rem;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  gap: 0.75rem;
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scroll-snap-type: x proximity;
-  padding-bottom: 0.15rem;
+  max-width: 56rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (max-width: 639px) {
+  .footer-gateway-row {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
 }
 
 .footer-gateway-cell {

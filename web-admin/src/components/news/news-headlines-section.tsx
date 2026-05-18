@@ -15,7 +15,7 @@ interface NewsHeadlinesSectionProps {
   maxItems?: number;
 }
 
-/** Home: 2 columns × 4 rows (8 items). Full list at /news */
+/** Home: 2 columns × 4 rows (8 items). Full titles visible — no truncation. */
 export function NewsHeadlinesSection({
   articles,
   title = "Latest Headlines",
@@ -60,34 +60,39 @@ export function NewsHeadlinesSection({
           No published headlines yet.
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:p-5">
+        <div className="news-headlines-grid grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 sm:gap-5 sm:p-5">
           {items.map((article) => (
             <Link
               key={article.id}
               href={`/news/${article.id}`}
-              className="group flex gap-3 overflow-hidden rounded-xl border border-cyan-500/15 bg-slate-950/60 p-3 transition hover:border-cyan-400/40 hover:bg-cyan-500/5 sm:gap-4 sm:p-3.5"
+              className="news-headline-card group flex h-full flex-col overflow-hidden rounded-xl border border-cyan-500/15 bg-slate-950/60 transition hover:border-cyan-400/40 hover:bg-cyan-500/5"
             >
-              <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-lg bg-slate-900 sm:h-[5.5rem] sm:w-28">
+              <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-slate-900">
                 {article.cover_image_url ? (
                   <NewsCoverImage
                     src={article.cover_image_url}
-                    className="object-cover transition duration-300 group-hover:scale-[1.03]"
-                    sizes="112px"
+                    className="object-cover transition duration-300 group-hover:scale-[1.02]"
+                    sizes="(max-width: 640px) 100vw, 50vw"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center">
-                    <Newspaper className="h-7 w-7 text-cyan-500/30" />
+                  <div className="flex h-full min-h-[7rem] items-center justify-center">
+                    <Newspaper className="h-10 w-10 text-cyan-500/30" />
                   </div>
                 )}
               </div>
-              <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1 text-[10px] font-medium text-cyan-500/90">
+              <div className="flex flex-1 flex-col p-3.5 sm:p-4">
+                <p className="flex items-center gap-1 text-[10px] font-medium text-cyan-500/90 sm:text-xs">
                   <Clock className="h-3 w-3 shrink-0" />
                   {formatDateTime(article.published_at ?? article.created_at)}
                 </p>
-                <h3 className="mt-1 line-clamp-3 text-sm font-bold leading-snug text-cyan-50 group-hover:text-white">
+                <h3 className="news-headline-title mt-2 text-sm font-bold leading-snug text-cyan-50 group-hover:text-white sm:text-base">
                   {article.title}
                 </h3>
+                {article.summary && (
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate-400">
+                    {article.summary}
+                  </p>
+                )}
               </div>
             </Link>
           ))}

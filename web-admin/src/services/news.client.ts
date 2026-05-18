@@ -1,9 +1,6 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
 import type { NewsArticle, NewsMediaType } from "@/types";
-
-const NEWS_COVER_BUCKET = "news-covers";
 
 export type NewsWritePayload = {
   headline: string;
@@ -17,6 +14,16 @@ export type NewsWritePayload = {
   published_at?: string | null;
 };
 
+function friendlyUploadError(message: string): string {
+  if (message.includes("enum user_role") && message.includes("information_office")) {
+    return "Run database/FIX_PIO_NEWS_RUN_ONCE.sql in Supabase SQL Editor, then try again.";
+  }
+  if (message.includes("row-level security")) {
+    return "Run database/FIX_PIO_NEWS_RUN_ONCE.sql in Supabase and set SUPABASE_SERVICE_ROLE_KEY on Render.";
+  }
+  return message;
+}
+
 async function uploadViaApi(file: File): Promise<{ url: string; mediaType?: "image" | "video" }> {
   const form = new FormData();
   form.append("file", file);
@@ -26,39 +33,13 @@ async function uploadViaApi(file: File): Promise<{ url: string; mediaType?: "ima
     credentials: "include",
   });
   const json = await res.json();
-  if (!res.ok) throw new Error(json.error ?? "Upload failed.");
+  if (!res.ok) throw new Error(friendlyUploadError(json.error ?? "Upload failed."));
   return json as { url: string; mediaType?: "image" | "video" };
 }
 
 async function uploadToBucket(file: File): Promise<string> {
-  try {
-    const { url } = await uploadViaApi(file);
-    return url;
-  } catch (apiErr) {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) throw apiErr instanceof Error ? apiErr : new Error("Sign in to upload files.");
-
-    const ext = file.name.split(".").pop()?.toLowerCase() || "bin";
-    const path = `${user.id}/${Date.now()}.${ext}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from(NEWS_COVER_BUCKET)
-      .upload(path, file, { cacheControl: "3600", upsert: false });
-
-    if (uploadError) {
-      throw new Error(
-        uploadError.message.includes("Bucket not found")
-          ? 'Create a public "news-covers" bucket in Supabase Storage, or paste a URL instead.'
-          : uploadError.message
-      );
-    }
-
-    const { data } = supabase.storage.from(NEWS_COVER_BUCKET).getPublicUrl(path);
-    return data.publicUrl;
-  }
+  const { url } = await uploadViaApi(file);
+  return url;
 }
 
 export async function uploadNewsCoverImage(file: File): Promise<string> {
@@ -72,17 +53,12 @@ export async function uploadNewsMedia(file: File): Promise<{
   url: string;
   mediaType: NewsMediaType;
 }> {
-  try {
-    const result = await uploadViaApi(file);
-    return {
-      url: result.url,
-      mediaType: (result.mediaType as NewsMediaType) ?? (file.type.startsWith("video/") ? "video" : "image"),
-    };
-  } catch {
-    const mediaType: NewsMediaType = file.type.startsWith("video/") ? "video" : "image";
-    const url = await uploadToBucket(file);
-    return { url, mediaType };
-  }
+  const result = await uploadViaApi(file);
+  return {
+    url: result.url,
+    mediaType:
+      (result.mediaType as NewsMediaType) ?? (file.type.startsWith("video/") ? "video" : "image"),
+  };
 }
 
 export async function fetchNewsAdmin(): Promise<NewsArticle[]> {

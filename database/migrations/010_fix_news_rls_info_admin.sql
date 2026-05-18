@@ -4,11 +4,11 @@
 CREATE OR REPLACE FUNCTION can_manage_provincial_news()
 RETURNS BOOLEAN AS $$
 DECLARE
-  r user_role;
+  r TEXT;
   dept_code TEXT;
   user_email TEXT;
 BEGIN
-  SELECT u.role, d.code, u.email
+  SELECT u.role::text, d.code, lower(trim(u.email))
   INTO r, dept_code, user_email
   FROM public.users u
   LEFT JOIN public.departments d ON d.id = u.department_id
@@ -26,7 +26,7 @@ BEGIN
     IF dept_code = 'INFO' THEN
       RETURN TRUE;
     END IF;
-    IF LOWER(TRIM(user_email)) = 'information@zamboangasibugay.gov.ph' THEN
+    IF user_email = 'information@zamboangasibugay.gov.ph' THEN
       RETURN TRUE;
     END IF;
   END IF;

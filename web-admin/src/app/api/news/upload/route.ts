@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireNewsManager } from "@/lib/news-auth";
 import { getNewsDataClient } from "@/lib/news-db";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 const BUCKET = "news-covers";
 
@@ -19,7 +20,9 @@ export async function POST(request: Request) {
   const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
   const path = `${auth.profile.userId}/${Date.now()}.${ext}`;
 
-  const db = getNewsDataClient(auth.supabase);
+  const admin = createAdminClient();
+  const db = admin ?? getNewsDataClient(auth.supabase);
+
   const buffer = await file.arrayBuffer();
 
   const { error: uploadError } = await db.storage.from(BUCKET).upload(path, buffer, {

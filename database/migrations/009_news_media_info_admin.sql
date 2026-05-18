@@ -9,17 +9,25 @@ COMMENT ON COLUMN news.title IS 'Headline';
 COMMENT ON COLUMN news.media_url IS 'Optional inline image or video URL';
 COMMENT ON COLUMN news.cover_image_url IS 'Thumbnail / cover for cards and headlines';
 
+-- Use text casts — safe when information_office enum value not yet added (see 011)
 CREATE OR REPLACE FUNCTION can_manage_provincial_news()
 RETURNS BOOLEAN AS $$
   SELECT
-    get_user_role() IN ('information_office', 'governor_super_admin', 'ict_admin')
+    COALESCE((SELECT role::text FROM users WHERE id = auth.uid()), '') IN (
+      'information_office', 'governor_super_admin', 'ict_admin'
+    )
     OR (
-      get_user_role() = 'department_admin'
+      COALESCE((SELECT role::text FROM users WHERE id = auth.uid()), '') = 'department_admin'
       AND EXISTS (
         SELECT 1 FROM users u
         JOIN departments d ON d.id = u.department_id
         WHERE u.id = auth.uid() AND d.code = 'INFO'
       )
+    )
+    OR (
+      COALESCE((SELECT role::text FROM users WHERE id = auth.uid()), '') = 'department_admin'
+      AND lower(trim((SELECT email FROM users WHERE id = auth.uid()))) =
+        'information@zamboangasibugay.gov.ph'
     );
 $$ LANGUAGE sql SECURITY DEFINER STABLE SET search_path = public;
 

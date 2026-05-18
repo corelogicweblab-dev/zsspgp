@@ -12,6 +12,7 @@ Run migrations **in this order** in the Supabase SQL Editor:
 8. **`migrations/012_info_announcements_rls.sql`** — PIO announcements RLS
 9. **`migrations/013_announcement_categories.sql`** — announcement categories
 10. **`migrations/014_job_applications_public_broadcasts.sql`** — job applications + citizen public broadcasts
+11. **`migrations/015_pio_carousel_executive_orders.sql`** — carousel, executive orders, resume uploads
 
 **Quick fix (PIO):** run entire **`FIX_PIO_NEWS_RUN_ONCE.sql`** in Supabase SQL Editor.
 3. **`migrations/004_users_add_role_column.sql`** — idinagdag ang column na `role` kapag kulang ang `public.users` (error: *column "role" does not exist*)

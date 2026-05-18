@@ -20,12 +20,12 @@ export function JobApplicationForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [resumeName, setResumeName] = useState<string | null>(null);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    const fd = new FormData(e.currentTarget);
 
     if (demoMode) {
       setError(
@@ -35,20 +35,19 @@ export function JobApplicationForm({
       return;
     }
 
+    const formEl = e.currentTarget;
+    const fd = new FormData(formEl);
+    const resume = fd.get("resume");
+    if (!(resume instanceof File) || resume.size === 0) {
+      setError("Please upload your resume (PDF or Word, required).");
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await fetch("/api/job-applications", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          announcement_id: announcementId,
-          full_name: fd.get("full_name"),
-          email: fd.get("email"),
-          phone: fd.get("phone"),
-          municipality: fd.get("municipality"),
-          barangay: fd.get("barangay"),
-          position_applied: fd.get("position_applied"),
-          cover_letter: fd.get("cover_letter"),
-        }),
+        body: fd,
       });
       const data = (await res.json()) as { error?: string };
       if (!res.ok) {
@@ -78,9 +77,10 @@ export function JobApplicationForm({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4 rounded-xl border border-cyan-500/20 bg-slate-900/50 p-5 sm:p-6">
+      <input type="hidden" name="announcement_id" value={announcementId} />
       <p className="text-sm text-slate-400">
-        Complete this form to apply. Your submission will appear in the Governor&apos;s command center
-        for review.
+        Complete this form and upload your resume. Submissions appear in the Governor&apos;s command
+        center for review.
       </p>
       {error && (
         <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-2 text-sm text-red-300">
@@ -128,10 +128,22 @@ export function JobApplicationForm({
           <textarea
             id="cover_letter"
             name="cover_letter"
-            rows={5}
+            rows={4}
             className="flex w-full rounded-lg border border-slate-600 bg-slate-950 px-3 py-2 text-sm text-slate-200"
-            placeholder="Education, experience, and documents you will submit…"
           />
+        </div>
+        <div className="space-y-2 sm:col-span-2">
+          <Label htmlFor="resume">Resume / CV * (PDF or Word, max 10 MB)</Label>
+          <Input
+            id="resume"
+            name="resume"
+            type="file"
+            required={!demoMode}
+            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            className="text-slate-300 file:mr-3 file:rounded-md file:border-0 file:bg-cyan-600 file:px-3 file:py-1.5 file:text-sm file:text-white"
+            onChange={(e) => setResumeName(e.target.files?.[0]?.name ?? null)}
+          />
+          {resumeName && <p className="text-xs text-cyan-400/90">Selected: {resumeName}</p>}
         </div>
       </div>
       <Button type="submit" variant="gov" className="w-full sm:w-auto" disabled={loading}>

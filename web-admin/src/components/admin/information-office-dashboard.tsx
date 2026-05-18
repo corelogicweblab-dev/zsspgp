@@ -31,10 +31,12 @@ import {
 } from "@/services/news.client";
 import { formatDateTime } from "@/lib/utils";
 import { PioAnnouncementsManager } from "@/components/admin/pio-announcements-manager";
+import { PioCarouselManager } from "@/components/admin/pio-carousel-manager";
+import { PioExecutiveOrdersManager } from "@/components/admin/pio-executive-orders-manager";
 import { cn } from "@/lib/utils";
 import type { NewsArticle, NewsMediaType } from "@/types";
 
-type PioTab = "news" | "announcements";
+type PioTab = "news" | "announcements" | "carousel" | "executive-orders";
 
 function toDatetimeLocalValue(iso: string | null): string {
   const d = iso ? new Date(iso) : new Date();
@@ -243,10 +245,42 @@ export function InformationOfficeDashboard() {
         >
           Announcements & hiring
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "carousel"}
+          className={cn(
+            "shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors",
+            activeTab === "carousel"
+              ? "bg-indigo-600 text-white"
+              : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+          )}
+          onClick={() => setActiveTab("carousel")}
+        >
+          Image carousel
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "executive-orders"}
+          className={cn(
+            "shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors",
+            activeTab === "executive-orders"
+              ? "bg-purple-600 text-white"
+              : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+          )}
+          onClick={() => setActiveTab("executive-orders")}
+        >
+          Executive orders
+        </button>
       </div>
 
       {activeTab === "announcements" ? (
         <PioAnnouncementsManager />
+      ) : activeTab === "carousel" ? (
+        <PioCarouselManager />
+      ) : activeTab === "executive-orders" ? (
+        <PioExecutiveOrdersManager />
       ) : (
         <>
       {(error || success) && (

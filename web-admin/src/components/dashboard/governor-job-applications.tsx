@@ -33,6 +33,16 @@ export function GovernorJobApplications({ applications }: { applications: JobApp
                   {app.email}
                   {app.municipality ? ` · ${app.municipality}` : ""}
                 </p>
+                {app.resume_url && (
+                  <a
+                    href={app.resume_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-xs font-semibold text-cyan-400 hover:underline"
+                  >
+                    View resume →
+                  </a>
+                )}
                 <p className="mt-1 text-[10px] text-slate-600">{formatRelative(app.created_at)}</p>
               </div>
             );

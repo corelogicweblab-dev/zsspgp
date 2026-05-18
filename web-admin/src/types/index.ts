@@ -201,7 +201,31 @@ export interface JobApplication {
   barangay: string | null;
   position_applied: string | null;
   cover_letter: string | null;
+  resume_url?: string | null;
   status: string;
   created_at: string;
   announcements?: { title?: string; category?: string } | null;
+}
+
+export interface PioCarouselSlide {
+  id: string;
+  title: string | null;
+  caption: string | null;
+  image_url: string;
+  sort_order: number;
+  is_published: boolean;
+  created_at: string;
+}
+
+export interface ExecutiveOrder {
+  id: string;
+  title: string;
+  summary: string | null;
+  image_url: string;
+  document_url: string | null;
+  order_number: string | null;
+  published_at: string | null;
+  is_published: boolean;
+  sort_order: number;
+  created_at: string;
 }

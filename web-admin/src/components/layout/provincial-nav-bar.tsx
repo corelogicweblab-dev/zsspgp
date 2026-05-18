@@ -479,7 +479,7 @@ export function ProvincialNavDrawer({ open, onClose, header, footer }: Provincia
       <button
         type="button"
         className={cn(
-          "fixed inset-0 z-[70] bg-black/60 transition-opacity duration-300 md:hidden",
+          "fixed inset-0 z-[70] bg-black/60 transition-opacity duration-300 lg:hidden",
           open ? "opacity-100" : "pointer-events-none opacity-0"
         )}
         aria-label="Close menu"
@@ -489,7 +489,7 @@ export function ProvincialNavDrawer({ open, onClose, header, footer }: Provincia
       />
       <aside
         className={cn(
-          "provincial-nav-drawer fixed left-0 top-0 z-[80] flex h-full w-[min(320px,92vw)] flex-col border-r border-indigo-500/25 bg-gradient-to-b from-slate-950 via-indigo-950/95 to-purple-950/95 shadow-2xl transition-transform duration-300 ease-out md:hidden",
+          "provincial-nav-drawer fixed left-0 top-0 z-[80] flex h-full w-[min(320px,92vw)] flex-col border-r border-indigo-500/25 bg-gradient-to-b from-slate-950 via-indigo-950/95 to-purple-950/95 shadow-2xl transition-transform duration-300 ease-out lg:hidden",
           open ? "translate-x-0" : "-translate-x-full"
         )}
         role="dialog"

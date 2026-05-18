@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Presidential Communications Office">
+  <circle cx="60" cy="60" r="54" fill="#0038a8"/>
+  <path d="M48 78 L60 32 L72 78 Z" fill="#fcd116" opacity="0.9"/>
+  <ellipse cx="60" cy="78" rx="18" ry="6" fill="#fcd116" opacity="0.5"/>
+  <text x="60" y="108" text-anchor="middle" fill="#fff" font-size="6.5" font-weight="600" font-family="system-ui,sans-serif">PHILIPPINES</text>
+</svg>

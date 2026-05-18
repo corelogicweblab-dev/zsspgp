@@ -25,13 +25,14 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
         <Button
           type="button"
-          variant="ghost"
-          size="icon"
+          variant="outline"
+          size="sm"
           onClick={onMenuClick}
-          aria-label="Open menu"
-          className="shrink-0 text-cyan-100 hover:bg-cyan-500/10 md:hidden"
+          aria-label="Open full navigation menu"
+          className="shrink-0 gap-1.5 border-cyan-500/35 px-2.5 text-cyan-100 hover:bg-cyan-500/10 lg:hidden"
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-5 w-5" />
+          <span className="text-xs font-semibold uppercase tracking-wide">Menu</span>
         </Button>
 
         <ProvincialBrand
@@ -56,7 +57,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <LogoutButton />
         </div>
       </div>
-      <ProvincialNavBar className="provincial-nav-bar--desktop-scroll hidden md:block" />
+      <ProvincialNavBar className="provincial-nav-bar--desktop-scroll" />
     </header>
   );
 }

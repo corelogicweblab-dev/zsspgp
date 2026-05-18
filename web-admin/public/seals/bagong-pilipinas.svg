@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Bagong Pilipinas">
+  <circle cx="60" cy="52" r="44" fill="#0038a8"/>
+  <path d="M16 88 Q60 108 104 88 L104 96 Q60 116 16 96 Z" fill="#ce1126"/>
+  <path d="M16 88 Q60 72 104 88" fill="#fcd116"/>
+  <circle cx="60" cy="48" r="14" fill="#fcd116"/>
+  <text x="60" y="112" text-anchor="middle" fill="#fcd116" font-size="7" font-weight="700" font-family="system-ui,sans-serif">BAGONG PILIPINAS</text>
+</svg>

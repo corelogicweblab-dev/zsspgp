@@ -537,9 +537,29 @@ body {
 
 @media (max-width: 767px) {
   .provincial-nav-bar--desktop-scroll .provincial-nav-item {
+    padding-left: 0.55rem;
+    padding-right: 0.55rem;
+    padding-top: 0.55rem;
+    padding-bottom: 0.55rem;
+    font-size: 10px;
+    min-height: 2.5rem;
+  }
+
+  .provincial-nav-bar--desktop-scroll .provincial-nav-bar-inner {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
-    font-size: 10px;
+  }
+
+  /* Hint that the strip scrolls sideways on phones */
+  .provincial-nav-bar--desktop-scroll::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 2rem;
+    pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(15, 23, 42, 0.85));
   }
 }
 
@@ -560,11 +580,15 @@ body {
 }
 
 /* PIO gallery — 4×4 square cells, always four columns */
-.pio-gallery-grid {
+.pio-gallery-viewport {
   width: 100%;
 }
 
-.pio-gallery-cell {
+.pio-gallery-track {
+  will-change: transform;
+}
+
+.pio-gallery-slide {
   min-height: 0;
 }
 
@@ -787,18 +811,49 @@ body {
 /* Provincial Digital Gateway — single row on all breakpoints (horizontal scroll when narrow) */
 .footer-gateway-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr);
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.85fr);
   gap: 0.75rem;
   width: 100%;
-  max-width: 56rem;
+  max-width: 64rem;
   margin-left: auto;
   margin-right: auto;
+  align-items: stretch;
+}
+
+.footer-seal-panel {
+  grid-column: 1;
+}
+
+.footer-seal-divider {
+  margin-top: 0.5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.35), transparent);
+}
+
+.footer-seal-body {
+  background: rgba(2, 6, 23, 0.35);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+}
+
+.footer-seal-logos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 @media (max-width: 639px) {
   .footer-gateway-row {
     grid-template-columns: 1fr;
     gap: 0.65rem;
+  }
+
+  .footer-seal-logos {
+    gap: 0.75rem;
+  }
+
+  .footer-seal-logos .footer-seal-logo-link span:first-child {
+    height: 3.75rem;
+    width: 3.75rem;
   }
 }
 

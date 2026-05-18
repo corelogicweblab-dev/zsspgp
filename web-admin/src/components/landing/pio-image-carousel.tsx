@@ -2,35 +2,29 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import type { PioCarouselSlide } from "@/types";
 
-const COLS = 4;
-const ROWS = 4;
-const MAX_CELLS = COLS * ROWS;
+const VISIBLE = 3;
+const MAX_SLIDES = 16;
 const AUTO_MS = 3000;
 
 export function PioImageCarousel({ slides }: { slides: PioCarouselSlide[] }) {
-  const items = useMemo(() => slides.slice(0, MAX_CELLS), [slides]);
-  const [offset, setOffset] = useState(0);
+  const items = useMemo(() => slides.slice(0, MAX_SLIDES), [slides]);
+  const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  const rowCount = Math.min(ROWS, Math.max(1, Math.ceil(items.length / COLS)));
-
   useEffect(() => {
-    if (items.length <= COLS || paused) return;
+    if (items.length <= VISIBLE || paused) return;
     const t = window.setInterval(() => {
-      setOffset((o) => (o + COLS) % items.length);
+      setIndex((i) => (i + 1) % items.length);
     }, AUTO_MS);
     return () => window.clearInterval(t);
   }, [items.length, paused]);
 
   if (!items.length) return null;
 
-  const gridCells = Array.from({ length: rowCount * COLS }, (_, i) => {
-    if (i >= items.length && items.length < rowCount * COLS) return null;
-    return items[(offset + i) % items.length];
-  });
+  const trackWidthPercent = (items.length * 100) / VISIBLE;
+  const slideWidthPercent = 100 / items.length;
 
   return (
     <section
@@ -46,42 +40,38 @@ export function PioImageCarousel({ slides }: { slides: PioCarouselSlide[] }) {
       </div>
 
       <div className="p-3 sm:p-4">
-        <div
-          className="pio-gallery-grid grid gap-1.5 sm:gap-2"
-          style={{
-            gridTemplateColumns: `repeat(${COLS}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${rowCount}, minmax(0, 1fr))`,
-          }}
-        >
-          {gridCells.map((slide, i) => (
-            <div
-              key={slide ? `${slide.id}-${offset}-${i}` : `empty-${i}`}
-              className={cn(
-                "pio-gallery-cell relative aspect-square overflow-hidden rounded-lg border border-cyan-500/15 bg-slate-900",
-                !slide && "invisible"
-              )}
-            >
-              {slide && (
-                <>
-                  <Image
-                    src={slide.image_url}
-                    alt={slide.title ?? "Provincial highlight"}
-                    fill
-                    className="object-contain p-0.5 transition-opacity duration-500"
-                    sizes="(max-width: 640px) 22vw, 200px"
-                    priority={i < COLS && offset === 0}
-                  />
-                  {slide.title && (
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 to-transparent px-1.5 pb-1.5 pt-4">
-                      <p className="line-clamp-1 text-[9px] font-semibold text-white sm:text-[10px]">
-                        {slide.title}
-                      </p>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          ))}
+        <div className="pio-gallery-viewport overflow-hidden">
+          <div
+            className="pio-gallery-track flex transition-transform duration-500 ease-in-out"
+            style={{
+              width: `${trackWidthPercent}%`,
+              transform: `translateX(-${index * slideWidthPercent}%)`,
+            }}
+          >
+            {items.map((slide, i) => (
+              <div
+                key={slide.id}
+                className="pio-gallery-slide relative aspect-square shrink-0 overflow-hidden rounded-lg border border-cyan-500/15 bg-slate-900 px-1 sm:px-1.5"
+                style={{ width: `${slideWidthPercent}%` }}
+              >
+                <Image
+                  src={slide.image_url}
+                  alt={slide.title ?? "Provincial highlight"}
+                  fill
+                  className="object-contain p-0.5"
+                  sizes="(max-width: 640px) 33vw, 320px"
+                  priority={i < VISIBLE}
+                />
+                {slide.title && (
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 to-transparent px-2 pb-1.5 pt-5">
+                    <p className="line-clamp-1 text-[10px] font-semibold text-white sm:text-xs">
+                      {slide.title}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

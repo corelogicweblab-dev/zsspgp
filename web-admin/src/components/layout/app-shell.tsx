@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { SideNav } from "./side-nav";
 import { AppHeader } from "./app-header";
 import { AppFooter } from "./app-footer";
@@ -10,6 +11,8 @@ import { SupportFab } from "@/components/support/support-fab";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   return (
     <div className="relative z-10 flex min-h-screen flex-col">
@@ -19,9 +22,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="app-main mx-auto w-full max-w-7xl flex-1 px-3 py-4 sm:p-6 lg:p-8">
         {children}
       </main>
-      <div className="mx-auto w-full max-w-7xl px-3 pb-6 sm:px-6 sm:pb-8">
-        <ProvincialCapitolMap />
-      </div>
+      {isHome && (
+        <div className="mx-auto w-full max-w-7xl px-3 pb-6 sm:px-6 sm:pb-8">
+          <ProvincialCapitolMap />
+        </div>
+      )}
       <AppFooter />
       <SupportFab />
     </div>

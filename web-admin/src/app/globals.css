@@ -347,6 +347,7 @@ body {
 .provincial-nav-bar,
 .site-mega-nav {
   position: relative;
+  z-index: 2;
   overflow: visible;
   border-top: 1px solid rgba(56, 189, 248, 0.25);
   background:
@@ -360,7 +361,6 @@ body {
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     0 8px 32px rgba(15, 23, 42, 0.5);
-  overflow: hidden;
 }
 
 .provincial-nav-beam {
@@ -488,6 +488,12 @@ body {
 
 .provincial-nav-dropdown {
   will-change: opacity, transform;
+}
+
+/* Keep open submenu above siblings and page content below the header */
+.provincial-nav-bar li:has(button[aria-expanded="true"]),
+.site-mega-nav li:has(button[aria-expanded="true"]) {
+  z-index: 200;
 }
 
 @media (max-width: 1279px) {

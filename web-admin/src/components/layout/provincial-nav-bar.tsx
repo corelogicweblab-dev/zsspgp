@@ -133,11 +133,11 @@ export function createNavItem(
         role="menu"
         aria-label={`${item.title} submenu`}
         className={cn(
-          "provincial-nav-dropdown absolute top-full z-[60] min-w-[240px] pt-1 transition-all duration-200",
+          "provincial-nav-dropdown absolute top-full z-[200] min-w-[240px] pt-1 transition-all duration-200",
           alignRight ? "right-0 left-auto" : "left-0",
           isOpen
-            ? "pointer-events-auto translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-1 opacity-0"
+            ? "pointer-events-auto visible translate-y-0 opacity-100"
+            : "pointer-events-none invisible -translate-y-1 opacity-0"
         )}
       >
         <ul className="provincial-nav-dropdown-panel overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">
@@ -206,10 +206,10 @@ function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNo
         role="menu"
         aria-label="More provincial sections"
         className={cn(
-          "provincial-nav-dropdown absolute right-0 left-auto top-full z-[60] min-w-[min(100vw-2rem,22rem)] pt-1 transition-all duration-200 sm:min-w-[20rem]",
+          "provincial-nav-dropdown absolute right-0 left-auto top-full z-[200] min-w-[min(100vw-2rem,22rem)] pt-1 transition-all duration-200 sm:min-w-[20rem]",
           isOpen
-            ? "pointer-events-auto translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-1 opacity-0"
+            ? "pointer-events-auto visible translate-y-0 opacity-100"
+            : "pointer-events-none invisible -translate-y-1 opacity-0"
         )}
       >
         <div className="provincial-nav-dropdown-panel provincial-nav-mega-panel max-h-[min(70vh,28rem)] overflow-y-auto rounded-xl border border-cyan-400/25 bg-slate-950/98 p-3 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { AI_SYSTEM_PROMPT, type AiChatMessage } from "@/lib/ai/system-prompt";
 import { fallbackAiReply } from "@/lib/ai/fallback";
+import { formatKnowledgeReply, matchKnowledge } from "@/lib/ai/knowledge-base";
 
 const bodySchema = z.object({
   messages: z
@@ -55,12 +56,16 @@ export async function POST(request: Request) {
     }
 
     const messages = parsed.data.messages as AiChatMessage[];
+    const lastUser = [...messages].reverse().find((m) => m.role === "user");
+    const knowledge = lastUser ? matchKnowledge(lastUser.content) : null;
+
     const ai = await openAiReply(messages);
     const reply = ai ?? fallbackAiReply(messages);
 
     return NextResponse.json({
       reply,
       provider: ai ? "openai" : "builtin",
+      actions: knowledge?.actions ?? [],
     });
   } catch (e) {
     console.error("AI chat route error", e);

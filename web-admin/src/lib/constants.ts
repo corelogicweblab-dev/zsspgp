@@ -93,8 +93,8 @@ export const PLATFORM_MODULES = [
   {
     title: "DRRM Incident Reporting",
     desc: "Emergency incidents with severity levels and response workflows.",
-    href: "/admin/incidents",
-    menuLabel: "Incidents (DRRM)",
+    href: "/admin/department/drrm",
+    menuLabel: "DRRM Super Dashboard",
   },
   {
     title: "Notifications",
@@ -187,7 +187,7 @@ export const CONTACT_INFO: { label: string; value: string; icon: LucideIcon }[] 
 ];
 
 export const SMART_FEATURES = [
-  { title: "24/7 AI Support", desc: "AI-powered assistance for citizens and staff — register, report, and get guidance anytime." },
+  { title: "Contact Us", desc: "AI-assisted provincial support with instant answers and direct links to every service." },
   { title: "Real-Time Monitoring", desc: "Live dashboards for complaints, incidents, and provincial KPIs." },
   { title: "Executive Analytics", desc: "Governor command center with province-wide intelligence." },
   { title: "Smart Notifications", desc: "Broadcast alerts to departments and citizens instantly." },

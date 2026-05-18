@@ -1,33 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { ProvincialLogo } from "@/components/ui/provincial-logo";
 import { APP_SHORT } from "@/lib/constants";
-import { KNOW_YOUR_GOVERNOR_PATH } from "@/lib/governor-profile";
+import { SiteMegaNav } from "@/components/layout/site-mega-nav";
 import { Button } from "@/components/ui/button";
 import { LiveClock } from "@/components/layout/live-clock";
 import { LogoutButton } from "@/components/auth/logout-button";
-import { cn } from "@/lib/utils";
+import { useSupport } from "@/components/support/support-provider";
 
 interface AppHeaderProps {
   onMenuClick: () => void;
 }
 
-const navLinks = [
-  { href: "/", label: "Home" },
-  { href: "/news", label: "News" },
-  { href: "/complaints", label: "Complaints" },
-  { href: KNOW_YOUR_GOVERNOR_PATH, label: "Governor" },
-] as const;
-
 export function AppHeader({ onMenuClick }: AppHeaderProps) {
-  const pathname = usePathname();
+  const { openSupport } = useSupport();
 
   return (
     <header className="app-header sticky top-0 z-50">
       <div className="app-header-accent" aria-hidden />
+      <div className="app-header-scan" aria-hidden />
       <div className="mx-auto flex max-w-7xl items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-6 sm:py-3">
         <Button
           type="button"
@@ -50,36 +43,21 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           </div>
         </Link>
 
-        <nav
-          className="hidden flex-1 items-center justify-center gap-1 lg:flex"
-          aria-label="Main navigation"
-        >
-          {navLinks.map((item) => {
-            const active =
-              pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "rounded-lg px-3 py-2 text-sm font-medium transition",
-                  active
-                    ? "bg-cyan-500/15 text-cyan-100 ring-1 ring-cyan-400/30"
-                    : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
         <div className="ml-auto flex shrink-0 items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="hidden border-cyan-500/30 text-cyan-100 sm:inline-flex"
+            onClick={() => openSupport("welcome")}
+          >
+            Contact Us!
+          </Button>
           <LiveClock />
           <LogoutButton />
         </div>
       </div>
+      <SiteMegaNav />
     </header>
   );
 }

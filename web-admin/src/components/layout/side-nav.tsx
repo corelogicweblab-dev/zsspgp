@@ -45,6 +45,7 @@ const authNav: NavItem[] = [
 const adminNav: NavItem[] = [
   { href: "/admin/governor", label: "Governor Dashboard", icon: LayoutDashboard },
   { href: "/admin/department", label: "Department Portals", icon: Building2 },
+  { href: "/admin/department/drrm", label: "DRRM Super Dashboard Ops", icon: AlertTriangle },
   { href: "/admin/news", label: "Manage News (Info Office)", icon: Newspaper },
   { href: "/admin/complaints", label: "Complaints", icon: MessageSquareWarning },
   { href: "/admin/incidents", label: "DRRM Incidents", icon: AlertTriangle },

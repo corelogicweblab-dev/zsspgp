@@ -43,7 +43,7 @@ const item = {
 
 export function PlatformModules() {
   return (
-    <section>
+    <section id="modules" className="scroll-mt-24">
       <motion.h2
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

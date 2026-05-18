@@ -106,16 +106,21 @@ export function AnnouncementsPublicList({
                     className="prose prose-sm max-w-none text-slate-600"
                     dangerouslySetInnerHTML={{ __html: item.content }}
                   />
-                  {item.link_url && (
+                  {item.category === "hiring" ? (
+                    <Link
+                      href={`/announcements/${item.id}/apply`}
+                      className="inline-flex text-sm font-semibold text-blue-600 hover:underline"
+                    >
+                      View application details →
+                    </Link>
+                  ) : item.link_url ? (
                     <Link
                       href={item.link_url}
                       className="inline-flex text-sm font-semibold text-blue-600 hover:underline"
                     >
-                      {item.category === "hiring"
-                        ? "View application details →"
-                        : "More information →"}
+                      More information →
                     </Link>
-                  )}
+                  ) : null}
                 </CardContent>
               </Card>
             </li>

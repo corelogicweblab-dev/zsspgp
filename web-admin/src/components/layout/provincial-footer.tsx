@@ -10,7 +10,7 @@ import {
   FOOTER_QUICK_LINKS,
   OFFICE_HOURS,
 } from "@/lib/site-navigation";
-import { FOOTER_TEXT, POWERED_BY } from "@/lib/constants";
+import { APP_SLOGAN, FOOTER_TEXT, POWERED_BY } from "@/lib/constants";
 import { useSupport } from "@/components/support/support-provider";
 import { cn } from "@/lib/utils";
 
@@ -32,9 +32,9 @@ export function ProvincialFooter() {
       <div className="futuristic-footer-mesh absolute inset-0" aria-hidden />
       <div className="futuristic-footer-beam" aria-hidden />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14">
+      <div className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <motion.div
-          className="mb-8 flex flex-col items-center gap-3 text-center sm:mb-10"
+          className="mb-5 flex flex-col items-center gap-2 text-center sm:mb-6"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -46,7 +46,7 @@ export function ProvincialFooter() {
           <div className="h-px w-32 bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
         </motion.div>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-12 lg:gap-5">
+        <motion.div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-12 lg:gap-4">
           {/* Seal — hero pod */}
           <motion.div
             custom={0}
@@ -62,14 +62,14 @@ export function ProvincialFooter() {
               <div className="footer-seal-ring footer-seal-ring-outer" aria-hidden />
               <ProvincialBrand
                 href="/"
-                logoSize={72}
+                logoSize={52}
                 showGlow
                 textAlign="center"
                 className="relative z-10"
               />
             </div>
-            <p className="mt-4 text-center text-xs leading-relaxed text-slate-400">
-              Smart Provincial Governance Platform
+            <p className="mt-2 text-center text-[11px] leading-relaxed text-slate-400">
+              {APP_SLOGAN}
             </p>
           </motion.div>
 
@@ -164,10 +164,10 @@ export function ProvincialFooter() {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.div
-          className="footer-bottom-bar mt-8 flex flex-col items-center justify-between gap-4 sm:flex-row"
+          className="footer-bottom-bar mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

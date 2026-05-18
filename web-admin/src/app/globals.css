@@ -490,6 +490,42 @@ body {
   will-change: opacity, transform;
 }
 
+/* Mobile: horizontal scroll nav strip (always visible under header) */
+.provincial-nav-bar--mobile-scroll .provincial-nav-bar-inner {
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
+  justify-content: flex-start;
+  scrollbar-width: thin;
+}
+
+.provincial-nav-bar--mobile-scroll .provincial-nav-track [role="menubar"] {
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  min-width: max-content;
+  padding-bottom: 2px;
+}
+
+@media (max-width: 767px) {
+  .provincial-nav-bar--mobile-scroll .provincial-nav-item {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    font-size: 10px;
+  }
+}
+
+/* Compact footer panels on desktop */
+@media (min-width: 1024px) {
+  .footer-panel {
+    padding: 0.85rem 1rem;
+  }
+
+  .footer-seal-pod {
+    margin-top: 0.5rem;
+    padding: 0.75rem 0.5rem;
+  }
+}
+
 /* Keep open submenu above siblings and page content below the header */
 .provincial-nav-bar li:has(button[aria-expanded="true"]),
 .site-mega-nav li:has(button[aria-expanded="true"]) {

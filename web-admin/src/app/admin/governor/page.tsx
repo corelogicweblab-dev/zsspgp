@@ -7,15 +7,18 @@ import {
   getRecentActivity,
   getNotifications,
 } from "@/services/dashboard.service";
+import { getJobApplications } from "@/services/job-applications.service";
 
 export default async function GovernorDashboardPage() {
-  const [stats, complaints, incidents, activity, notifications] = await Promise.all([
-    getDashboardStats(),
-    getRecentComplaints(5),
-    getActiveIncidents(5),
-    getRecentActivity(8),
-    getNotifications(5),
-  ]);
+  const [stats, complaints, incidents, activity, notifications, jobApplications] =
+    await Promise.all([
+      getDashboardStats(),
+      getRecentComplaints(5),
+      getActiveIncidents(5),
+      getRecentActivity(8),
+      getNotifications(5),
+      getJobApplications(12),
+    ]);
 
   return (
     <AdminShell
@@ -28,6 +31,7 @@ export default async function GovernorDashboardPage() {
         incidents={incidents}
         activity={activity}
         notifications={notifications}
+        jobApplications={jobApplications}
       />
     </AdminShell>
   );

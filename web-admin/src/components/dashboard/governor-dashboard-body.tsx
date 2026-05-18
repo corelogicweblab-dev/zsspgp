@@ -10,6 +10,7 @@ import {
   Bell,
 } from "lucide-react";
 import { GovernorCommandHub } from "@/components/dashboard/governor-command-hub";
+import { GovernorJobApplications } from "@/components/dashboard/governor-job-applications";
 import { StatCard } from "@/components/dashboard/stat-card";
 import {
   ComplaintsByCategoryChart,
@@ -25,6 +26,7 @@ import type {
   Complaint,
   DashboardStats,
   Incident,
+  JobApplication,
   Notification,
 } from "@/types";
 
@@ -34,6 +36,7 @@ interface GovernorDashboardBodyProps {
   incidents: Incident[];
   activity: ActivityLog[];
   notifications: Notification[];
+  jobApplications: JobApplication[];
 }
 
 export function GovernorDashboardBody({
@@ -42,6 +45,7 @@ export function GovernorDashboardBody({
   incidents,
   activity,
   notifications,
+  jobApplications,
 }: GovernorDashboardBodyProps) {
   return (
     <>
@@ -86,6 +90,7 @@ export function GovernorDashboardBody({
         </div>
         <div className="space-y-6">
           <RecentActivity activities={activity} />
+          <GovernorJobApplications applications={jobApplications} />
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0">
               <CardTitle>Notifications</CardTitle>

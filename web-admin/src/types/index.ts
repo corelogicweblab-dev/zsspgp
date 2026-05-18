@@ -181,3 +181,27 @@ export interface DashboardStats {
   resolvedToday: number;
   notificationsUnread: number;
 }
+
+export interface PublicBroadcast {
+  id: string;
+  title: string;
+  message: string;
+  link_url: string | null;
+  source: string;
+  created_at: string;
+}
+
+export interface JobApplication {
+  id: string;
+  announcement_id: string;
+  full_name: string;
+  email: string;
+  phone: string | null;
+  municipality: string | null;
+  barangay: string | null;
+  position_applied: string | null;
+  cover_letter: string | null;
+  status: string;
+  created_at: string;
+  announcements?: { title?: string; category?: string } | null;
+}

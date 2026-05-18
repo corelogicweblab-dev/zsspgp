@@ -7,6 +7,7 @@ import { ProvincialNavBar } from "@/components/layout/provincial-nav-bar";
 import { Button } from "@/components/ui/button";
 import { LiveClock } from "@/components/layout/live-clock";
 import { LogoutButton } from "@/components/auth/logout-button";
+import { CitizenNotificationsBell } from "@/components/layout/citizen-notifications-bell";
 import { useSupport } from "@/components/support/support-provider";
 
 interface AppHeaderProps {
@@ -38,7 +39,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           className="min-w-0 flex-1 sm:flex-none lg:[&_img]:!h-12 lg:[&_img]:!w-12"
         />
 
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <CitizenNotificationsBell />
           <Button
             type="button"
             variant="outline"
@@ -52,7 +54,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <LogoutButton />
         </div>
       </div>
-      <ProvincialNavBar className="hidden md:block" />
+      <ProvincialNavBar className="provincial-nav-bar--mobile-scroll" />
     </header>
   );
 }

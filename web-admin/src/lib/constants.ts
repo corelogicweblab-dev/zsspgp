@@ -9,7 +9,16 @@ import type { LucideIcon } from "lucide-react";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
 export const APP_NAME = "Zamboanga Sibugay Smart Provincial Governance Platform";
+export const APP_SLOGAN =
+  "Your Province, Your Platform — Smart Solutions for Better Communities";
 export const APP_SHORT = "ZSSPGP";
+
+/** Provincial Capitol, Ipil — map pin */
+export const PROVINCIAL_CAPITOL = {
+  lat: 7.784,
+  lng: 122.584,
+  label: "Provincial Capitol Complex, Ipil",
+} as const;
 export const LOGO_PATH = "/zamboangasibugaylogo.png";
 export const FOOTER_TEXT = "2026 Province of Zamboanga Sibugay";
 export const POWERED_BY = "CoreLogic";

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canManageInfoAnnouncements } from "@/lib/announcement-banner";
 import { findDepartmentPortalByEmail } from "@/lib/department-portals";
+import { createPublicBroadcast } from "@/lib/public-broadcasts";
 import type { AnnouncementCategory } from "@/types";
 
 const SELECT_FIELDS =
@@ -144,6 +145,19 @@ export async function POST(request: Request) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (is_published) {
+    const link =
+      category === "hiring" && data?.id
+        ? `/announcements/${data.id}/apply`
+        : "/announcements";
+    await createPublicBroadcast(db, {
+      title: category === "hiring" ? "New hiring announcement" : "Provincial announcement",
+      message: title,
+      link_url: link,
+      source: category === "hiring" ? "hiring" : "pio",
+    });
   }
 
   return NextResponse.json({ announcement: data }, { status: 201 });

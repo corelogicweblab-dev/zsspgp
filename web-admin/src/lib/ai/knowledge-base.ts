@@ -1,6 +1,5 @@
-import { CONTACT_INFO } from "@/lib/constants";
+import { APP_SLOGAN, CONTACT_INFO } from "@/lib/constants";
 import { OFFICE_HOURS } from "@/lib/site-navigation";
-import { DEPARTMENT_PORTALS } from "@/lib/department-portals";
 
 export type KnowledgeAction = {
   label: string;
@@ -35,21 +34,35 @@ export const KNOWLEDGE_ENTRIES: KnowledgeEntry[] = [
     ],
     actions: [
       { label: "Create Account", href: "/register" },
-      { label: "Official Login", href: "/login" },
+      { label: "Sign In", href: "/login" },
     ],
   },
   {
     id: "login",
     match: /login|sign\s*in|password|mag\s*login/i,
-    title: "Official Login",
-    summary: "One login page for citizens and all provincial departments.",
+    title: "Sign In",
+    summary: `One secure login at /login for citizens and provincial staff. ${APP_SLOGAN}`,
     steps: [
       "Go to /login.",
-      "Enter your designated office or citizen email and password.",
-      "Department users are routed automatically to their dashboard (e.g. DRRM → /admin/department/drrm).",
+      "Enter the email and password for your account (provided by your office or from registration).",
+      "Staff are routed to their department dashboard automatically.",
       "Citizens go to /dashboard after login.",
     ],
     actions: [{ label: "Sign In", href: "/login" }],
+  },
+  {
+    id: "hiring",
+    match: /hiring|apply|job|vacancy|application|trabaho/i,
+    title: "Job applications",
+    summary: "Hiring announcements from the Provincial Information Office.",
+    steps: [
+      "Browse openings at /announcements?category=hiring.",
+      "Click View application details on a posting.",
+      "Complete the form at /announcements/{id}/apply — submissions go to the Governor command center.",
+    ],
+    actions: [
+      { label: "Hiring announcements", href: "/announcements?category=hiring" },
+    ],
   },
   {
     id: "complaint",
@@ -73,7 +86,7 @@ export const KNOWLEDGE_ENTRIES: KnowledgeEntry[] = [
     title: "DRRM Super Dashboard Ops",
     summary: "Provincial disaster command: live map, active incidents, and response status.",
     steps: [
-      "DRRM staff: sign in with drrm@zamboangasibugay.gov.ph at /login.",
+      "DRRM staff: sign in at /login with your assigned account.",
       "Open DRRM Super Dashboard Ops at /admin/department/drrm for the operations map and incident overview.",
       "Review or update incidents at /admin/incidents.",
       "Citizens report emergencies via /complaints or contact hotline " + hotline + ".",
@@ -129,16 +142,18 @@ export const KNOWLEDGE_ENTRIES: KnowledgeEntry[] = [
     ],
   },
   {
-    id: "departments",
-    match: /department|opisina|tourism|health|agriculture|ict|information/i,
-    title: "Department portals",
-    summary: "Each department has a designated email and password at /login.",
-    steps: DEPARTMENT_PORTALS.map(
-      (d) => `${d.code}: ${d.email} → /admin/department/${d.slug}`
-    ),
+    id: "capitol",
+    match: /capitol|map|ipil|location|saan|address|visit/i,
+    title: "Provincial Capitol map",
+    summary: "Find the capitol complex in Ipil on the home page map.",
+    steps: [
+      "Scroll to the capitol map on the home page or open /#capitol-map.",
+      "The pin marks the Provincial Capitol Complex, Ipil.",
+      `Office hours: ${OFFICE_HOURS.weekdays} ${OFFICE_HOURS.weekdayTime}.`,
+    ],
     actions: [
-      { label: "Department Overview", href: "/admin/department" },
-      { label: "Official Login", href: "/login" },
+      { label: "Capitol map", href: "/#capitol-map" },
+      { label: "Contact section", href: "/#contact" },
     ],
   },
 ];

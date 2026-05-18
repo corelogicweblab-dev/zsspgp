@@ -1,7 +1,7 @@
 import { LandingHeroActions } from "@/components/landing/landing-hero-actions";
 import { HeroDateTime } from "@/components/landing/hero-datetime";
 import { HeroLogo } from "@/components/landing/hero-logo";
-import { APP_NAME } from "@/lib/constants";
+import { APP_NAME, APP_SLOGAN } from "@/lib/constants";
 
 export function LandingHero() {
   const titleBase = APP_NAME.replace(/ Platform$/, "");
@@ -19,8 +19,8 @@ export function LandingHero() {
             {titleBase}{" "}
             <span className="text-amber-200">Platform</span>
           </h1>
-          <p className="mt-2 text-sm leading-relaxed text-slate-200 sm:mt-4 sm:text-base lg:text-lg">
-            Modern, premium, enterprise-grade provincial governance — government-ready.
+          <p className="mt-2 text-sm leading-relaxed text-amber-100/90 sm:mt-4 sm:text-base lg:text-lg">
+            {APP_SLOGAN}
           </p>
           <HeroDateTime />
           <LandingHeroActions />

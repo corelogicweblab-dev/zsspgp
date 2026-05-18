@@ -1,18 +1,17 @@
 import { AnnouncementBannerSection } from "@/components/announcements/announcement-banner-section";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { SmartFeatures } from "@/components/landing/smart-features";
 import { NewsHeadlinesSection } from "@/components/news/news-headlines-section";
-import { PlatformModules } from "@/components/landing/platform-modules";
+import { ProvincialCapitolMap } from "@/components/landing/provincial-capitol-map";
 import { ContactSection } from "@/components/layout/contact-section";
 import { GovernorSpotlight } from "@/components/landing/governor-spotlight";
 import { getFeaturedNews, getPublishedNews } from "@/services/news.service";
 
 export default async function LandingPage() {
   const [featured, recent] = await Promise.all([
-    getFeaturedNews(3),
-    getPublishedNews(6),
+    getFeaturedNews(8),
+    getPublishedNews(8),
   ]);
-  const newsItems = featured.length > 0 ? featured : recent.slice(0, 3);
+  const newsItems = featured.length > 0 ? featured : recent;
 
   return (
     <div className="space-y-10 sm:space-y-14 lg:space-y-16">
@@ -22,14 +21,12 @@ export default async function LandingPage() {
 
       <NewsHeadlinesSection
         articles={newsItems}
-        maxItems={4}
+        maxItems={8}
         title="Provincial Updates"
-        subtitle="Headlines, advisories, and official releases from the Provincial Information Office"
+        subtitle="Latest headlines — browse all releases on the news page"
       />
 
-      <SmartFeatures />
-
-      <PlatformModules />
+      <ProvincialCapitolMap />
 
       <ContactSection />
 

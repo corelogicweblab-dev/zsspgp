@@ -52,7 +52,7 @@ const ALL_NAV_ITEMS: NavItem[] = [
       { label: "Track Your Request", href: "/complaints" },
       { label: "Citizen Dashboard", href: "/dashboard" },
       { label: "Create Account", href: "/register" },
-      { label: "Official Login", href: "/login" },
+      { label: "Sign In", href: "/login" },
     ],
   },
   {

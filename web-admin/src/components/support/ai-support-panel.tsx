@@ -31,7 +31,7 @@ interface AiSupportPanelProps {
 const WELCOME_MESSAGE: AiChatMessage = {
   role: "assistant",
   content:
-    "Contact Us — instant ZSSPGP guidance with accurate steps and direct links. Ask about register, login, complaints, DRRM map, news, or capitol contact.",
+    "Contact Us — accurate ZSSPGP guidance with step-by-step help and real page links. Close this panel (X) anytime to open links on the site. Ask about register, sign in, complaints, hiring applications, news, announcements, or the capitol map.",
 };
 
 const QUICK_PROMPTS = [

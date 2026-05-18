@@ -2,13 +2,11 @@
 
 import { Suspense, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Building2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { resolvePostLoginPath } from "@/lib/auth-redirect";
 import { resolveSafeRedirectPath } from "@/lib/admin-access";
-import { DEPARTMENT_PORTALS } from "@/lib/department-portals";
+import { APP_SLOGAN } from "@/lib/constants";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { GoogleSignInButton } from "@/components/auth/google-sign-in-button";
 import { SupabaseConfigHint } from "@/components/auth/supabase-config-hint";
@@ -87,10 +85,10 @@ function LoginForm() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Official Login</CardTitle>
+        <CardTitle>Sign In</CardTitle>
         <p className="text-sm text-slate-400">
-          One login for citizens, departments, and provincial offices. Use your designated office email
-          and password — you will be routed directly to your dashboard.
+          One secure login for citizens and provincial offices. Use the email and password assigned to
+          your account — you will be routed to your dashboard automatically.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -135,28 +133,6 @@ function LoginForm() {
           </Button>
         </form>
 
-        <div className="rounded-xl border border-cyan-500/20 bg-slate-900/50 p-4">
-          <p className="mb-3 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-300">
-            <Building2 className="h-4 w-4" />
-            Department portal emails
-          </p>
-          <ul className="space-y-2 text-xs text-slate-400">
-            {DEPARTMENT_PORTALS.map((dept) => (
-              <li key={dept.code} className="flex items-center gap-2">
-                <div className="relative h-7 w-7 shrink-0 overflow-hidden rounded-full border border-cyan-500/20 bg-slate-950">
-                  <Image src={dept.imagePath} alt="" fill className="object-contain p-0.5" sizes="28px" />
-                </div>
-                <span className="font-medium text-slate-300">{dept.code}</span>
-                <span className="truncate text-cyan-200/90">{dept.email}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-[11px] text-slate-500">
-            Each department has its own email and password (set in Supabase Auth). After login you go
-            straight to that department&apos;s dashboard.
-          </p>
-        </div>
-
         <p className="text-center text-sm text-slate-400">
           <Link href="/register" className="text-cyan-400 hover:underline">
             Create account with your role
@@ -171,7 +147,7 @@ export default function LoginPage() {
   return (
     <CitizenPage
       title="Sign In"
-      subtitle="Zamboanga Sibugay Smart Provincial Governance Platform"
+      subtitle={APP_SLOGAN}
       maxWidth="md"
     >
       <Suspense fallback={<Card><CardContent className="py-8 text-center text-slate-400">Loading…</CardContent></Card>}>

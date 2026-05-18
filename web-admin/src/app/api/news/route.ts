@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { getNewsDataClient } from "@/lib/news-db";
+import { createPublicBroadcast } from "@/lib/public-broadcasts";
 import { requireNewsManager } from "@/lib/news-auth";
 import { newsWriteSchema, toNewsRow } from "@/lib/news-api-schemas";
 import { sanitizeNewsHtml, isHtmlContent } from "@/lib/sanitize-html";
@@ -96,6 +97,15 @@ export async function POST(request: Request) {
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (row.is_published && data?.id) {
+    await createPublicBroadcast(db, {
+      title: "New provincial headline",
+      message: String(data.title ?? input.title),
+      link_url: `/news/${data.id}`,
+      source: "pio",
+    });
   }
 
   return NextResponse.json({ data }, { status: 201 });

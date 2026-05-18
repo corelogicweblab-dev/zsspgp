@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { APP_NAME, APP_SHORT } from "@/lib/constants";
+import { APP_NAME, APP_SHORT, APP_SLOGAN } from "@/lib/constants";
 import { AppProviders } from "@/components/providers/app-providers";
 import { AppShell } from "@/components/layout/app-shell";
 
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: `${APP_SHORT} | Smart Provincial Governance`,
-  description: APP_NAME,
+  description: `${APP_NAME} — ${APP_SLOGAN}`,
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,

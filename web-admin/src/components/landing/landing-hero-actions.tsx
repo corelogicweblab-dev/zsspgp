@@ -24,7 +24,7 @@ export function LandingHeroActions() {
       </Link>
       <Link href="/login">
         <Button variant="ghost" size="default" className="sm:h-12 sm:px-6 sm:text-base text-cyan-200/90">
-          Official Login
+          Sign In
         </Button>
       </Link>
     </div>

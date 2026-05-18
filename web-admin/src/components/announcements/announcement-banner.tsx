@@ -3,15 +3,12 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   type BannerAnnouncement,
   canManageInfoAnnouncements,
   cycleAnnouncements,
-  dismissBanner,
-  filterVisibleAnnouncements,
   handleBannerClick,
-  loadDismissedAnnouncementIds,
   shouldRenderAnnouncementBanner,
   toBannerMessages,
 } from "@/lib/announcement-banner";
@@ -82,19 +79,10 @@ export function AnnouncementBanner({
   className,
 }: AnnouncementBannerProps) {
   const router = useRouter();
-  const [dismissedIds, setDismissedIds] = useState<string[]>([]);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 
-  useEffect(() => {
-    setDismissedIds(loadDismissedAnnouncementIds());
-  }, []);
-
-  const visible = useMemo(
-    () => filterVisibleAnnouncements(announcements, dismissedIds),
-    [announcements, dismissedIds]
-  );
-
+  const visible = announcements;
   const messages = useMemo(() => toBannerMessages(visible), [visible]);
   const safeIndex = visible.length ? index % visible.length : 0;
   const current = visible[safeIndex];
@@ -112,15 +100,6 @@ export function AnnouncementBanner({
     }, 6000);
     return () => window.clearInterval(timer);
   }, [visible.length, messages, paused]);
-
-  const onDismiss = useCallback(
-    (e: React.MouseEvent) => {
-      e.stopPropagation();
-      if (!current) return;
-      setDismissedIds((prev) => dismissBanner(current.id, prev));
-    },
-    [current]
-  );
 
   const onBannerClick = useCallback(() => {
     const path =
@@ -179,42 +158,32 @@ export function AnnouncementBanner({
           })}
         </div>
 
-        <div
-          className="flex w-full shrink-0 items-center justify-end gap-1 sm:w-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
-          {showControls && (
-            <>
-              <button
-                type="button"
-                className="rounded-md p-1.5 text-amber-100/80 transition hover:bg-white/10 hover:text-white"
-                aria-label="Previous announcement"
-                onClick={onPrev}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <span className="min-w-[2.25rem] text-center text-[10px] font-semibold text-amber-200/90 tabular-nums">
-                {safeIndex + 1}/{visible.length}
-              </span>
-              <button
-                type="button"
-                className="rounded-md p-1.5 text-amber-100/80 transition hover:bg-white/10 hover:text-white"
-                aria-label="Next announcement"
-                onClick={onNext}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </>
-          )}
-          <button
-            type="button"
-            className="rounded-md p-1.5 text-amber-100/80 transition hover:bg-white/15 hover:text-white"
-            aria-label="Dismiss announcement"
-            onClick={onDismiss}
+        {showControls && (
+          <div
+            className="flex w-full shrink-0 items-center justify-center gap-1 sm:w-auto sm:justify-end"
+            onClick={(e) => e.stopPropagation()}
           >
-            <X className="h-4 w-4" />
-          </button>
-        </div>
+            <button
+              type="button"
+              className="rounded-md p-1.5 text-amber-100/80 transition hover:bg-white/10 hover:text-white"
+              aria-label="Previous announcement"
+              onClick={onPrev}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <span className="min-w-[2.25rem] text-center text-[10px] font-semibold text-amber-200/90 tabular-nums">
+              {safeIndex + 1}/{visible.length}
+            </span>
+            <button
+              type="button"
+              className="rounded-md p-1.5 text-amber-100/80 transition hover:bg-white/10 hover:text-white"
+              aria-label="Next announcement"
+              onClick={onNext}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+        )}
       </div>
 
       {showControls && (

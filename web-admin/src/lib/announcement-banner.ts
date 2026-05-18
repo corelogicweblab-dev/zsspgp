@@ -1,7 +1,6 @@
 /** Announcement banner helpers — IO-authored content, public read. */
 
 export const ANNOUNCEMENT_BANNER_ICON = "📢";
-export const DISMISSED_ANNOUNCEMENTS_KEY = "zsspgp-dismissed-announcements";
 
 export type BannerAnnouncement = {
   id: string;
@@ -26,44 +25,14 @@ export function canManageInfoAnnouncements(
   return isInformationOfficeAdmin(role, departmentCode);
 }
 
-/**
- * Whether the banner should render.
- * Public: when there is a message and announcements from Information Office exist.
- * The role parameter gates admin-only preview chrome, not citizen visibility.
- */
+/** Whether the banner should render when published announcements exist. */
 export function shouldRenderAnnouncementBanner(
   message: string,
-  role: string,
-  departmentCode?: string | null,
+  _role: string,
+  _departmentCode?: string | null,
   hasPublishedItems = true
 ): boolean {
-  if (!message.trim() || !hasPublishedItems) return false;
-  return true;
-}
-
-export function loadDismissedAnnouncementIds(): string[] {
-  if (typeof window === "undefined") return [];
-  try {
-    const raw = localStorage.getItem(DISMISSED_ANNOUNCEMENTS_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? parsed.filter((x) => typeof x === "string") : [];
-  } catch {
-    return [];
-  }
-}
-
-export function persistDismissedAnnouncementIds(ids: string[]): void {
-  if (typeof window === "undefined") return;
-  localStorage.setItem(DISMISSED_ANNOUNCEMENTS_KEY, JSON.stringify(ids));
-}
-
-/** Hide a single announcement in the rotating banner. */
-export function dismissBanner(id: string, dismissedIds: string[]): string[] {
-  if (dismissedIds.includes(id)) return dismissedIds;
-  const next = [...dismissedIds, id];
-  persistDismissedAnnouncementIds(next);
-  return next;
+  return Boolean(message.trim() && hasPublishedItems);
 }
 
 /** Advance carousel index for multiple announcement messages. */
@@ -85,13 +54,6 @@ export function handleBannerClick(
 ): void {
   void role;
   navigate(path);
-}
-
-export function filterVisibleAnnouncements(
-  items: BannerAnnouncement[],
-  dismissedIds: string[]
-): BannerAnnouncement[] {
-  return items.filter((a) => !dismissedIds.includes(a.id));
 }
 
 export function toBannerMessages(items: BannerAnnouncement[]): string[] {

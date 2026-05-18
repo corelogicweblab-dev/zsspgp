@@ -18,20 +18,20 @@ export default async function ExecutiveOrdersPage() {
           No executive orders published yet.
         </p>
       ) : (
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <ul className="mx-auto grid max-w-3xl grid-cols-2 gap-4">
           {orders.map((order) => (
             <li key={order.id}>
               <Link
                 href={`/executive-orders/${order.id}`}
                 className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:border-cyan-400/50"
               >
-                <div className="relative aspect-[4/5] bg-slate-100">
+                <div className="relative aspect-square bg-slate-100">
                   <Image
                     src={order.image_url}
                     alt=""
                     fill
-                    className="object-cover transition group-hover:scale-[1.02]"
-                    sizes="200px"
+                    className="object-contain p-1 transition group-hover:scale-[1.02]"
+                    sizes="(max-width: 640px) 45vw, 280px"
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-3">

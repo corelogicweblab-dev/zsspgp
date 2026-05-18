@@ -317,6 +317,23 @@ body {
 
 .app-header {
   isolation: isolate;
+  overflow: visible;
+}
+
+.provincial-nav-dropdown-portal {
+  pointer-events: auto;
+  animation: nav-dropdown-in 0.18s ease-out;
+}
+
+@keyframes nav-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .app-main {
@@ -490,27 +507,27 @@ body {
   will-change: opacity, transform;
 }
 
-/* Nav strip: horizontal scroll only — no vertical scrollbar */
-.provincial-nav-bar--mobile-scroll .provincial-nav-bar-inner {
+/* Desktop nav strip: horizontal scroll when items overflow — dropdowns use fixed portal */
+.provincial-nav-bar--desktop-scroll .provincial-nav-bar-inner {
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   justify-content: flex-start;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-.provincial-nav-bar--mobile-scroll .provincial-nav-bar-inner::-webkit-scrollbar {
+.provincial-nav-bar--desktop-scroll .provincial-nav-bar-inner::-webkit-scrollbar {
   display: none;
   width: 0;
   height: 0;
 }
 
-.provincial-nav-bar--mobile-scroll .provincial-nav-track {
+.provincial-nav-bar--desktop-scroll .provincial-nav-track {
   overflow: visible;
 }
 
-.provincial-nav-bar--mobile-scroll .provincial-nav-track [role="menubar"] {
+.provincial-nav-bar--desktop-scroll .provincial-nav-track [role="menubar"] {
   flex-wrap: nowrap;
   justify-content: flex-start;
   min-width: max-content;
@@ -519,7 +536,7 @@ body {
 }
 
 @media (max-width: 767px) {
-  .provincial-nav-bar--mobile-scroll .provincial-nav-item {
+  .provincial-nav-bar--desktop-scroll .provincial-nav-item {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     font-size: 10px;
@@ -540,6 +557,15 @@ body {
 
 .capitol-map-container {
   background: #0f172a;
+}
+
+/* PIO gallery — 4×4 square cells, always four columns */
+.pio-gallery-grid {
+  width: 100%;
+}
+
+.pio-gallery-cell {
+  min-height: 0;
 }
 
 /* Compact footer panels on desktop */
@@ -741,6 +767,38 @@ body {
   padding: 0.35rem 0.85rem;
   background: rgba(56, 189, 248, 0.06);
   box-shadow: 0 0 20px rgba(56, 189, 248, 0.08);
+}
+
+/* Provincial Digital Gateway — single row on all breakpoints (horizontal scroll when narrow) */
+.footer-gateway-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(9.5rem, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(9.5rem, 1fr);
+  gap: 0.65rem;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scroll-snap-type: x proximity;
+  padding-bottom: 0.15rem;
+}
+
+.footer-gateway-cell {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 639px) {
+  .footer-gateway-row .footer-panel {
+    padding: 0.7rem 0.6rem;
+  }
+
+  .footer-gateway-row .footer-panel-title {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
 }
 
 .footer-panel {

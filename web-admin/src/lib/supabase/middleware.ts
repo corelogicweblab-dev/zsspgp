@@ -1,10 +1,15 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/supabase/env";
-import { resolvePostLoginPath, type AuthProfile } from "@/lib/auth-redirect";
+import {
+  isProvincialStaffRole,
+  resolvePostLoginPath,
+  type AuthProfile,
+} from "@/lib/auth-redirect";
 import {
   canAccessAdminPath,
   getUnauthorizedAdminFallback,
+  resolveSafeRedirectPath,
 } from "@/lib/admin-access";
 import { getDepartmentDashboardPath } from "@/lib/department-portals";
 import type { UserRole } from "@/types";
@@ -90,8 +95,16 @@ export async function updateSession(request: NextRequest) {
 
   if (user && isAuthPage) {
     const url = request.nextUrl.clone();
-    url.pathname = resolvePostLoginPath(session);
+    const redirectParam = url.searchParams.get("redirect");
+    url.pathname =
+      resolveSafeRedirectPath(redirectParam, session) ?? resolvePostLoginPath(session);
     url.searchParams.delete("redirect");
+    return NextResponse.redirect(url);
+  }
+
+  if (user && isProvincialStaffRole(session.role) && (path === "/" || path === "/dashboard")) {
+    const url = request.nextUrl.clone();
+    url.pathname = resolvePostLoginPath(session);
     return NextResponse.redirect(url);
   }
 

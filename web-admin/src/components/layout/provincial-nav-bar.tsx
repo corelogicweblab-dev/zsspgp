@@ -2,7 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
 import {
   PROVINCIAL_NAV_ITEMS,
@@ -54,6 +64,88 @@ function slugify(title: string): string {
   return title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 }
 
+type DropdownCoords = { top: number; left?: number; right?: number; minWidth: number };
+
+function useDropdownPosition(
+  open: boolean,
+  anchorRef: React.RefObject<HTMLElement | null>,
+  align: "left" | "right"
+): DropdownCoords | null {
+  const [coords, setCoords] = useState<DropdownCoords | null>(null);
+
+  useLayoutEffect(() => {
+    if (!open || !anchorRef.current) {
+      setCoords(null);
+      return;
+    }
+    const update = () => {
+      const rect = anchorRef.current!.getBoundingClientRect();
+      setCoords({
+        top: rect.bottom + 4,
+        left: align === "left" ? rect.left : undefined,
+        right: align === "right" ? window.innerWidth - rect.right : undefined,
+        minWidth: Math.max(240, rect.width),
+      });
+    };
+    update();
+    window.addEventListener("scroll", update, true);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update, true);
+      window.removeEventListener("resize", update);
+    };
+  }, [open, align, anchorRef]);
+
+  return coords;
+}
+
+function NavDropdownPortal({
+  open,
+  anchorRef,
+  align,
+  id,
+  ariaLabel,
+  children,
+}: {
+  open: boolean;
+  anchorRef: React.RefObject<HTMLButtonElement | null>;
+  align: "left" | "right";
+  id: string;
+  ariaLabel: string;
+  children: ReactNode;
+}) {
+  const coords = useDropdownPosition(open, anchorRef, align);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted || !open || !coords) return null;
+
+  const style: CSSProperties = {
+    position: "fixed",
+    top: coords.top,
+    left: coords.left,
+    right: coords.right,
+    minWidth: coords.minWidth,
+    zIndex: 400,
+  };
+
+  return createPortal(
+    <div
+      id={id}
+      role="menu"
+      aria-label={ariaLabel}
+      style={style}
+      className="provincial-nav-dropdown-portal"
+    >
+      {children}
+    </div>,
+    document.body
+  );
+}
+
 /** @see setActiveTab — updates the highlighted top-level tab */
 export function setActiveTab(tab: string, setter: (value: string | null) => void): void {
   setter(tab);
@@ -68,52 +160,34 @@ export function toggleDropdown(
   setter(current === tab ? null : tab);
 }
 
-export function createNavItem(
-  item: NavItem,
-  ctx: NavRenderContext,
-  options?: { alignDropdown?: "left" | "right" }
-): ReactNode {
+function NavDropdownMenuItem({
+  item,
+  ctx,
+  alignDropdown = "left",
+}: {
+  item: NavItem;
+  ctx: NavRenderContext;
+  alignDropdown?: "left" | "right";
+}) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const label = navDisplayTitle(item);
   const isActive = ctx.activeTab === item.title;
   const isOpen = ctx.openDropdown === item.title;
-  const isAlert = item.title === "Emergency Alerts";
-  const alignRight = options?.alignDropdown === "right";
-
-  if (!item.hasDropdown) {
-    return (
-      <li key={item.title} role="none" className="relative flex shrink-0 items-stretch">
-        <Link
-          href={item.link}
-          role="menuitem"
-          className={cn(
-            "provincial-nav-item flex items-center whitespace-nowrap px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] transition-all duration-200 sm:px-3 lg:px-3.5 lg:text-xs",
-            isAlert && "provincial-nav-item--alert",
-            isActive && "provincial-nav-item-active"
-          )}
-          onClick={() => {
-            ctx.setActiveTab(item.title);
-            ctx.onNavigate?.();
-          }}
-        >
-          {label}
-        </Link>
-      </li>
-    );
-  }
+  const submenuId = `nav-submenu-${slugify(item.title)}`;
 
   return (
     <li
-      key={item.title}
       role="none"
       className="relative flex shrink-0 items-stretch"
       onMouseEnter={() => !ctx.lite && ctx.openDropdownFor(item.title)}
     >
       <button
+        ref={buttonRef}
         type="button"
         role="menuitem"
         aria-haspopup="true"
         aria-expanded={isOpen}
-        aria-controls={`nav-submenu-${slugify(item.title)}`}
+        aria-controls={submenuId}
         className={cn(
           "provincial-nav-item flex items-center gap-0.5 whitespace-nowrap px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] transition-all duration-200 sm:px-3 lg:px-3.5 lg:text-xs",
           (isActive || isOpen) && "provincial-nav-item-active"
@@ -127,18 +201,12 @@ export function createNavItem(
           aria-hidden
         />
       </button>
-
-      <div
-        id={`nav-submenu-${slugify(item.title)}`}
-        role="menu"
-        aria-label={`${item.title} submenu`}
-        className={cn(
-          "provincial-nav-dropdown absolute top-full z-[200] min-w-[240px] pt-1 transition-all duration-200",
-          alignRight ? "right-0 left-auto" : "left-0",
-          isOpen
-            ? "pointer-events-auto visible translate-y-0 opacity-100"
-            : "pointer-events-none invisible -translate-y-1 opacity-0"
-        )}
+      <NavDropdownPortal
+        open={isOpen}
+        anchorRef={buttonRef}
+        align={alignDropdown}
+        id={submenuId}
+        ariaLabel={`${item.title} submenu`}
       >
         <ul className="provincial-nav-dropdown-panel overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">
           {item.children?.map((child) => {
@@ -165,14 +233,56 @@ export function createNavItem(
             );
           })}
         </ul>
-      </div>
+      </NavDropdownPortal>
     </li>
+  );
+}
+
+export function createNavItem(
+  item: NavItem,
+  ctx: NavRenderContext,
+  options?: { alignDropdown?: "left" | "right" }
+): ReactNode {
+  const label = navDisplayTitle(item);
+  const isActive = ctx.activeTab === item.title;
+  const isAlert = item.title === "Emergency Alerts";
+
+  if (!item.hasDropdown) {
+    return (
+      <li key={item.title} role="none" className="relative flex shrink-0 items-stretch">
+        <Link
+          href={item.link}
+          role="menuitem"
+          className={cn(
+            "provincial-nav-item flex items-center whitespace-nowrap px-2.5 py-2 text-[11px] font-semibold uppercase tracking-[0.1em] transition-all duration-200 sm:px-3 lg:px-3.5 lg:text-xs",
+            isAlert && "provincial-nav-item--alert",
+            isActive && "provincial-nav-item-active"
+          )}
+          onClick={() => {
+            ctx.setActiveTab(item.title);
+            ctx.onNavigate?.();
+          }}
+        >
+          {label}
+        </Link>
+      </li>
+    );
+  }
+
+  return (
+    <NavDropdownMenuItem
+      key={item.title}
+      item={item}
+      ctx={ctx}
+      alignDropdown={options?.alignDropdown}
+    />
   );
 }
 
 const MORE_MENU_ID = "More";
 
-function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNode {
+function NavMoreMenuItem({ moreItems, ctx }: { moreItems: NavItem[]; ctx: NavRenderContext }) {
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const isOpen = ctx.openDropdown === MORE_MENU_ID;
   const isActive = ctx.activeTab === MORE_MENU_ID;
 
@@ -183,6 +293,7 @@ function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNo
       onMouseEnter={() => !ctx.lite && ctx.openDropdownFor(MORE_MENU_ID)}
     >
       <button
+        ref={buttonRef}
         type="button"
         role="menuitem"
         aria-haspopup="true"
@@ -200,17 +311,12 @@ function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNo
           aria-hidden
         />
       </button>
-
-      <div
+      <NavDropdownPortal
+        open={isOpen}
+        anchorRef={buttonRef}
+        align="right"
         id="nav-submenu-more"
-        role="menu"
-        aria-label="More provincial sections"
-        className={cn(
-          "provincial-nav-dropdown absolute right-0 left-auto top-full z-[200] min-w-[min(100vw-2rem,22rem)] pt-1 transition-all duration-200 sm:min-w-[20rem]",
-          isOpen
-            ? "pointer-events-auto visible translate-y-0 opacity-100"
-            : "pointer-events-none invisible -translate-y-1 opacity-0"
-        )}
+        ariaLabel="More provincial sections"
       >
         <div className="provincial-nav-dropdown-panel provincial-nav-mega-panel max-h-[min(70vh,28rem)] overflow-y-auto rounded-xl border border-cyan-400/25 bg-slate-950/98 p-3 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">
           {moreItems.map((section) => (
@@ -243,9 +349,13 @@ function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNo
             </div>
           ))}
         </div>
-      </div>
+      </NavDropdownPortal>
     </li>
   );
+}
+
+function createMoreNavItem(moreItems: NavItem[], ctx: NavRenderContext): ReactNode {
+  return <NavMoreMenuItem moreItems={moreItems} ctx={ctx} />;
 }
 
 export function renderNavBar(
@@ -493,3 +603,4 @@ function DrawerNavRow({ item, ctx }: { item: NavItem; ctx: NavRenderContext }) {
 export function SiteMegaNav() {
   return <ProvincialNavBar className="hidden md:block" />;
 }
+

@@ -2,7 +2,6 @@ import { AnnouncementBannerSection } from "@/components/announcements/announceme
 import { LandingHero } from "@/components/landing/landing-hero";
 import { NewsHeadlinesSection } from "@/components/news/news-headlines-section";
 import { PioImageCarousel } from "@/components/landing/pio-image-carousel";
-import { ProvincialCapitolMap } from "@/components/landing/provincial-capitol-map";
 import { ContactSection } from "@/components/layout/contact-section";
 import { ExecutiveOrdersSection } from "@/components/landing/executive-orders-section";
 import { GovernorSpotlight } from "@/components/landing/governor-spotlight";
@@ -35,8 +34,6 @@ export default async function LandingPage() {
       />
 
       {carouselSlides.length > 0 && <PioImageCarousel slides={carouselSlides} />}
-
-      <ProvincialCapitolMap />
 
       <ContactSection />
 

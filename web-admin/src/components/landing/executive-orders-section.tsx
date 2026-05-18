@@ -4,8 +4,9 @@ import { ScrollText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ExecutiveOrder } from "@/types";
 
+/** Home section: 2×2 grid, square covers with object-contain. */
 export function ExecutiveOrdersSection({ orders }: { orders: ExecutiveOrder[] }) {
-  const items = orders.slice(0, 16);
+  const items = orders.slice(0, 4);
 
   if (!items.length) return null;
 
@@ -24,19 +25,19 @@ export function ExecutiveOrdersSection({ orders }: { orders: ExecutiveOrder[] })
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+      <div className="executive-orders-grid mx-auto grid max-w-2xl grid-cols-2 grid-rows-2 gap-3 sm:gap-4">
         {items.map((order) => (
           <article
             key={order.id}
             className="flex flex-col overflow-hidden rounded-xl border border-cyan-500/15 bg-slate-950/60"
           >
-            <div className="relative aspect-[4/5] w-full bg-slate-900">
+            <div className="relative aspect-square w-full bg-slate-900">
               <Image
                 src={order.image_url}
                 alt={order.title}
                 fill
-                className="object-cover"
-                sizes="(max-width: 640px) 50vw, 25vw"
+                className="object-contain p-1"
+                sizes="(max-width: 640px) 45vw, 280px"
               />
             </div>
             <div className="flex flex-1 flex-col p-3">

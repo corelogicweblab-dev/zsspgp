@@ -4,7 +4,12 @@ import {
   findDepartmentPortalBySlug,
   getDepartmentSlugFromCode,
 } from "@/lib/department-portals";
-import { resolvePostLoginPath, type AuthProfile } from "@/lib/auth-redirect";
+import {
+  isProvincialStaffRole,
+  PUBLIC_POST_LOGIN_PATHS,
+  resolvePostLoginPath,
+  type AuthProfile,
+} from "@/lib/auth-redirect";
 
 /** Whether this role may open this admin path (pathname without query). */
 export function canAccessAdminPath(
@@ -72,6 +77,14 @@ export function resolveSafeRedirectPath(
   if (redirect.startsWith("//") || redirect.includes("://")) return null;
 
   const pathOnly = redirect.split("?")[0];
+
+  if (isProvincialStaffRole(profile.role)) {
+    if (PUBLIC_POST_LOGIN_PATHS.has(pathOnly)) return null;
+    if (!pathOnly.startsWith("/admin") && !pathOnly.startsWith("/governor")) {
+      return null;
+    }
+  }
+
   if (pathOnly.startsWith("/admin") && !canAccessAdminPath(profile.role, pathOnly, profile.departmentCode)) {
     return null;
   }

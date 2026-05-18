@@ -26,8 +26,15 @@ export default async function ExecutiveOrderDetailPage({
       </Link>
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
-        <div className="relative aspect-[16/10] w-full bg-slate-100">
-          <Image src={order.image_url} alt="" fill className="object-cover" priority sizes="800px" />
+        <div className="relative mx-auto aspect-square w-full max-w-lg bg-slate-100">
+          <Image
+            src={order.image_url}
+            alt=""
+            fill
+            className="object-contain p-2"
+            priority
+            sizes="(max-width: 768px) 100vw, 512px"
+          />
         </div>
         <div className="space-y-4 p-5 sm:p-8">
           {order.order_number && (

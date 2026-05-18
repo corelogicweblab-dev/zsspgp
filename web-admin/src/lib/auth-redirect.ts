@@ -8,6 +8,13 @@ export type AuthProfile = {
   departmentCode?: string | null;
 };
 
+/** Provincial staff and executives — not public citizens. */
+export function isProvincialStaffRole(role: UserRole): boolean {
+  return role !== "citizen";
+}
+
+export const PUBLIC_POST_LOGIN_PATHS = new Set(["/", "/login", "/register", "/dashboard"]);
+
 export function resolvePostLoginPath(
   profile: AuthProfile,
   redirectParam?: string | null

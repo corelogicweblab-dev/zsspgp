@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { LiveClock } from "@/components/layout/live-clock";
 import { LogoutButton } from "@/components/auth/logout-button";
 import { CitizenNotificationsBell } from "@/components/layout/citizen-notifications-bell";
+import { SiteSearchBar } from "@/components/layout/site-search-bar";
 import { useSupport } from "@/components/support/support-provider";
 
 interface AppHeaderProps {
@@ -40,6 +41,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
         />
 
         <div className="ml-auto flex shrink-0 items-center gap-1 sm:gap-2">
+          <SiteSearchBar />
           <CitizenNotificationsBell />
           <Button
             type="button"
@@ -54,7 +56,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <LogoutButton />
         </div>
       </div>
-      <ProvincialNavBar className="provincial-nav-bar--mobile-scroll" />
+      <ProvincialNavBar className="provincial-nav-bar--desktop-scroll hidden md:block" />
     </header>
   );
 }

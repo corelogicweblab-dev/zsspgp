@@ -4,6 +4,7 @@ import { useState } from "react";
 import { SideNav } from "./side-nav";
 import { AppHeader } from "./app-header";
 import { AppFooter } from "./app-footer";
+import { ProvincialCapitolMap } from "@/components/landing/provincial-capitol-map";
 import { InstallAppBanner } from "./install-app-banner";
 import { SupportFab } from "@/components/support/support-fab";
 
@@ -18,6 +19,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <main className="app-main mx-auto w-full max-w-7xl flex-1 px-3 py-4 sm:p-6 lg:p-8">
         {children}
       </main>
+      <div className="mx-auto w-full max-w-7xl px-3 pb-6 sm:px-6 sm:pb-8">
+        <ProvincialCapitolMap />
+      </div>
       <AppFooter />
       <SupportFab />
     </div>

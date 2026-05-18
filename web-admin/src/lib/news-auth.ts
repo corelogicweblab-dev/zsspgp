@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { findDepartmentPortalByEmail } from "@/lib/department-portals";
 import type { UserRole } from "@/types";
 
 export type NewsManagerProfile = {
@@ -15,12 +16,53 @@ const MANAGER_ROLES: UserRole[] = [
   "ict_admin",
 ];
 
+/** Matches middleware + department portal email (e.g. information@…). */
 export function canManageProvincialNews(
   role: UserRole,
-  departmentCode?: string | null
+  departmentCode?: string | null,
+  email?: string | null
 ): boolean {
   if (MANAGER_ROLES.includes(role)) return true;
-  return role === "department_admin" && departmentCode === "INFO";
+
+  if (role !== "department_admin") return false;
+
+  if (departmentCode?.toUpperCase() === "INFO") return true;
+
+  const portal = findDepartmentPortalByEmail(email);
+  return portal?.code === "INFO";
+}
+
+function parseDepartmentCode(departments: unknown): string | null {
+  if (!departments) return null;
+  if (Array.isArray(departments)) {
+    const first = departments[0] as { code?: string } | undefined;
+    return first?.code?.toUpperCase() ?? null;
+  }
+  return (departments as { code?: string }).code?.toUpperCase() ?? null;
+}
+
+async function resolveDepartmentCode(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  row: {
+    department_id: string | null;
+    departments: unknown;
+    email: string | null;
+  }
+): Promise<string | null> {
+  const fromJoin = parseDepartmentCode(row.departments);
+  if (fromJoin) return fromJoin;
+
+  if (row.department_id) {
+    const { data: dept } = await supabase
+      .from("departments")
+      .select("code")
+      .eq("id", row.department_id)
+      .maybeSingle();
+    if (dept?.code) return dept.code.toUpperCase();
+  }
+
+  const portal = findDepartmentPortalByEmail(row.email);
+  return portal?.code ?? null;
 }
 
 export async function requireNewsManager(): Promise<
@@ -38,7 +80,7 @@ export async function requireNewsManager(): Promise<
 
   const { data: row, error } = await supabase
     .from("users")
-    .select("id, role, email, full_name, department_id, departments(code)")
+    .select("id, role, email, full_name, department_id, departments:department_id (code)")
     .eq("id", user.id)
     .single();
 
@@ -46,11 +88,15 @@ export async function requireNewsManager(): Promise<
     return { ok: false, status: 403, message: "User profile not found." };
   }
 
-  const departmentCode =
-    (row.departments as { code?: string } | null)?.code ?? null;
   const role = row.role as UserRole;
+  const email = row.email ?? user.email ?? null;
+  const departmentCode = await resolveDepartmentCode(supabase, {
+    department_id: row.department_id,
+    departments: row.departments,
+    email,
+  });
 
-  if (!canManageProvincialNews(role, departmentCode)) {
+  if (!canManageProvincialNews(role, departmentCode, email)) {
     return {
       ok: false,
       status: 403,
@@ -64,7 +110,7 @@ export async function requireNewsManager(): Promise<
     profile: {
       userId: row.id,
       role,
-      email: row.email,
+      email,
       fullName: row.full_name,
       departmentCode,
     },

@@ -287,48 +287,126 @@ body {
   50% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.45); }
 }
 
-/* Provincial mega menu (reference-style) */
-.site-mega-nav {
-  border-top: 1px solid rgba(99, 102, 241, 0.35);
+/* Provincial announcement banner (above Provincial Updates) */
+.announcement-banner {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(251, 191, 36, 0.35);
   background: linear-gradient(
     90deg,
-    rgba(49, 46, 129, 0.95) 0%,
-    rgba(67, 56, 202, 0.92) 35%,
-    rgba(79, 70, 229, 0.9) 65%,
-    rgba(49, 46, 129, 0.95) 100%
+    rgba(30, 58, 138, 0.95) 0%,
+    rgba(67, 56, 202, 0.92) 40%,
+    rgba(124, 58, 237, 0.9) 100%
   );
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 24px rgba(30, 27, 75, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  overflow: hidden;
 }
 
+.announcement-banner-track {
+  transition: background 0.2s ease;
+}
+
+.announcement-banner-track:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.announcement-banner-icon {
+  filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.45));
+}
+
+.app-header {
+  isolation: isolate;
+}
+
+.app-main {
+  min-width: 0;
+  overflow-x: clip;
+}
+
+@media (max-width: 639px) {
+  .announcement-banner-track {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .announcement-banner-inner p {
+    font-size: 0.8125rem;
+  }
+
+  .provincial-nav-bar-inner {
+    max-width: 100vw;
+  }
+}
+
+.announcement-banner-track {
+  cursor: pointer;
+}
+
+/* Provincial navigation — dark blue → purple gradient, yellow active tab */
+.provincial-nav-bar,
+.site-mega-nav {
+  border-top: 1px solid rgba(129, 140, 248, 0.4);
+  background: linear-gradient(
+    90deg,
+    #0f172a 0%,
+    #1e3a8a 22%,
+    #312e81 50%,
+    #5b21b6 78%,
+    #4c1d95 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 4px 24px rgba(30, 27, 75, 0.45);
+}
+
+.provincial-nav-bar-inner,
 .site-mega-nav-inner {
   position: relative;
 }
 
+.provincial-nav-bar-inner::before,
 .site-mega-nav-inner::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='120' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q30 0 60 20 T120 20' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/%3E%3C/svg%3E");
-  opacity: 0.5;
+  background: url("data:image/svg+xml,%3Csvg width='120' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 Q30 0 60 20 T120 20' fill='none' stroke='rgba(255,255,255,0.05)' stroke-width='1'/%3E%3C/svg%3E");
+  opacity: 0.55;
   pointer-events: none;
 }
 
+.provincial-nav-item,
 .site-mega-nav-item {
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-  transition: background 0.2s, color 0.2s;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    transform 0.2s ease;
 }
 
+.provincial-nav-item:hover,
+.provincial-nav-item-active,
 .site-mega-nav-item:hover,
 .site-mega-nav-item-active {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fde68a;
+  background: rgba(255, 255, 255, 0.1);
+  color: #facc15;
+  transform: translateY(-1px);
 }
 
+.provincial-nav-divider,
 .site-mega-nav-divider {
   color: rgba(255, 255, 255, 0.35);
   font-weight: 300;
   user-select: none;
+}
+
+.provincial-nav-bar--tablet {
+  border-top-width: 0;
+}
+
+.provincial-nav-dropdown {
+  will-change: opacity, transform;
 }
 
 .app-header-scan {
@@ -370,19 +448,30 @@ body {
   }
 }
 
+.provincial-nav-mobile-item,
 .site-mega-nav-mobile-item {
   color: rgba(255, 255, 255, 0.92);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
+.provincial-nav-mobile-item-active,
+.provincial-nav-mobile-item:hover,
 .site-mega-nav-mobile-item-active,
 .site-mega-nav-mobile-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: #fde68a;
+  color: #facc15;
 }
 
+.provincial-nav-bar-inner,
 .site-mega-nav-inner {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
+}
+
+.provincial-nav-drawer {
+  will-change: transform;
 }
 
 /* Provincial Information Office — news prose */

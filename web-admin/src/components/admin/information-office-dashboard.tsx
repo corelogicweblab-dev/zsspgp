@@ -30,7 +30,11 @@ import {
   uploadNewsCoverImage,
 } from "@/services/news.client";
 import { formatDateTime } from "@/lib/utils";
+import { PioAnnouncementsManager } from "@/components/admin/pio-announcements-manager";
+import { cn } from "@/lib/utils";
 import type { NewsArticle, NewsMediaType } from "@/types";
+
+type PioTab = "news" | "announcements";
 
 function toDatetimeLocalValue(iso: string | null): string {
   const d = iso ? new Date(iso) : new Date();
@@ -53,6 +57,7 @@ const emptyForm = {
 };
 
 export function InformationOfficeDashboard() {
+  const [activeTab, setActiveTab] = useState<PioTab>("news");
   const [articles, setArticles] = useState<NewsArticle[]>([]);
   const [loadingList, setLoadingList] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -186,23 +191,64 @@ export function InformationOfficeDashboard() {
   return (
     <AdminShell
       title="Provincial Information Dashboard"
-      subtitle="Information Office — headlines, news management, and public communications"
+      subtitle="Information Office — news headlines, hiring & announcements, public communications"
     >
-      <div className="pio-dashboard-hero mb-8 flex flex-col gap-4 rounded-2xl border border-cyan-500/20 bg-gradient-to-r from-slate-900/80 to-indigo-950/40 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
-        <Image src={LOGO_PATH} alt="" width={56} height={56} className="rounded-full object-contain" />
-        <div className="flex-1">
+      <div className="pio-dashboard-hero mb-6 flex flex-col gap-4 rounded-2xl border border-cyan-500/20 bg-gradient-to-r from-slate-900/80 to-indigo-950/40 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
+        <Image src={LOGO_PATH} alt="" width={56} height={56} className="shrink-0 rounded-full object-contain" />
+        <div className="min-w-0 flex-1">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-amber-300">INFO · PIO</p>
-          <h2 className="text-lg font-bold text-white sm:text-xl">News & Headlines Control Center</h2>
+          <h2 className="text-lg font-bold text-white sm:text-xl">Communications Control Center</h2>
           <p className="mt-1 text-sm text-slate-400">
-            Manage official provincial headlines. Citizens see published articles only.
+            News articles, hiring posts, advisories, and official announcements.
           </p>
         </div>
-        <Button variant="gov" className="gap-2 shrink-0" onClick={startCreate}>
-          <Plus className="h-4 w-4" />
-          New article
-        </Button>
+        {activeTab === "news" && (
+          <Button variant="gov" className="w-full shrink-0 gap-2 sm:w-auto" onClick={startCreate}>
+            <Plus className="h-4 w-4" />
+            New article
+          </Button>
+        )}
       </div>
 
+      <div
+        className="mb-6 flex gap-1 overflow-x-auto rounded-xl border border-cyan-500/20 bg-slate-900/50 p-1 scrollbar-thin"
+        role="tablist"
+        aria-label="PIO content type"
+      >
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "news"}
+          className={cn(
+            "shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors",
+            activeTab === "news"
+              ? "bg-cyan-600 text-white"
+              : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+          )}
+          onClick={() => setActiveTab("news")}
+        >
+          News & headlines
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "announcements"}
+          className={cn(
+            "shrink-0 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors",
+            activeTab === "announcements"
+              ? "bg-amber-600 text-white"
+              : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+          )}
+          onClick={() => setActiveTab("announcements")}
+        >
+          Announcements & hiring
+        </button>
+      </div>
+
+      {activeTab === "announcements" ? (
+        <PioAnnouncementsManager />
+      ) : (
+        <>
       {(error || success) && (
         <div
           className={`mb-6 rounded-lg border px-4 py-3 text-sm ${
@@ -394,6 +440,8 @@ export function InformationOfficeDashboard() {
           )}
         </CardContent>
       </Card>
+        </>
+      )}
     </AdminShell>
   );
 }

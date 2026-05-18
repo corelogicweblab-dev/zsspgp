@@ -1,3 +1,4 @@
+import { AnnouncementBannerSection } from "@/components/announcements/announcement-banner-section";
 import { LandingHero } from "@/components/landing/landing-hero";
 import { SmartFeatures } from "@/components/landing/smart-features";
 import { NewsHeadlinesSection } from "@/components/news/news-headlines-section";
@@ -17,7 +18,14 @@ export default async function LandingPage() {
     <div className="space-y-10 sm:space-y-14 lg:space-y-16">
       <LandingHero />
 
-      <NewsHeadlinesSection articles={newsItems} maxItems={4} />
+      <AnnouncementBannerSection />
+
+      <NewsHeadlinesSection
+        articles={newsItems}
+        maxItems={4}
+        title="Provincial Updates"
+        subtitle="Headlines, advisories, and official releases from the Provincial Information Office"
+      />
 
       <SmartFeatures />
 

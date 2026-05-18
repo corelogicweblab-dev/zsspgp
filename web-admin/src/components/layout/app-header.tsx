@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { ProvincialBrand } from "@/components/ui/provincial-brand";
-import { SiteMegaNav } from "@/components/layout/site-mega-nav";
+import { ProvincialNavBar } from "@/components/layout/provincial-nav-bar";
 import { Button } from "@/components/ui/button";
 import { LiveClock } from "@/components/layout/live-clock";
 import { LogoutButton } from "@/components/auth/logout-button";
@@ -27,7 +27,7 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           size="icon"
           onClick={onMenuClick}
           aria-label="Open menu"
-          className="shrink-0 text-cyan-100 hover:bg-cyan-500/10 lg:hidden"
+          className="shrink-0 text-cyan-100 hover:bg-cyan-500/10 md:hidden"
         >
           <Menu className="h-6 w-6" />
         </Button>
@@ -52,7 +52,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <LogoutButton />
         </div>
       </div>
-      <SiteMegaNav />
+      <ProvincialNavBar variant="desktop" className="hidden lg:block" />
+      <ProvincialNavBar variant="tablet" className="hidden md:block lg:hidden" />
     </header>
   );
 }

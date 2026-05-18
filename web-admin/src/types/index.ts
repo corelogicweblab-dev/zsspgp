@@ -138,13 +138,26 @@ export interface Notification {
   created_at: string;
 }
 
+export type AnnouncementCategory =
+  | "general"
+  | "hiring"
+  | "advisory"
+  | "event"
+  | "emergency"
+  | "procurement"
+  | "holiday";
+
 export interface Announcement {
   id: string;
   title: string;
   content: string;
+  category: AnnouncementCategory;
+  link_url?: string | null;
   is_published: boolean;
   published_at: string | null;
+  expires_at?: string | null;
   created_at: string;
+  updated_at?: string;
 }
 
 export interface ActivityLog {

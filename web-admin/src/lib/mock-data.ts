@@ -177,6 +177,7 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
     title: "Disaster Preparedness Week 2026",
     content:
       "The Provincial Government of Zamboanga Sibugay announces Disaster Preparedness Week from May 20-27, 2026. All municipalities are encouraged to conduct drills and review emergency protocols.",
+    category: "advisory",
     is_published: true,
     published_at: new Date(Date.now() - 172800000).toISOString(),
     created_at: new Date(Date.now() - 259200000).toISOString(),
@@ -186,18 +187,31 @@ export const MOCK_ANNOUNCEMENTS: Announcement[] = [
     title: "ZSSPGP Citizen Portal Now Live",
     content:
       "Citizens can now submit complaints, track status, and receive alerts through the Smart Provincial Governance Platform. Register today for full access.",
+    category: "general",
     is_published: true,
     published_at: new Date(Date.now() - 86400000).toISOString(),
     created_at: new Date(Date.now() - 172800000).toISOString(),
   },
   {
     id: "3",
-    title: "Agricultural Support Program Applications Open",
+    title: "HIRING: Administrative Aide III (Provincial Capitol)",
     content:
-      "The Provincial Agriculture Office is accepting applications for the 2026 crop support program. Visit your municipal agriculture office for details.",
+      "The Provincial Government of Zamboanga Sibugay is accepting applications for Administrative Aide III (Plantilla Item No. 12). Qualifications: completion of two-year studies in college or high school graduate with relevant vocational training. Submit completed PDS, TOR, and certificates to the Provincial HRMO, Capitol Compound, Ipil.",
+    category: "hiring",
+    link_url: "/announcements",
     is_published: true,
     published_at: new Date().toISOString(),
     created_at: new Date().toISOString(),
+  },
+  {
+    id: "4",
+    title: "HIRING: Nurse II — Provincial Hospital",
+    content:
+      "Vacancy for Nurse II (SG-15). Must be a registered nurse with valid PRC license. Application period: until June 30, 2026. Inquire at the Provincial Health Office.",
+    category: "hiring",
+    is_published: true,
+    published_at: new Date(Date.now() - 43200000).toISOString(),
+    created_at: new Date(Date.now() - 43200000).toISOString(),
   },
 ];
 

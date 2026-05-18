@@ -1,72 +1,150 @@
-/** Provincial portal navigation — aligned with ZSSPGP routes (reference-style mega menu + footer). */
+/** Provincial portal navigation — ZSSPGP public menu structure. */
 
 export type NavChild = { label: string; href: string; description?: string };
 
+export type NavItem = {
+  title: string;
+  link: string;
+  hasDropdown: boolean;
+  children?: NavChild[];
+};
+
+/** @deprecated Use NavItem — kept for footer / legacy imports */
 export type NavGroup = {
   label: string;
   href?: string;
   children?: NavChild[];
 };
 
-export const SITE_MEGA_NAV: NavGroup[] = [
+export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
   {
-    label: "About",
+    title: "Our Province",
+    link: "/",
+    hasDropdown: true,
     children: [
       { label: "Home", href: "/", description: "ZSSPGP landing page" },
-      { label: "Know Your Governor", href: "/know-your-governor", description: "Governor Ann Hofer" },
+      { label: "About Zamboanga Sibugay", href: "/#about", description: "Province overview" },
       { label: "Platform Modules", href: "/#modules", description: "Integrated governance modules" },
       { label: "Contact Us", href: "/#contact", description: "Capitol address, hotline, email" },
     ],
   },
   {
-    label: "Governor's Office",
+    title: "Leadership",
+    link: "/know-your-governor",
+    hasDropdown: true,
     children: [
-      { label: "Know Your Governor", href: "/know-your-governor" },
+      { label: "Know Your Governor", href: "/know-your-governor", description: "Governor Ann K. Hofer" },
+      { label: "Executive Priorities", href: "/know-your-governor#priorities" },
       { label: "Governor Dashboard", href: "/admin/governor", description: "Authorized executives only" },
       { label: "Executive Login", href: "/governor/executive-access", description: "Restricted access" },
     ],
   },
   {
-    label: "Services",
+    title: "Public Assistance",
+    link: "/complaints",
+    hasDropdown: true,
     children: [
       { label: "File a Complaint", href: "/complaints" },
+      { label: "Track Your Request", href: "/complaints" },
       { label: "Citizen Dashboard", href: "/dashboard" },
       { label: "Create Account", href: "/register" },
       { label: "Official Login", href: "/login" },
     ],
   },
   {
-    label: "DRRM",
+    title: "Safety & Resilience",
+    link: "/admin/incidents",
+    hasDropdown: true,
     children: [
       {
-        label: "DRRM Super Dashboard Ops",
+        label: "DRRM Command Center",
         href: "/admin/department/drrm",
         description: "Live map, incidents, and command overview",
       },
       { label: "Incident Reports", href: "/admin/incidents" },
-      { label: "Department Portal (DRRM)", href: "/admin/department/drrm" },
+      { label: "Emergency Alerts", href: "/announcements", description: "Advisories and warnings" },
     ],
   },
   {
-    label: "News",
-    href: "/news",
+    title: "Provincial Updates",
+    link: "/news",
+    hasDropdown: true,
+    children: [
+      { label: "Headlines & News", href: "/news" },
+      { label: "Announcements", href: "/announcements" },
+      { label: "Information Office", href: "/admin/news", description: "Authorized PIO staff" },
+    ],
   },
   {
-    label: "Transparency",
+    title: "Open Governance",
+    link: "/announcements",
+    hasDropdown: true,
     children: [
-      { label: "Announcements", href: "/announcements" },
+      { label: "Transparency Hub", href: "/announcements" },
       { label: "Provincial News", href: "/news" },
       { label: "Complaint Tracking", href: "/complaints" },
+      { label: "Department Portals", href: "/admin/department" },
     ],
+  },
+  {
+    title: "Projects",
+    link: "/#modules",
+    hasDropdown: true,
+    children: [
+      { label: "Ongoing Projects", href: "/#modules", description: "Infrastructure and development" },
+      { label: "Completed Projects", href: "/announcements", description: "Milestones and turnover" },
+      { label: "Platform Modules", href: "/#modules" },
+    ],
+  },
+  {
+    title: "Tourism",
+    link: "/admin/department/tourism",
+    hasDropdown: true,
+    children: [
+      { label: "Local Attractions", href: "/admin/department/tourism" },
+      { label: "Events & Festivals", href: "/announcements" },
+      { label: "Tourism Office Portal", href: "/admin/department/tourism" },
+    ],
+  },
+  {
+    title: "Agriculture",
+    link: "/admin/department/agriculture",
+    hasDropdown: true,
+    children: [
+      { label: "Farming Programs", href: "/admin/department/agriculture" },
+      { label: "Fisheries Support", href: "/admin/department/agriculture" },
+      { label: "Agriculture Office Portal", href: "/admin/department/agriculture" },
+    ],
+  },
+  {
+    title: "Community Voices",
+    link: "/complaints",
+    hasDropdown: true,
+    children: [
+      { label: "Citizen Feedback", href: "/complaints" },
+      { label: "Surveys & Participation", href: "/dashboard" },
+      { label: "Register to Participate", href: "/register" },
+    ],
+  },
+  {
+    title: "Emergency Alerts",
+    link: "/announcements",
+    hasDropdown: false,
   },
 ];
 
+export const SITE_MEGA_NAV: NavGroup[] = PROVINCIAL_NAV_ITEMS.map((item) => ({
+  label: item.title,
+  href: item.hasDropdown ? undefined : item.link,
+  children: item.hasDropdown ? item.children : undefined,
+}));
+
 export const FOOTER_QUICK_LINKS: NavChild[] = [
   { label: "Home", href: "/" },
-  { label: "Services", href: "/complaints" },
-  { label: "Departments", href: "/admin/department" },
-  { label: "News", href: "/news" },
-  { label: "Governor", href: "/know-your-governor" },
+  { label: "Public Assistance", href: "/complaints" },
+  { label: "Provincial Updates", href: "/news" },
+  { label: "Leadership", href: "/know-your-governor" },
+  { label: "Emergency Alerts", href: "/announcements" },
   { label: "Login", href: "/login" },
   { label: "Register", href: "/register" },
   { label: "Contact", href: "/#contact" },

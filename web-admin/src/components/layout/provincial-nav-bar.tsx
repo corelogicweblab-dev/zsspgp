@@ -58,6 +58,7 @@ export function toggleDropdown(
 export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
   const isActive = ctx.activeTab === item.title;
   const isOpen = ctx.openDropdown === item.title;
+  const isAlert = item.title === "Emergency Alerts";
 
   if (!item.hasDropdown) {
     return (
@@ -66,7 +67,8 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
           href={item.link}
           role="menuitem"
           className={cn(
-            "provincial-nav-item flex items-center whitespace-nowrap px-2 py-2.5 text-[10px] font-bold uppercase tracking-wide transition-all duration-200 sm:px-2.5 sm:text-[11px] lg:px-3 lg:py-3",
+            "provincial-nav-item flex items-center whitespace-nowrap px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 xl:px-3.5 xl:py-2.5 xl:text-xs",
+            isAlert && "provincial-nav-item--alert",
             isActive && "provincial-nav-item-active"
           )}
           onClick={() => {
@@ -94,7 +96,7 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
         aria-expanded={isOpen}
         aria-controls={`nav-submenu-${slugify(item.title)}`}
         className={cn(
-          "provincial-nav-item flex items-center gap-1 whitespace-nowrap px-2 py-2.5 text-[10px] font-bold uppercase tracking-wide transition-all duration-200 sm:px-2.5 sm:text-[11px] lg:px-3 lg:py-3",
+          "provincial-nav-item flex items-center gap-0.5 whitespace-nowrap px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all duration-200 xl:gap-1 xl:px-3.5 xl:py-2.5 xl:text-xs",
           (isActive || isOpen) && "provincial-nav-item-active"
         )}
         onClick={() => ctx.toggleDropdown(item.title)}
@@ -118,7 +120,7 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
             : "pointer-events-none -translate-y-1 opacity-0"
         )}
       >
-        <ul className="overflow-hidden rounded-lg border border-indigo-400/30 bg-slate-950/98 p-2 shadow-[0_16px_48px_rgba(0,0,0,0.55)] backdrop-blur-xl">
+        <ul className="provincial-nav-dropdown-panel overflow-hidden rounded-xl border border-cyan-400/25 bg-slate-950/95 p-2 shadow-[0_20px_50px_rgba(0,0,0,0.6)] backdrop-blur-xl">
           {item.children?.map((child) => {
             const childActive = isChildActive(ctx.pathname, child.href);
             return (
@@ -150,17 +152,8 @@ export function createNavItem(item: NavItem, ctx: NavRenderContext): ReactNode {
 
 export function renderNavBar(items: NavItem[], ctx: NavRenderContext): ReactNode {
   return (
-    <ul role="menubar" className="flex flex-wrap items-stretch gap-0">
-      {items.map((item, index) => (
-        <div key={item.title} className="contents">
-          {index > 0 && (
-            <span className="provincial-nav-divider self-center px-0.5" aria-hidden>
-              |
-            </span>
-          )}
-          {createNavItem(item, ctx)}
-        </div>
-      ))}
+    <ul role="menubar" className="flex flex-nowrap items-center justify-center gap-1">
+      {items.map((item) => createNavItem(item, ctx))}
     </ul>
   );
 }
@@ -262,8 +255,11 @@ export function ProvincialNavBar({ variant = "desktop", className }: ProvincialN
       aria-label="Main provincial navigation"
       onMouseLeave={() => !lite && setOpenDropdown(null)}
     >
-      <div className="provincial-nav-bar-inner mx-auto max-w-7xl overflow-x-auto px-2 scrollbar-thin sm:px-6">
-        {renderNavBar(PROVINCIAL_NAV_ITEMS, ctx)}
+      <div className="provincial-nav-beam" aria-hidden />
+      <div className="provincial-nav-bar-inner mx-auto flex max-w-7xl items-center justify-center px-4 py-1.5 sm:px-6">
+        <div className="provincial-nav-track w-full min-w-0">
+          {renderNavBar(PROVINCIAL_NAV_ITEMS, ctx)}
+        </div>
       </div>
     </nav>
   );
@@ -516,5 +512,5 @@ function DrawerNavRow({ item, ctx }: { item: NavItem; ctx: NavRenderContext }) {
 
 /** @deprecated Use ProvincialNavBar */
 export function SiteMegaNav() {
-  return <ProvincialNavBar variant="desktop" className="hidden lg:block" />;
+  return <ProvincialNavBar variant="desktop" className="hidden xl:block" />;
 }

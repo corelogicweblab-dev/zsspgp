@@ -52,8 +52,8 @@ export function AppHeader({ onMenuClick }: AppHeaderProps) {
           <LogoutButton />
         </div>
       </div>
-      <ProvincialNavBar variant="desktop" className="hidden lg:block" />
-      <ProvincialNavBar variant="tablet" className="hidden md:block lg:hidden" />
+      <ProvincialNavBar variant="desktop" className="hidden xl:block" />
+      <ProvincialNavBar variant="tablet" className="hidden md:block xl:hidden" />
     </header>
   );
 }

@@ -87,43 +87,18 @@ export const PROVINCIAL_NAV_ITEMS: NavItem[] = [
     ],
   },
   {
-    title: "Projects",
+    title: "Provincial Programs",
     link: "/#modules",
     hasDropdown: true,
     children: [
-      { label: "Ongoing Projects", href: "/#modules", description: "Infrastructure and development" },
-      { label: "Completed Projects", href: "/announcements", description: "Milestones and turnover" },
-      { label: "Platform Modules", href: "/#modules" },
-    ],
-  },
-  {
-    title: "Tourism",
-    link: "/admin/department/tourism",
-    hasDropdown: true,
-    children: [
-      { label: "Local Attractions", href: "/admin/department/tourism" },
-      { label: "Events & Festivals", href: "/announcements" },
-      { label: "Tourism Office Portal", href: "/admin/department/tourism" },
-    ],
-  },
-  {
-    title: "Agriculture",
-    link: "/admin/department/agriculture",
-    hasDropdown: true,
-    children: [
-      { label: "Farming Programs", href: "/admin/department/agriculture" },
-      { label: "Fisheries Support", href: "/admin/department/agriculture" },
-      { label: "Agriculture Office Portal", href: "/admin/department/agriculture" },
-    ],
-  },
-  {
-    title: "Community Voices",
-    link: "/complaints",
-    hasDropdown: true,
-    children: [
-      { label: "Citizen Feedback", href: "/complaints" },
-      { label: "Surveys & Participation", href: "/dashboard" },
-      { label: "Register to Participate", href: "/register" },
+      { label: "Projects", href: "/#modules", description: "Ongoing and completed provincial projects" },
+      { label: "Tourism", href: "/admin/department/tourism", description: "Attractions and events" },
+      { label: "Agriculture", href: "/admin/department/agriculture", description: "Farming and fisheries programs" },
+      {
+        label: "Community Voices",
+        href: "/complaints",
+        description: "Feedback, surveys, participatory governance",
+      },
     ],
   },
   {

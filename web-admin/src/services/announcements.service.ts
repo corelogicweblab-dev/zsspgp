@@ -78,3 +78,32 @@ function filterMock(category?: AnnouncementCategory): Announcement[] {
   if (category) items = items.filter((a) => a.category === category);
   return items;
 }
+
+/** Resolve a published announcement for public pages (DB first, then demo mock). */
+export async function getPublishedAnnouncementById(id: string): Promise<Announcement | null> {
+  const admin = createAdminClient();
+  const supabase = admin ?? (await createClient());
+
+  try {
+    const { data, error } = await supabase
+      .from("announcements")
+      .select(SELECT)
+      .eq("id", id)
+      .eq("is_published", true)
+      .maybeSingle();
+
+    if (!error && data) {
+      const row = data as AnnouncementRow;
+      if (isInfoDepartment(row) && notExpired(row)) return mapRow(row);
+    }
+  } catch {
+    /* fall through to mock */
+  }
+
+  const mock = MOCK_ANNOUNCEMENTS.find((a) => a.id === id && a.is_published);
+  return mock ?? null;
+}
+
+export function isDemoAnnouncementId(id: string): boolean {
+  return MOCK_ANNOUNCEMENTS.some((a) => a.id === id);
+}

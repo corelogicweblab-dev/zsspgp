@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { createPublicBroadcast } from "@/lib/public-broadcasts";
+import { isDemoAnnouncementId } from "@/services/announcements.service";
 
 export async function GET() {
   const supabase = await createClient();
@@ -52,6 +53,16 @@ export async function POST(request: Request) {
 
   if (!announcement_id || !full_name || !email) {
     return NextResponse.json({ error: "Name, email, and posting are required." }, { status: 400 });
+  }
+
+  if (isDemoAnnouncementId(announcement_id)) {
+    return NextResponse.json(
+      {
+        error:
+          "This posting is a demo listing. Apply in person at the Provincial HRMO, Capitol Compound, Ipil, or wait for a live PIO hiring post.",
+      },
+      { status: 400 }
+    );
   }
 
   const db = createAdminClient();

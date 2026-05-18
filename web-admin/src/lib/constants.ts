@@ -13,11 +13,11 @@ export const APP_SLOGAN =
   "Your Province, Your Platform — Smart Solutions for Better Communities";
 export const APP_SHORT = "ZSSPGP";
 
-/** Provincial Capitol, Ipil — map pin */
+/** Provincial Capitol, Ipil (OSM / Capitol View Rd) — map pin */
 export const PROVINCIAL_CAPITOL = {
-  lat: 7.784,
-  lng: 122.584,
-  label: "Provincial Capitol Complex, Ipil",
+  lat: 7.788042,
+  lng: 122.573596,
+  label: "Provincial Capitol Complex, Capitol View Road, Ipil",
 } as const;
 export const LOGO_PATH = "/zamboangasibugaylogo.png";
 export const FOOTER_TEXT = "2026 Province of Zamboanga Sibugay";

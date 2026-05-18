@@ -10,9 +10,11 @@ import { MUNICIPALITIES } from "@/lib/constants";
 export function JobApplicationForm({
   announcementId,
   announcementTitle,
+  demoMode = false,
 }: {
   announcementId: string;
   announcementTitle: string;
+  demoMode?: boolean;
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -24,6 +26,14 @@ export function JobApplicationForm({
     setError(null);
     setLoading(true);
     const fd = new FormData(e.currentTarget);
+
+    if (demoMode) {
+      setError(
+        "Online submission is available for live PIO postings only. For this sample listing, submit your PDS and documents to the Provincial HRMO at the Capitol, Ipil."
+      );
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch("/api/job-applications", {

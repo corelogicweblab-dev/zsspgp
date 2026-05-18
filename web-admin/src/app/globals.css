@@ -514,6 +514,22 @@ body {
   }
 }
 
+/* Provincial capitol map pin */
+.capitol-map-pin-dot {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: linear-gradient(135deg, #38bdf8, #fbbf24);
+  border: 2px solid #fff;
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.55);
+}
+
+.capitol-map-container {
+  background: #0f172a;
+}
+
 /* Compact footer panels on desktop */
 @media (min-width: 1024px) {
   .footer-panel {

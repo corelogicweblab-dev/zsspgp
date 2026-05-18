@@ -22,17 +22,4 @@ export async function getJobApplications(limit = 50): Promise<JobApplication[]> 
   return (data ?? []) as JobApplication[];
 }
 
-export async function getPublishedAnnouncement(id: string) {
-  const admin = createAdminClient();
-  const supabase = admin ?? (await createClient());
-  if (!supabase) return null;
-
-  const { data } = await supabase
-    .from("announcements")
-    .select("id, title, content, category, is_published, published_at")
-    .eq("id", id)
-    .eq("is_published", true)
-    .maybeSingle();
-
-  return data;
-}
+export { getPublishedAnnouncementById as getPublishedAnnouncement } from "@/services/announcements.service";

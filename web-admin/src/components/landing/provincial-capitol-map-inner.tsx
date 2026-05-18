@@ -6,38 +6,39 @@ import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import { PROVINCIAL_CAPITOL } from "@/lib/constants";
 import "leaflet/dist/leaflet.css";
 
+const capitolPosition: [number, number] = [PROVINCIAL_CAPITOL.lat, PROVINCIAL_CAPITOL.lng];
+
 const capitolIcon = L.divIcon({
-  className: "",
-  html: `<span style="display:flex;width:36px;height:36px;align-items:center;justify-content:center;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#fbbf24);box-shadow:0 0 20px rgba(56,189,248,0.6);border:2px solid #fff;font-size:18px">📍</span>`,
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
-  popupAnchor: [0, -36],
+  className: "capitol-map-pin",
+  html: `<span class="capitol-map-pin-dot" aria-hidden="true"></span>`,
+  iconSize: [32, 32],
+  iconAnchor: [16, 32],
+  popupAnchor: [0, -30],
 });
 
 function MapResize() {
   const map = useMap();
   useEffect(() => {
     map.invalidateSize();
+    map.setView(capitolPosition, 17, { animate: false });
   }, [map]);
   return null;
 }
 
 export function ProvincialCapitolMapInner() {
-  const center: [number, number] = [PROVINCIAL_CAPITOL.lat, PROVINCIAL_CAPITOL.lng];
-
   return (
     <MapContainer
-      center={center}
-      zoom={15}
+      center={capitolPosition}
+      zoom={17}
       scrollWheelZoom={false}
-      className="h-[min(280px,50vh)] w-full z-0"
+      className="capitol-map-container h-[min(320px,55vh)] w-full z-0"
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <MapResize />
-      <Marker position={center} icon={capitolIcon}>
+      <Marker position={capitolPosition} icon={capitolIcon}>
         <Popup>
           <strong>Provincial Capitol</strong>
           <br />

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, MapPin, Sprout, Palmtree } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 import { SITE_ROUTES } from "@/lib/site-navigation";
 

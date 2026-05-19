@@ -38,17 +38,19 @@ export function ProvincialLogo({
   }
 
   return (
-    <span className={cn("relative inline-block shrink-0", className)} style={{ width: size, height: size }}>
-      <FastImage
-        src={LOGO_PATH}
-        alt={`${APP_SHORT} — Province of Zamboanga Sibugay`}
-        width={size}
-        height={size}
-        priority={priority}
-        sizes={`${size}px`}
-        className={cn("rounded-full object-contain", showGlow && "logo-glow logo-float")}
-        onError={() => setFailed(true)}
-      />
-    </span>
+    <FastImage
+      src={LOGO_PATH}
+      alt={`${APP_SHORT} — Province of Zamboanga Sibugay`}
+      width={size}
+      height={size}
+      priority={priority}
+      sizes={`${size}px`}
+      className={cn(
+        "rounded-full object-contain",
+        showGlow && "logo-glow logo-float",
+        className
+      )}
+      onError={() => setFailed(true)}
+    />
   );
 }

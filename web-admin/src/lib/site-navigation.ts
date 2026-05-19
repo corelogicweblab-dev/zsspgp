@@ -4,7 +4,6 @@ export type NavChild = { label: string; href: string; description?: string };
 
 export type NavItem = {
   title: string;
-  /** Shorter label for the top bar (fits all screens) */
   shortTitle?: string;
   link: string;
   hasDropdown: boolean;
@@ -18,26 +17,52 @@ export type NavGroup = {
   children?: NavChild[];
 };
 
+/** Single source of truth for public routes (footer, nav, AI, search). */
+export const SITE_ROUTES = {
+  home: "/",
+  about: "/#about",
+  modules: "/#modules",
+  contact: "/#contact",
+  capitolMap: "/#capitol-map",
+  news: "/news",
+  announcements: "/announcements",
+  announcementsHiring: "/announcements?category=hiring",
+  announcementsEmergency: "/announcements?category=emergency",
+  knowYourGovernor: "/know-your-governor",
+  complaints: "/complaints",
+  dashboard: "/dashboard",
+  login: "/login",
+  register: "/register",
+  executiveOrders: "/executive-orders",
+  jobApplications: "/services/job-applications",
+  publicBroadcasts: "/services/public-broadcasts",
+  emergencyAlerts: "/services/emergency-alerts",
+  tourismProjects: "/services/tourism-projects",
+  dataPrivacy: "/transparency/data-privacy",
+  citizenCharter: "/transparency/citizen-charter",
+  openGovernance: "/transparency/open-governance",
+} as const;
+
 const ALL_NAV_ITEMS: NavItem[] = [
   {
     title: "Our Province",
     shortTitle: "Province",
-    link: "/",
+    link: SITE_ROUTES.home,
     hasDropdown: true,
     children: [
-      { label: "Home", href: "/", description: "ZSSPGP landing page" },
-      { label: "About Zamboanga Sibugay", href: "/#about", description: "Province overview" },
-      { label: "Platform Modules", href: "/#modules", description: "Integrated governance modules" },
-      { label: "Contact Us", href: "/#contact", description: "Capitol address, hotline, email" },
+      { label: "Home", href: SITE_ROUTES.home, description: "ZSSPGP landing page" },
+      { label: "About Zamboanga Sibugay", href: SITE_ROUTES.about, description: "Province overview" },
+      { label: "Platform Modules", href: SITE_ROUTES.modules, description: "Integrated governance modules" },
+      { label: "Contact Us", href: SITE_ROUTES.contact, description: "Capitol address, hotline, email" },
     ],
   },
   {
     title: "Leadership",
-    link: "/know-your-governor",
+    link: SITE_ROUTES.knowYourGovernor,
     hasDropdown: true,
     children: [
-      { label: "Know Your Governor", href: "/know-your-governor", description: "Governor Ann K. Hofer" },
-      { label: "Executive Priorities", href: "/know-your-governor#priorities" },
+      { label: "Know Your Governor", href: SITE_ROUTES.knowYourGovernor, description: "Governor Ann K. Hofer" },
+      { label: "Executive Priorities", href: `${SITE_ROUTES.knowYourGovernor}#priorities` },
       { label: "Governor Dashboard", href: "/admin/governor", description: "Authorized executives only" },
       { label: "Executive Login", href: "/governor/executive-access", description: "Restricted access" },
     ],
@@ -45,31 +70,32 @@ const ALL_NAV_ITEMS: NavItem[] = [
   {
     title: "Public Assistance",
     shortTitle: "Assistance",
-    link: "/complaints",
+    link: SITE_ROUTES.complaints,
     hasDropdown: true,
     children: [
-      { label: "File a Complaint", href: "/complaints" },
-      { label: "Track Your Request", href: "/complaints" },
-      { label: "Citizen Dashboard", href: "/dashboard" },
-      { label: "Create Account", href: "/register" },
-      { label: "Sign In", href: "/login" },
+      { label: "File a Complaint", href: SITE_ROUTES.complaints },
+      { label: "Track Your Request", href: SITE_ROUTES.complaints },
+      { label: "Citizen Dashboard", href: SITE_ROUTES.dashboard },
+      { label: "Create Account", href: SITE_ROUTES.register },
+      { label: "Sign In", href: SITE_ROUTES.login },
     ],
   },
   {
     title: "Provincial Updates",
     shortTitle: "Updates",
-    link: "/news",
+    link: SITE_ROUTES.news,
     hasDropdown: true,
     children: [
-      { label: "Headlines & News", href: "/news" },
-      { label: "Announcements & Hiring", href: "/announcements" },
+      { label: "Headlines & News", href: SITE_ROUTES.news },
+      { label: "Announcements & Hiring", href: SITE_ROUTES.announcements },
+      { label: "Public Broadcasts", href: SITE_ROUTES.publicBroadcasts, description: "Official advisories pushed to citizens" },
       { label: "Information Office", href: "/admin/news", description: "Authorized PIO staff" },
     ],
   },
   {
     title: "Emergency Alerts",
     shortTitle: "Alerts",
-    link: "/announcements",
+    link: SITE_ROUTES.emergencyAlerts,
     hasDropdown: false,
   },
   {
@@ -89,46 +115,48 @@ const ALL_NAV_ITEMS: NavItem[] = [
   {
     title: "Open Governance",
     shortTitle: "Governance",
-    link: "/announcements",
+    link: SITE_ROUTES.openGovernance,
     hasDropdown: true,
     children: [
-      { label: "Transparency Hub", href: "/announcements" },
-      { label: "Provincial News", href: "/news" },
-      { label: "Complaint Tracking", href: "/complaints" },
-      { label: "Department Portals", href: "/admin/department" },
+      { label: "Open Governance Hub", href: SITE_ROUTES.openGovernance, description: "Transparency portal" },
+      { label: "Data Privacy Notice", href: SITE_ROUTES.dataPrivacy },
+      { label: "Citizen Charter", href: SITE_ROUTES.citizenCharter },
+      { label: "Provincial News", href: SITE_ROUTES.news },
+      { label: "Announcements", href: SITE_ROUTES.announcements },
+      { label: "Executive Orders", href: SITE_ROUTES.executiveOrders },
+      { label: "Complaint Tracking", href: SITE_ROUTES.complaints },
     ],
   },
   {
     title: "Provincial Programs",
     shortTitle: "Programs",
-    link: "/#modules",
+    link: SITE_ROUTES.tourismProjects,
     hasDropdown: true,
     children: [
-      { label: "Projects", href: "/#modules", description: "Ongoing and completed provincial projects" },
-      { label: "Tourism", href: "/admin/department/tourism", description: "Attractions and events" },
+      { label: "Tourism & Projects", href: SITE_ROUTES.tourismProjects, description: "Tourism and development programs" },
+      { label: "Job Applications", href: SITE_ROUTES.jobApplications, description: "Provincial hiring portal" },
+      { label: "Projects & Modules", href: SITE_ROUTES.modules, description: "Integrated governance modules" },
+      { label: "Tourism Office", href: "/admin/department/tourism", description: "Attractions and events" },
       { label: "Agriculture", href: "/admin/department/agriculture", description: "Farming and fisheries programs" },
       {
         label: "Community Voices",
-        href: "/complaints",
+        href: SITE_ROUTES.complaints,
         description: "Feedback, surveys, participatory governance",
       },
     ],
   },
 ];
 
-/** Shown in the top bar — most used by citizens */
 export const PROVINCIAL_NAV_PRIMARY: NavItem[] = ALL_NAV_ITEMS.filter((i) =>
   ["Our Province", "Leadership", "Public Assistance", "Provincial Updates", "Emergency Alerts"].includes(
     i.title
   )
 );
 
-/** Secondary sections — inside the “More” menu on desktop; full list in mobile drawer */
 export const PROVINCIAL_NAV_MORE: NavItem[] = ALL_NAV_ITEMS.filter(
   (i) => !PROVINCIAL_NAV_PRIMARY.some((p) => p.title === i.title)
 );
 
-/** Complete menu (mobile drawer + route matching) */
 export const PROVINCIAL_NAV_ITEMS: NavItem[] = ALL_NAV_ITEMS;
 
 export const SITE_MEGA_NAV: NavGroup[] = PROVINCIAL_NAV_ITEMS.map((item) => ({
@@ -138,14 +166,55 @@ export const SITE_MEGA_NAV: NavGroup[] = PROVINCIAL_NAV_ITEMS.map((item) => ({
 }));
 
 export const FOOTER_QUICK_LINKS: NavChild[] = [
-  { label: "Home", href: "/" },
-  { label: "Public Assistance", href: "/complaints" },
-  { label: "Provincial Updates", href: "/news" },
-  { label: "Leadership", href: "/know-your-governor" },
-  { label: "Emergency Alerts", href: "/announcements" },
-  { label: "Login", href: "/login" },
-  { label: "Register", href: "/register" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Home", href: SITE_ROUTES.home },
+  { label: "Public Assistance", href: SITE_ROUTES.complaints },
+  { label: "Provincial Updates", href: SITE_ROUTES.news },
+  { label: "Leadership", href: SITE_ROUTES.knowYourGovernor },
+  { label: "Emergency Alerts", href: SITE_ROUTES.emergencyAlerts },
+  { label: "Login", href: SITE_ROUTES.login },
+  { label: "Register", href: SITE_ROUTES.register },
+  { label: "Contact", href: SITE_ROUTES.contact },
+];
+
+export const FOOTER_CITIZEN_SERVICES: NavChild[] = [
+  {
+    label: "Job Applications",
+    href: SITE_ROUTES.jobApplications,
+    description: "Provincial hiring and plantilla vacancies",
+  },
+  {
+    label: "Public Broadcasts",
+    href: SITE_ROUTES.publicBroadcasts,
+    description: "Official alerts and public advisories",
+  },
+  {
+    label: "Emergency Alerts",
+    href: SITE_ROUTES.emergencyAlerts,
+    description: "DRRM and emergency notifications",
+  },
+  {
+    label: "Tourism & Projects",
+    href: SITE_ROUTES.tourismProjects,
+    description: "Tourism, agriculture, and provincial programs",
+  },
+];
+
+export const FOOTER_TRANSPARENCY_LINKS: NavChild[] = [
+  {
+    label: "Data Privacy Notice",
+    href: SITE_ROUTES.dataPrivacy,
+    description: "How we handle your personal data",
+  },
+  {
+    label: "Citizen Charter",
+    href: SITE_ROUTES.citizenCharter,
+    description: "Service standards and commitments",
+  },
+  {
+    label: "Open Governance",
+    href: SITE_ROUTES.openGovernance,
+    description: "Transparency hub and public information",
+  },
 ];
 
 export const FOOTER_GOV_LINKS: { label: string; href: string; color?: "cyan" | "amber" | "white" }[] = [
@@ -157,6 +226,14 @@ export const FOOTER_GOV_LINKS: { label: string; href: string; color?: "cyan" | "
   { label: "NBI", href: "https://nbi.gov.ph", color: "amber" },
   { label: "COA", href: "https://www.coa.gov.ph", color: "white" },
   { label: "DBM", href: "https://www.dbm.gov.ph", color: "white" },
+];
+
+/** Extra pages for site search (footer services + transparency). */
+export const STATIC_SITE_PAGES: NavChild[] = [
+  ...FOOTER_CITIZEN_SERVICES,
+  ...FOOTER_TRANSPARENCY_LINKS,
+  { label: "Executive Orders", href: SITE_ROUTES.executiveOrders, description: "Signed provincial executive orders" },
+  { label: "Announcements", href: SITE_ROUTES.announcements, description: "Official PIO announcements" },
 ];
 
 export const OFFICE_HOURS = {

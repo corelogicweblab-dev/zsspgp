@@ -11,6 +11,7 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 export const APP_NAME = "Zamboanga Sibugay Smart Provincial Governance Platform";
 export const APP_SLOGAN =
   "Your Province, Your Platform — Smart Solutions for Better Communities";
+export const APP_TAGLINE = "Smart Governance, Stronger Sibugay";
 export const APP_SHORT = "ZSSPGP";
 
 /** Provincial Capitol, Ipil (OSM / Capitol View Rd) — map pin */

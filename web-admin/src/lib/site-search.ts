@@ -1,4 +1,4 @@
-import { PROVINCIAL_NAV_ITEMS } from "@/lib/site-navigation";
+import { PROVINCIAL_NAV_ITEMS, STATIC_SITE_PAGES } from "@/lib/site-navigation";
 
 export type SiteSearchResult = {
   id: string;
@@ -34,6 +34,17 @@ export function getNavSearchResults(query: string): SiteSearchResult[] {
         excerpt: child.description,
       });
     }
+  }
+
+  for (const page of STATIC_SITE_PAGES) {
+    if (page.href.startsWith("http")) continue;
+    entries.push({
+      id: `static-${page.href}-${page.label}`,
+      title: page.label,
+      href: page.href,
+      category: "Page",
+      excerpt: page.description,
+    });
   }
 
   return entries.filter(

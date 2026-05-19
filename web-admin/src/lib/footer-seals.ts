@@ -3,42 +3,39 @@ import { LOGO_PATH } from "@/lib/constants";
 export type FooterOfficialSeal = {
   id: string;
   label: string;
+  shortLabel: string;
   href: string;
   src: string;
 };
 
-/** Official seals row — matches standard provincial transparency footer layout. */
+/** Official seals — provincial transparency footer (PNG assets in /public). */
 export const FOOTER_OFFICIAL_SEALS: FooterOfficialSeal[] = [
   {
     id: "zamboanga-sibugay",
-    label: "Province of Zamboanga Sibugay",
+    label: "Province of Zamboanga Sibugay Seal",
+    shortLabel: "Zamboanga Sibugay",
     href: "https://www.zamboangasibugay.gov.ph",
     src: LOGO_PATH,
   },
   {
-    id: "bagong-pilipinas",
-    label: "Bagong Pilipinas",
-    href: "https://www.gov.ph",
-    src: "/seals/bagong-pilipinas.svg",
-  },
-  {
-    id: "transparency",
-    label: "Transparency Seal",
-    href: "https://www.gov.ph/transparency",
-    src: "/seals/transparency-seal.svg",
+    id: "dilg",
+    label: "Department of the Interior and Local Government",
+    shortLabel: "DILG",
+    href: "https://www.dilg.gov.ph",
+    src: "/dilg.png",
   },
   {
     id: "foi",
     label: "Freedom of Information — Philippines",
+    shortLabel: "FOI PH",
     href: "https://www.foi.gov.ph",
-    src: "/seals/foi-philippines.svg",
+    src: "/foi.png",
   },
   {
-    id: "pco",
-    label: "Presidential Communications Office",
-    href: "https://pco.gov.ph",
-    src: "/seals/pco-philippines.svg",
+    id: "transparency",
+    label: "Philippines Transparency Seal",
+    shortLabel: "PH Transparency",
+    href: "https://www.gov.ph/transparency",
+    src: "/phtransparencyseal.png",
   },
 ];
-
-export const FOOTER_COAT_WATERMARK = "/seals/ph-coat-watermark.svg";

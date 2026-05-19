@@ -5,6 +5,7 @@ import type {
   DashboardStats,
   Incident,
   Notification,
+  PublicBroadcast,
 } from "@/types";
 
 export const MOCK_STATS: DashboardStats = {
@@ -245,6 +246,36 @@ export const MOCK_ACTIVITY: ActivityLog[] = [
     details: { status: "resolved" },
     created_at: new Date(Date.now() - 7200000).toISOString(),
     user: { id: "u3", email: "admin@zsspgp.gov.ph", full_name: "Gov. Admin", role: "governor_super_admin", department_id: null, phone: null, municipality: null, barangay: null, purok_or_street: null, avatar_url: null, is_active: true, created_at: "" },
+  },
+];
+
+export const MOCK_PUBLIC_BROADCASTS: PublicBroadcast[] = [
+  {
+    id: "pb-1",
+    title: "Disaster Preparedness Week 2026",
+    message:
+      "The Provincial Government reminds all municipalities to complete preparedness drills and review evacuation plans by May 27, 2026.",
+    link_url: "/services/emergency-alerts",
+    source: "DRRM",
+    created_at: new Date(Date.now() - 7200000).toISOString(),
+  },
+  {
+    id: "pb-2",
+    title: "State of the Province Address",
+    message:
+      "Citizens are invited to follow official coverage of the State of the Province Address on May 20, 2026 via provincial news channels.",
+    link_url: "/news",
+    source: "PIO",
+    created_at: new Date(Date.now() - 86400000).toISOString(),
+  },
+  {
+    id: "pb-3",
+    title: "Hiring: Administrative Aide III",
+    message:
+      "Applications are open for Plantilla Item No. 12. Submit through the Job Applications portal before the posted deadline.",
+    link_url: "/services/job-applications",
+    source: "HRMO",
+    created_at: new Date(Date.now() - 172800000).toISOString(),
   },
 ];
 

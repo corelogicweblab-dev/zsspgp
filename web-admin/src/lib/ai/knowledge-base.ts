@@ -1,5 +1,5 @@
 import { APP_SLOGAN, CONTACT_INFO } from "@/lib/constants";
-import { OFFICE_HOURS } from "@/lib/site-navigation";
+import { OFFICE_HOURS, SITE_ROUTES } from "@/lib/site-navigation";
 
 export type KnowledgeAction = {
   label: string;
@@ -56,12 +56,13 @@ export const KNOWLEDGE_ENTRIES: KnowledgeEntry[] = [
     title: "Job applications",
     summary: "Hiring announcements from the Provincial Information Office.",
     steps: [
-      "Browse openings at /announcements?category=hiring.",
-      "Click View application details on a posting.",
+      `Open the Job Applications portal at ${SITE_ROUTES.jobApplications}.`,
+      "Click View application details on a hiring post.",
       "Complete the form at /announcements/{id}/apply — submissions go to the Governor command center.",
     ],
     actions: [
-      { label: "Hiring announcements", href: "/announcements?category=hiring" },
+      { label: "Job Applications", href: SITE_ROUTES.jobApplications },
+      { label: "All announcements", href: SITE_ROUTES.announcementsHiring },
     ],
   },
   {
@@ -108,8 +109,52 @@ export const KNOWLEDGE_ENTRIES: KnowledgeEntry[] = [
       "PIO staff publish via /admin/news after signing in.",
     ],
     actions: [
-      { label: "View News", href: "/news" },
-      { label: "Announcements", href: "/announcements" },
+      { label: "View News", href: SITE_ROUTES.news },
+      { label: "Announcements", href: SITE_ROUTES.announcements },
+      { label: "Public Broadcasts", href: SITE_ROUTES.publicBroadcasts },
+    ],
+  },
+  {
+    id: "privacy",
+    match: /privacy|data\s*protection|personal\s*data|ra\s*10173|dpa/i,
+    title: "Data Privacy Notice",
+    summary: "How ZSSPGP handles personal information under the Data Privacy Act.",
+    steps: [
+      `Read the full notice at ${SITE_ROUTES.dataPrivacy}.`,
+      "Contact the Provincial Information Office for access, correction, or privacy requests.",
+    ],
+    actions: [
+      { label: "Data Privacy Notice", href: SITE_ROUTES.dataPrivacy },
+      { label: "Citizen Charter", href: SITE_ROUTES.citizenCharter },
+    ],
+  },
+  {
+    id: "transparency",
+    match: /transparency|charter|open\s*governance|foi|accountability/i,
+    title: "Open Governance",
+    summary: "Transparency hub for news, announcements, executive orders, and service standards.",
+    steps: [
+      `Visit the Open Governance hub at ${SITE_ROUTES.openGovernance}.`,
+      `Review the Citizen Charter at ${SITE_ROUTES.citizenCharter}.`,
+    ],
+    actions: [
+      { label: "Open Governance", href: SITE_ROUTES.openGovernance },
+      { label: "Citizen Charter", href: SITE_ROUTES.citizenCharter },
+    ],
+  },
+  {
+    id: "emergency",
+    match: /alert|broadcast|baha|bagyo|evacuation|warning/i,
+    title: "Emergency alerts & broadcasts",
+    summary: "Official DRRM warnings and provincial public broadcasts.",
+    steps: [
+      `Emergency announcements: ${SITE_ROUTES.emergencyAlerts}.`,
+      `All public broadcasts: ${SITE_ROUTES.publicBroadcasts}.`,
+      `For life-threatening emergencies call ${hotline}.`,
+    ],
+    actions: [
+      { label: "Emergency Alerts", href: SITE_ROUTES.emergencyAlerts },
+      { label: "Public Broadcasts", href: SITE_ROUTES.publicBroadcasts },
     ],
   },
   {

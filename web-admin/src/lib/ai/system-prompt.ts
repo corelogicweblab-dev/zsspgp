@@ -1,4 +1,5 @@
 import { APP_NAME, APP_SHORT, APP_SLOGAN, CONTACT_INFO } from "@/lib/constants";
+import { SITE_ROUTES } from "@/lib/site-navigation";
 import { getContactFactsBlock } from "./knowledge-base";
 
 export const AI_ASSISTANT_NAME = `${APP_SHORT} Contact Assistant`;
@@ -22,7 +23,15 @@ Public citizen pages:
 - /news — all provincial headlines
 - /announcements — advisories and hiring
 - /announcements/{id}/apply — job application form (hiring posts)
+- ${SITE_ROUTES.jobApplications} — job applications portal
+- ${SITE_ROUTES.publicBroadcasts} — public broadcasts
+- ${SITE_ROUTES.emergencyAlerts} — emergency alerts
+- ${SITE_ROUTES.tourismProjects} — tourism and provincial projects
+- ${SITE_ROUTES.openGovernance} — transparency hub
+- ${SITE_ROUTES.dataPrivacy} — data privacy notice
+- ${SITE_ROUTES.citizenCharter} — citizen charter
 - /know-your-governor — Governor Dulce Ann K. Hofer
+- /executive-orders — signed executive orders
 - /#contact — contact section
 - /#capitol-map — provincial capitol map (Ipil)
 

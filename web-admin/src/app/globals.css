@@ -724,6 +724,48 @@ body {
   margin-left: 1.25rem;
 }
 
+/* Executive order — formal summary body */
+.executive-order-summary {
+  max-width: 42rem;
+}
+
+.executive-order-summary p {
+  margin: 0 0 1rem;
+  text-align: justify;
+  text-indent: 2em;
+  hyphens: auto;
+}
+
+.executive-order-summary p:last-child {
+  margin-bottom: 0;
+}
+
+.executive-order-summary ul,
+.executive-order-summary ol {
+  margin: 0.75rem 0 1.25rem;
+  padding-left: 2.25rem;
+  text-align: left;
+}
+
+.executive-order-summary ul {
+  list-style-type: disc;
+}
+
+.executive-order-summary ol {
+  list-style-type: decimal;
+}
+
+.executive-order-summary li {
+  margin-bottom: 0.5rem;
+  padding-left: 0.35rem;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+.executive-order-summary li:last-child {
+  margin-bottom: 0;
+}
+
 .pio-headlines {
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
 }

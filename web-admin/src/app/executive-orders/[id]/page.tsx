@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { Button } from "@/components/ui/button";
+import { ExecutiveOrderSummary } from "@/components/executive-orders/executive-order-summary";
 import { getExecutiveOrderById } from "@/services/pio-content.service";
 import { formatDate } from "@/lib/utils";
 
@@ -36,7 +37,7 @@ export default async function ExecutiveOrderDetailPage({
             sizes="(max-width: 768px) 100vw, 512px"
           />
         </div>
-        <div className="space-y-4 p-5 sm:p-8">
+        <div className="space-y-5 p-5 sm:p-8">
           {order.order_number && (
             <p className="text-sm font-semibold text-cyan-700">{order.order_number}</p>
           )}
@@ -44,7 +45,7 @@ export default async function ExecutiveOrderDetailPage({
             <p className="text-xs text-slate-500">Published {formatDate(order.published_at)}</p>
           )}
           {order.summary && (
-            <p className="text-sm leading-relaxed text-slate-600">{order.summary}</p>
+            <ExecutiveOrderSummary summary={order.summary} className="border-t border-slate-100 pt-5" />
           )}
           {order.document_url && (
             <a href={order.document_url} target="_blank" rel="noopener noreferrer">

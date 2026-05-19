@@ -148,7 +148,9 @@ export function PioExecutiveOrdersManager() {
                 <Textarea
                   value={form.summary}
                   onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
-                  rows={3}
+                  rows={6}
+                  placeholder="Use blank lines between paragraphs. Bullet lines: - item or 1. item"
+                  className="leading-relaxed"
                 />
               </div>
               <div className="space-y-2">

@@ -1,45 +1,41 @@
-import { AnnouncementBannerSection } from "@/components/announcements/announcement-banner-section";
+import { Suspense } from "react";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { NewsHeadlinesSection } from "@/components/news/news-headlines-section";
-import { PioImageCarousel } from "@/components/landing/pio-image-carousel";
 import { ContactSection } from "@/components/layout/contact-section";
-import { ExecutiveOrdersSection } from "@/components/landing/executive-orders-section";
-import { GovernorSpotlight } from "@/components/landing/governor-spotlight";
-import { getFeaturedNews, getPublishedNews } from "@/services/news.service";
+import { SectionSkeleton } from "@/components/ui/section-skeleton";
 import {
-  getPublishedCarouselSlides,
-  getPublishedExecutiveOrders,
-} from "@/services/pio-content.service";
+  HomeAnnouncementBanner,
+  HomeExecutiveOrdersSection,
+  HomeGallerySection,
+  HomeGovernorSpotlight,
+  HomeNewsSection,
+} from "@/components/landing/home-sections";
 
-export default async function LandingPage() {
-  const [featured, recent, carouselSlides, executiveOrders] = await Promise.all([
-    getFeaturedNews(8),
-    getPublishedNews(8),
-    getPublishedCarouselSlides(16),
-    getPublishedExecutiveOrders(16),
-  ]);
-  const newsItems = featured.length > 0 ? featured : recent;
+export const revalidate = 60;
 
+export default function LandingPage() {
   return (
     <div className="space-y-10 sm:space-y-14 lg:space-y-16">
       <LandingHero />
 
-      <AnnouncementBannerSection />
+      <Suspense fallback={<SectionSkeleton variant="banner" />}>
+        <HomeAnnouncementBanner />
+      </Suspense>
 
-      <NewsHeadlinesSection
-        articles={newsItems}
-        maxItems={8}
-        title="Provincial Updates"
-        subtitle="Latest headlines — browse all releases on the news page"
-      />
+      <Suspense fallback={<SectionSkeleton variant="news" />}>
+        <HomeNewsSection />
+      </Suspense>
 
-      {carouselSlides.length > 0 && <PioImageCarousel slides={carouselSlides} />}
+      <Suspense fallback={<SectionSkeleton variant="gallery" />}>
+        <HomeGallerySection />
+      </Suspense>
 
       <ContactSection />
 
-      <ExecutiveOrdersSection orders={executiveOrders} />
+      <Suspense fallback={<SectionSkeleton variant="cards" />}>
+        <HomeExecutiveOrdersSection />
+      </Suspense>
 
-      <GovernorSpotlight />
+      <HomeGovernorSpotlight />
     </div>
   );
 }

@@ -1,80 +1,55 @@
+import { parseExecutiveOrderSummary } from "@/lib/executive-order-summary-parse";
 import { cn } from "@/lib/utils";
-
-type Block =
-  | { type: "paragraph"; lines: string[] }
-  | { type: "list"; items: string[]; ordered: boolean };
-
-function normalizeLine(line: string): string {
-  return line.replace(/\s+/g, " ").trim();
-}
-
-function parseSummaryBlocks(text: string): Block[] {
-  const rawBlocks = text
-    .split(/\n{2,}/)
-    .map((block) => block.trim())
-    .filter(Boolean);
-
-  const blocks: Block[] = [];
-
-  for (const block of rawBlocks) {
-    const lines = block.split("\n").map(normalizeLine).filter(Boolean);
-    if (!lines.length) continue;
-
-    const bulletPattern = /^([-–—•*]|\d+[.)])\s+/;
-    const allBullets = lines.every((line) => bulletPattern.test(line));
-
-    if (allBullets) {
-      const ordered = /^\d+[.)]\s+/.test(lines[0]);
-      blocks.push({
-        type: "list",
-        ordered,
-        items: lines.map((line) => line.replace(bulletPattern, "").trim()),
-      });
-    } else {
-      blocks.push({ type: "paragraph", lines });
-    }
-  }
-
-  return blocks;
-}
 
 interface ExecutiveOrderSummaryProps {
   summary: string;
   className?: string;
 }
 
-/** Formal typography for executive order summary text (paragraphs, lists, spacing). */
+/** Formal executive order body — sections, lists, and readable spacing. */
 export function ExecutiveOrderSummary({ summary, className }: ExecutiveOrderSummaryProps) {
-  const blocks = parseSummaryBlocks(summary);
+  const blocks = parseExecutiveOrderSummary(summary);
 
   if (!blocks.length) {
     return (
-      <p className={cn("executive-order-summary text-sm leading-relaxed text-slate-600", className)}>
+      <p className={cn("executive-order-summary-fallback text-sm leading-relaxed text-slate-600", className)}>
         {summary.trim()}
       </p>
     );
   }
 
   return (
-    <div
-      className={cn("executive-order-summary text-[0.9375rem] leading-[1.75] text-slate-700", className)}
-      role="doc-subtitle"
+    <article
+      className={cn("executive-order-summary", className)}
+      aria-label="Executive order summary"
     >
       {blocks.map((block, index) => {
+        if (block.type === "heading") {
+          const Tag = block.level === 2 ? "h3" : "h4";
+          return (
+            <Tag key={`h-${index}-${block.text}`} className="eo-summary-heading">
+              {block.text}
+            </Tag>
+          );
+        }
+
         if (block.type === "list") {
           const ListTag = block.ordered ? "ol" : "ul";
           return (
-            <ListTag key={`list-${index}`}>
+            <ListTag key={`list-${index}`} className="eo-summary-list">
               {block.items.map((item) => (
-                <li key={item.slice(0, 48)}>{item}</li>
+                <li key={`${index}-${item.slice(0, 40)}`}>{item}</li>
               ))}
             </ListTag>
           );
         }
 
-        const paragraph = block.lines.join(" ");
-        return <p key={`p-${index}`}>{paragraph}</p>;
+        return (
+          <p key={`p-${index}`} className="eo-summary-paragraph">
+            {block.text}
+          </p>
+        );
       })}
-    </div>
+    </article>
   );
 }

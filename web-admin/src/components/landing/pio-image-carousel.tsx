@@ -118,7 +118,8 @@ export function PioImageCarousel({ slides }: { slides: PioCarouselSlide[] }) {
                   fill
                   className="object-contain p-0.5"
                   sizes="(max-width: 640px) 33vw, 320px"
-                  priority={i < VISIBLE}
+                  priority={i === 0}
+                  loading={i === 0 ? undefined : "lazy"}
                 />
                 {slide.title && (
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 to-transparent px-2 pb-1.5 pt-5">

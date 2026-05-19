@@ -148,9 +148,9 @@ export function PioExecutiveOrdersManager() {
                 <Textarea
                   value={form.summary}
                   onChange={(e) => setForm((f) => ({ ...f, summary: e.target.value }))}
-                  rows={6}
-                  placeholder="Use blank lines between paragraphs. Bullet lines: - item or 1. item"
-                  className="leading-relaxed"
+                  rows={10}
+                  placeholder={`Use section headings in ALL CAPS on their own line, e.g.:\n\nLEGAL BASIS\nRepublic Act No. ...\n\nPURPOSE\n...\n\nOBJECTIVES\n- First objective\n- Second objective`}
+                  className="leading-relaxed font-mono text-xs"
                 />
               </div>
               <div className="space-y-2">

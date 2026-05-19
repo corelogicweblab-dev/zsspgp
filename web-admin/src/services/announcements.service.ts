@@ -1,7 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MOCK_ANNOUNCEMENTS } from "@/lib/mock-data";
+import { withTimeout } from "@/lib/with-timeout";
 import type { Announcement, AnnouncementCategory } from "@/types";
+
+const DB_TIMEOUT_MS = 6_000;
 
 type AnnouncementRow = Announcement & {
   department_id?: string | null;
@@ -38,36 +41,47 @@ function notExpired(row: AnnouncementRow): boolean {
   return new Date(row.expires_at) > new Date();
 }
 
-/** Published PIO announcements (all categories including hiring). */
-export async function getPublishedInfoAnnouncements(
-  limit = 20,
+async function fetchPublishedInfoAnnouncements(
+  limit: number,
   category?: AnnouncementCategory
 ): Promise<Announcement[]> {
   const admin = createAdminClient();
   const supabase = admin ?? (await createClient());
 
+  let query = supabase
+    .from("announcements")
+    .select(SELECT)
+    .eq("is_published", true)
+    .order("published_at", { ascending: false })
+    .limit(limit);
+
+  if (category) query = query.eq("category", category);
+
+  const { data, error } = await query;
+
+  if (error || !data?.length) {
+    return filterMock(category);
+  }
+
+  const filtered = (data as AnnouncementRow[])
+    .filter(isInfoDepartment)
+    .filter(notExpired)
+    .map(mapRow);
+
+  return filtered.length > 0 ? filtered : filterMock(category);
+}
+
+/** Published PIO announcements (all categories including hiring). */
+export async function getPublishedInfoAnnouncements(
+  limit = 20,
+  category?: AnnouncementCategory
+): Promise<Announcement[]> {
   try {
-    let query = supabase
-      .from("announcements")
-      .select(SELECT)
-      .eq("is_published", true)
-      .order("published_at", { ascending: false })
-      .limit(limit);
-
-    if (category) query = query.eq("category", category);
-
-    const { data, error } = await query;
-
-    if (error || !data?.length) {
-      return filterMock(category);
-    }
-
-    const filtered = (data as AnnouncementRow[])
-      .filter(isInfoDepartment)
-      .filter(notExpired)
-      .map(mapRow);
-
-    return filtered.length > 0 ? filtered : filterMock(category);
+    return await withTimeout(
+      fetchPublishedInfoAnnouncements(limit, category),
+      DB_TIMEOUT_MS,
+      filterMock(category)
+    );
   } catch {
     return filterMock(category);
   }

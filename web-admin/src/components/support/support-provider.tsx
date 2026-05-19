@@ -1,7 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
-import { AiSupportPanel } from "./ai-support-panel";
+
+const AiSupportPanel = dynamic(
+  () => import("./ai-support-panel").then((m) => m.AiSupportPanel),
+  { ssr: false }
+);
 
 type SupportContextValue = {
   open: boolean;
@@ -30,7 +35,9 @@ export function SupportProvider({ children }: { children: React.ReactNode }) {
   return (
     <SupportContext.Provider value={value}>
       {children}
-      <AiSupportPanel open={open} initialStep={initialStep} onClose={closeSupport} />
+      {open && (
+        <AiSupportPanel open={open} initialStep={initialStep} onClose={closeSupport} />
+      )}
     </SupportContext.Provider>
   );
 }

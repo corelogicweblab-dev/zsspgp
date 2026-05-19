@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import { SideNav } from "./side-nav";
 import { AppHeader } from "./app-header";
 import { AppFooter } from "./app-footer";
+import { LazyWhenVisible } from "@/components/layout/lazy-when-visible";
 import { ProvincialCapitolMap } from "@/components/landing/provincial-capitol-map";
+import { SectionSkeleton } from "@/components/ui/section-skeleton";
 import { InstallAppBanner } from "./install-app-banner";
 import { SupportFab } from "@/components/support/support-fab";
 
@@ -24,7 +26,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </main>
       {isHome && (
         <div className="mx-auto w-full max-w-7xl px-3 pb-6 sm:px-6 sm:pb-8">
-          <ProvincialCapitolMap />
+          <LazyWhenVisible placeholder={<SectionSkeleton variant="map" className="overflow-hidden" />}>
+            <ProvincialCapitolMap />
+          </LazyWhenVisible>
         </div>
       )}
       <AppFooter />

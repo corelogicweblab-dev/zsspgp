@@ -1,13 +1,16 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { withTimeout } from "@/lib/with-timeout";
 import type { ExecutiveOrder, PioCarouselSlide } from "@/types";
+
+const DB_TIMEOUT_MS = 6_000;
 
 const CAROUSEL_SELECT =
   "id, title, caption, image_url, sort_order, is_published, created_at";
 const EO_SELECT =
   "id, title, summary, image_url, document_url, order_number, published_at, is_published, sort_order, created_at";
 
-export async function getPublishedCarouselSlides(limit = 16): Promise<PioCarouselSlide[]> {
+async function fetchPublishedCarouselSlides(limit: number): Promise<PioCarouselSlide[]> {
   const db = createAdminClient() ?? (await createClient());
   const { data, error } = await db
     .from("pio_carousel_slides")
@@ -21,7 +24,11 @@ export async function getPublishedCarouselSlides(limit = 16): Promise<PioCarouse
   return data as PioCarouselSlide[];
 }
 
-export async function getPublishedExecutiveOrders(limit = 16): Promise<ExecutiveOrder[]> {
+export async function getPublishedCarouselSlides(limit = 16): Promise<PioCarouselSlide[]> {
+  return withTimeout(fetchPublishedCarouselSlides(limit), DB_TIMEOUT_MS, []);
+}
+
+async function fetchPublishedExecutiveOrders(limit: number): Promise<ExecutiveOrder[]> {
   const db = createAdminClient() ?? (await createClient());
   const { data, error } = await db
     .from("executive_orders")
@@ -33,6 +40,10 @@ export async function getPublishedExecutiveOrders(limit = 16): Promise<Executive
 
   if (error || !data?.length) return [];
   return data as ExecutiveOrder[];
+}
+
+export async function getPublishedExecutiveOrders(limit = 16): Promise<ExecutiveOrder[]> {
+  return withTimeout(fetchPublishedExecutiveOrders(limit), DB_TIMEOUT_MS, []);
 }
 
 export async function getExecutiveOrderById(id: string): Promise<ExecutiveOrder | null> {

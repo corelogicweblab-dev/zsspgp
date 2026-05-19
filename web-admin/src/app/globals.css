@@ -724,45 +724,74 @@ body {
   margin-left: 1.25rem;
 }
 
-/* Executive order — formal summary body */
+/* Executive order — structured summary document */
 .executive-order-summary {
   max-width: 42rem;
 }
 
-.executive-order-summary p {
-  margin: 0 0 1rem;
+.executive-order-summary .eo-summary-heading {
+  margin: 1.75rem 0 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0e7490;
+  text-indent: 0;
+}
+
+.executive-order-summary .eo-summary-heading:first-child {
+  margin-top: 0;
+}
+
+.executive-order-summary h3.eo-summary-heading {
+  font-size: 0.8rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.35rem;
+}
+
+.executive-order-summary h4.eo-summary-heading {
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: #334155;
+}
+
+.executive-order-summary .eo-summary-paragraph {
+  margin: 0 0 0.85rem;
   text-align: justify;
   text-indent: 2em;
+  line-height: 1.75;
   hyphens: auto;
+  color: #334155;
 }
 
-.executive-order-summary p:last-child {
-  margin-bottom: 0;
+.executive-order-summary .eo-summary-heading + .eo-summary-paragraph,
+.executive-order-summary .eo-summary-heading + .eo-summary-list {
+  text-indent: 0;
 }
 
-.executive-order-summary ul,
-.executive-order-summary ol {
-  margin: 0.75rem 0 1.25rem;
-  padding-left: 2.25rem;
+.executive-order-summary .eo-summary-list {
+  margin: 0.35rem 0 1rem;
+  padding-left: 1.75rem;
   text-align: left;
 }
 
-.executive-order-summary ul {
+.executive-order-summary ul.eo-summary-list {
   list-style-type: disc;
 }
 
-.executive-order-summary ol {
+.executive-order-summary ol.eo-summary-list {
   list-style-type: decimal;
 }
 
-.executive-order-summary li {
-  margin-bottom: 0.5rem;
-  padding-left: 0.35rem;
+.executive-order-summary .eo-summary-list li {
+  margin-bottom: 0.55rem;
+  padding-left: 0.25rem;
   line-height: 1.7;
   text-align: justify;
+  color: #334155;
 }
 
-.executive-order-summary li:last-child {
+.executive-order-summary .eo-summary-list li:last-child {
   margin-bottom: 0;
 }
 

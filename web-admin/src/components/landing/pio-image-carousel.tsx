@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import { FastImage } from "@/components/ui/fast-image";
 import type { PioCarouselSlide } from "@/types";
 
 const VISIBLE = 3;
@@ -112,14 +112,14 @@ export function PioImageCarousel({ slides }: { slides: PioCarouselSlide[] }) {
                 className="pio-gallery-slide relative aspect-square shrink-0 overflow-hidden rounded-lg border border-cyan-500/15 bg-slate-900 px-1 sm:px-1.5"
                 style={{ width: `${slideWidthPercent}%` }}
               >
-                <Image
+                <FastImage
                   src={slide.image_url}
                   alt={slide.title ?? "Provincial highlight"}
                   fill
                   className="object-contain p-0.5"
-                  sizes="(max-width: 640px) 33vw, 320px"
+                  sizes="(max-width: 640px) 33vw, 280px"
                   priority={i === 0}
-                  loading={i === 0 ? undefined : "lazy"}
+                  loading={i === 0 ? "eager" : "lazy"}
                 />
                 {slide.title && (
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/95 to-transparent px-2 pb-1.5 pt-5">

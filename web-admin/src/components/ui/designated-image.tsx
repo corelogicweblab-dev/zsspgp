@@ -1,56 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import Image, { type ImageProps } from "next/image";
-import { cn } from "@/lib/utils";
+import { FastImage } from "@/components/ui/fast-image";
+import type { ImageProps } from "next/image";
 
 type DesignatedImageProps = Omit<ImageProps, "src" | "onError"> & {
   src: string;
   fallbackSrc?: string;
 };
 
-/** Designated PNG first; WebP fallback on error. PNG uses unoptimized for reliability. */
-export function DesignatedImage({
-  src,
-  fallbackSrc,
-  className,
-  alt = "",
-  fill,
-  ...props
-}: DesignatedImageProps) {
-  const [currentSrc, setCurrentSrc] = useState(src);
-  const [failed, setFailed] = useState(false);
-
-  if (failed) {
-    return (
-      <div
-        className={cn(
-          "flex items-center justify-center bg-slate-800/80 text-[10px] font-semibold uppercase tracking-wider text-slate-500",
-          fill ? "absolute inset-0" : "",
-          className
-        )}
-        aria-hidden
-      >
-        {alt.slice(0, 2) || "ZS"}
-      </div>
-    );
-  }
-
-  return (
-    <Image
-      {...props}
-      fill={fill}
-      src={currentSrc}
-      alt={alt}
-      className={cn(className)}
-      unoptimized={/\.(png|webp)$/i.test(currentSrc)}
-      onError={() => {
-        if (fallbackSrc && currentSrc !== fallbackSrc) {
-          setCurrentSrc(fallbackSrc);
-          return;
-        }
-        setFailed(true);
-      }}
-    />
-  );
+/** Official PNG/WebP with fast placeholder, optimization, and fallback. */
+export function DesignatedImage({ src, fallbackSrc, ...props }: DesignatedImageProps) {
+  return <FastImage src={src} fallbackSrc={fallbackSrc} {...props} />;
 }

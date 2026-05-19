@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import { FastImage } from "@/components/ui/fast-image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { LOGO_PATH } from "@/lib/constants";
@@ -27,7 +27,7 @@ export function LandingHero() {
           </div>
         </div>
         <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring" }}>
-          <Image
+          <FastImage
             src={LOGO_PATH}
             alt="Zamboanga Sibugay"
             width={200}

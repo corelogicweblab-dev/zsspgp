@@ -1,4 +1,6 @@
-import Image from "next/image";
+"use client";
+
+import { FastImage } from "@/components/ui/fast-image";
 import { cn } from "@/lib/utils";
 
 interface NewsCoverImageProps {
@@ -27,7 +29,7 @@ function isOptimizableRemoteUrl(url: string) {
   }
 }
 
-/** Cover image — Next/Image when optimizable; native img with eager load otherwise. */
+/** Cover image with shimmer placeholder and adaptive quality on slow networks. */
 export function NewsCoverImage({
   src,
   alt = "",
@@ -36,9 +38,9 @@ export function NewsCoverImage({
   priority = false,
   fill = true,
 }: NewsCoverImageProps) {
-  if (isSupabaseStorageUrl(src) || src.startsWith("/")) {
+  if (isSupabaseStorageUrl(src) || src.startsWith("/") || isOptimizableRemoteUrl(src)) {
     return (
-      <Image
+      <FastImage
         src={src}
         alt={alt}
         fill={fill}
@@ -46,21 +48,6 @@ export function NewsCoverImage({
         sizes={sizes}
         priority={priority}
         loading={priority ? "eager" : undefined}
-      />
-    );
-  }
-
-  if (isOptimizableRemoteUrl(src)) {
-    return (
-      <Image
-        src={src}
-        alt={alt}
-        fill={fill}
-        className={className}
-        sizes={sizes}
-        priority={priority}
-        loading={priority ? "eager" : undefined}
-        unoptimized
       />
     );
   }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { FastImage } from "@/components/ui/fast-image";
 import { CitizenPage } from "@/components/layout/citizen-page";
 import { Button } from "@/components/ui/button";
 import { getAllPublishedExecutiveOrders } from "@/services/pio-content.service";
@@ -26,12 +26,13 @@ export default async function ExecutiveOrdersPage() {
                 className="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition hover:border-cyan-400/50"
               >
                 <div className="relative aspect-square bg-slate-100">
-                  <Image
+                  <FastImage
                     src={order.image_url}
-                    alt=""
+                    alt={order.title}
                     fill
                     className="object-contain p-1 transition group-hover:scale-[1.02]"
                     sizes="(max-width: 640px) 45vw, 280px"
+                    loading="lazy"
                   />
                 </div>
                 <div className="flex flex-1 flex-col p-3">

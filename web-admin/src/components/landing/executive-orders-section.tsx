@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { FastImage } from "@/components/ui/fast-image";
 import { ScrollText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { ExecutiveOrder } from "@/types";
@@ -32,12 +32,13 @@ export function ExecutiveOrdersSection({ orders }: { orders: ExecutiveOrder[] })
             className="flex flex-col overflow-hidden rounded-xl border border-cyan-500/15 bg-slate-950/60"
           >
             <div className="relative aspect-square w-full bg-slate-900">
-              <Image
+              <FastImage
                 src={order.image_url}
                 alt={order.title}
                 fill
                 className="object-contain p-1"
                 sizes="(max-width: 640px) 45vw, 280px"
+                loading="lazy"
               />
             </div>
             <div className="flex flex-1 flex-col p-3">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { FastImage } from "@/components/ui/fast-image";
 import { LOGO_PATH, APP_SHORT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,7 @@ interface ProvincialLogoProps {
   priority?: boolean;
 }
 
-/** Provincial seal — uses zamboangasibugaylogo.png from /public */
+/** Provincial seal — optimized with instant placeholder. */
 export function ProvincialLogo({
   size = 52,
   className,
@@ -38,19 +38,17 @@ export function ProvincialLogo({
   }
 
   return (
-    <Image
-      src={LOGO_PATH}
-      alt={`${APP_SHORT} — Province of Zamboanga Sibugay`}
-      width={size}
-      height={size}
-      priority={priority}
-      loading={priority ? "eager" : undefined}
-      className={cn(
-        "rounded-full object-contain",
-        showGlow && "logo-glow logo-float",
-        className
-      )}
-      onError={() => setFailed(true)}
-    />
+    <span className={cn("relative inline-block shrink-0", className)} style={{ width: size, height: size }}>
+      <FastImage
+        src={LOGO_PATH}
+        alt={`${APP_SHORT} — Province of Zamboanga Sibugay`}
+        width={size}
+        height={size}
+        priority={priority}
+        sizes={`${size}px`}
+        className={cn("rounded-full object-contain", showGlow && "logo-glow logo-float")}
+        onError={() => setFailed(true)}
+      />
+    </span>
   );
 }

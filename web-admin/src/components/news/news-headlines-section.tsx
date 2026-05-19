@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Newspaper, ArrowRight, Clock } from "lucide-react";
+import { FastImage } from "@/components/ui/fast-image";
 import { NewsCoverImage } from "@/components/news/news-cover-image";
 import { Button } from "@/components/ui/button";
 import { LOGO_PATH } from "@/lib/constants";
@@ -31,7 +31,7 @@ export function NewsHeadlinesSection({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="mb-2 flex items-center gap-2.5">
-              <Image
+              <FastImage
                 src={LOGO_PATH}
                 alt=""
                 width={28}

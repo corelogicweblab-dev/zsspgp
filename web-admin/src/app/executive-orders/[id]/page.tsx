@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { FastImage } from "@/components/ui/fast-image";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 import { CitizenPage } from "@/components/layout/citizen-page";
@@ -28,13 +28,13 @@ export default async function ExecutiveOrderDetailPage({
 
       <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
         <div className="relative mx-auto aspect-square w-full max-w-lg bg-slate-100">
-          <Image
+          <FastImage
             src={order.image_url}
-            alt=""
+            alt={order.title}
             fill
             className="object-contain p-2"
             priority
-            sizes="(max-width: 768px) 100vw, 512px"
+            sizes="(max-width: 768px) 100vw, 480px"
           />
         </div>
         <div className="space-y-5 p-5 sm:p-8">

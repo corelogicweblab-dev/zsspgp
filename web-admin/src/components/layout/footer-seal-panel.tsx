@@ -1,5 +1,7 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { FastImage } from "@/components/ui/fast-image";
 import { FOOTER_OFFICIAL_SEALS } from "@/lib/footer-seals";
 
 /** Official government seals — circular icons with labels (responsive grid). */
@@ -28,11 +30,13 @@ export function FooterSealPanel() {
               title={seal.label}
             >
               <span className="relative flex h-16 w-16 items-center justify-center rounded-full border border-cyan-500/25 bg-slate-950/80 p-1.5 shadow-[0_0_20px_rgba(56,189,248,0.12)] transition group-hover:border-cyan-400/50 group-hover:shadow-[0_0_24px_rgba(56,189,248,0.2)] sm:h-[4.5rem] sm:w-[4.5rem]">
-                <Image
+                <FastImage
                   src={seal.src}
                   alt={seal.label}
                   width={72}
                   height={72}
+                  sizes="72px"
+                  loading="lazy"
                   className="h-full w-full rounded-full object-contain"
                 />
               </span>

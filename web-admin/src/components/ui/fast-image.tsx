@@ -17,7 +17,8 @@ function resolveImageSrc(value: ImageProps["src"]): string {
 /** Static /public assets load directly — avoids optimizer edge cases. */
 function shouldSkipOptimization(src: string): boolean {
   if (!src || src.startsWith("data:") || src.startsWith("blob:")) return true;
-  if (src.startsWith("/")) return /\.(png|webp|gif|jpe?g|avif|svg)$/i.test(src);
+  const pathOnly = src.split("?")[0];
+  if (pathOnly.startsWith("/")) return /\.(png|webp|gif|jpe?g|avif|svg)$/i.test(pathOnly);
   return false;
 }
 

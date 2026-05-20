@@ -3,11 +3,12 @@
 import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { Loader2, Plus, Trash2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { fetchApiJson, friendlyPioDbError } from "@/lib/fetch-json";
 import type { ExecutiveOrder } from "@/types";
 
 const empty = {
@@ -30,12 +31,15 @@ export function PioExecutiveOrdersManager() {
 
   const load = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const res = await fetch("/api/pio/executive-orders?admin=true");
-      const data = (await res.json()) as { orders?: ExecutiveOrder[] };
+      const { res, data } = await fetchApiJson<{ orders?: ExecutiveOrder[]; error?: string }>(
+        "/api/pio/executive-orders?admin=true"
+      );
+      if (!res.ok) throw new Error(data.error ?? "Failed to load executive orders.");
       setOrders(data.orders ?? []);
-    } catch {
-      setError("Failed to load executive orders.");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load executive orders.");
     } finally {
       setLoading(false);
     }
@@ -53,27 +57,36 @@ export function PioExecutiveOrdersManager() {
     try {
       const fd = new FormData();
       fd.append("file", file);
-      const res = await fetch("/api/pio/executive-orders/upload", { method: "POST", body: fd });
-      const data = (await res.json()) as { url?: string; error?: string };
-      if (!res.ok || !data.url) throw new Error(data.error ?? "Upload failed");
+      const { res, data } = await fetchApiJson<{ url?: string; error?: string }>(
+        "/api/pio/executive-orders/upload",
+        { method: "POST", body: fd }
+      );
+      if (!res.ok || !data.url) {
+        throw new Error(friendlyPioDbError(data.error ?? "Upload failed."));
+      }
       setForm((f) => ({ ...f, image_url: data.url! }));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed.");
     } finally {
       setUploading(false);
+      e.target.value = "";
     }
   }
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!form.title.trim() || !form.image_url) {
-      setError("Title and cover image are required.");
+    if (!form.title.trim()) {
+      setError("Title is required.");
+      return;
+    }
+    if (!form.image_url.trim()) {
+      setError("Cover image is required. Upload an image before saving.");
       return;
     }
     setSaving(true);
     setError(null);
     try {
-      const res = await fetch("/api/pio/executive-orders", {
+      const { res, data } = await fetchApiJson<{ error?: string }>("/api/pio/executive-orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -85,8 +98,7 @@ export function PioExecutiveOrdersManager() {
           is_published: form.publish,
         }),
       });
-      const data = (await res.json()) as { error?: string };
-      if (!res.ok) throw new Error(data.error ?? "Save failed");
+      if (!res.ok) throw new Error(friendlyPioDbError(data.error ?? "Save failed."));
       setForm(empty);
       setShowForm(false);
       await load();
@@ -99,8 +111,17 @@ export function PioExecutiveOrdersManager() {
 
   async function remove(id: string) {
     if (!confirm("Delete this executive order?")) return;
-    await fetch(`/api/pio/executive-orders/${id}`, { method: "DELETE" });
-    await load();
+    setError(null);
+    try {
+      const { res, data } = await fetchApiJson<{ error?: string }>(
+        `/api/pio/executive-orders/${id}`,
+        { method: "DELETE" }
+      );
+      if (!res.ok) throw new Error(friendlyPioDbError(data.error ?? "Delete failed."));
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Delete failed.");
+    }
   }
 
   return (
@@ -164,6 +185,9 @@ export function PioExecutiveOrdersManager() {
               <div className="space-y-2">
                 <Label>Cover image *</Label>
                 <Input type="file" accept="image/*" disabled={uploading} onChange={onCoverUpload} />
+                {uploading && (
+                  <p className="text-xs text-cyan-400">Uploading cover image…</p>
+                )}
                 {form.image_url && (
                   <div className="relative mt-2 h-32 w-48 overflow-hidden rounded-lg">
                     <Image src={form.image_url} alt="" fill className="object-cover" sizes="192px" />

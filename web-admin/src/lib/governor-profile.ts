@@ -1,5 +1,7 @@
 /** Designated official images (PNG). WebP used only if PNG fails to load. */
-export const GOVERNOR_IMAGE_PATH = "/governorannhofer1.png";
+/** Bump after replacing web-admin/public/governorannhofer1.png (source: repo root governorannhofer1.png). */
+export const GOVERNOR_IMAGE_VERSION = "20260520";
+export const GOVERNOR_IMAGE_PATH = `/governorannhofer1.png?v=${GOVERNOR_IMAGE_VERSION}`;
 export const GOVERNOR_HEADER_IMAGE_PATH = "/governorannhoferheader.png";
 export const GOVERNOR_IMAGE_FALLBACK = "/governorannhofer-spotlight.webp";
 export const GOVERNOR_HEADER_FALLBACK = "/governorannhofer-hero.webp";

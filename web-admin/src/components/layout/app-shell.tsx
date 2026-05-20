@@ -7,6 +7,7 @@ import { AppHeader } from "./app-header";
 import { AppFooter } from "./app-footer";
 import { LazyWhenVisible } from "@/components/layout/lazy-when-visible";
 import { ProvincialCapitolMap } from "@/components/landing/provincial-capitol-map";
+import { ContactSection } from "@/components/layout/contact-section";
 import { SectionSkeleton } from "@/components/ui/section-skeleton";
 import { InstallAppBanner } from "./install-app-banner";
 import { SupportFab } from "@/components/support/support-fab";
@@ -25,10 +26,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       {isHome && (
-        <div className="mx-auto w-full max-w-7xl px-3 pb-6 sm:px-6 sm:pb-8">
+        <div className="mx-auto w-full max-w-7xl space-y-10 px-3 pb-6 sm:space-y-14 sm:px-6 sm:pb-8">
           <LazyWhenVisible placeholder={<SectionSkeleton variant="map" className="overflow-hidden" />}>
             <ProvincialCapitolMap />
           </LazyWhenVisible>
+          <ContactSection />
         </div>
       )}
       <AppFooter />
@@ -36,3 +38,4 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     </div>
   );
 }
+

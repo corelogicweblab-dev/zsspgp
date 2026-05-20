@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { LandingHero } from "@/components/landing/landing-hero";
-import { ContactSection } from "@/components/layout/contact-section";
 import { SectionSkeleton } from "@/components/ui/section-skeleton";
 import {
   HomeAnnouncementBanner,
@@ -28,8 +27,6 @@ export default function LandingPage() {
       <Suspense fallback={<SectionSkeleton variant="gallery" />}>
         <HomeGallerySection />
       </Suspense>
-
-      <ContactSection />
 
       <Suspense fallback={<SectionSkeleton variant="cards" />}>
         <HomeExecutiveOrdersSection />

@@ -3,13 +3,26 @@ import {
   findDepartmentPortalByCode,
   findDepartmentPortalBySlug,
   getDepartmentSlugFromCode,
+  type DepartmentPortal,
 } from "@/lib/department-portals";
+import { getDepartmentAllowedAdminPaths } from "@/lib/department-dashboard-config";
 import {
   isProvincialStaffRole,
   PUBLIC_POST_LOGIN_PATHS,
   resolvePostLoginPath,
   type AuthProfile,
 } from "@/lib/auth-redirect";
+
+function pathAllowed(pathname: string, allowedPrefixes: string[]): boolean {
+  const p = pathname.split("?")[0];
+  return allowedPrefixes.some((prefix) => p === prefix || p.startsWith(`${prefix}/`) || p.startsWith(prefix));
+}
+
+function getStaffDepartmentSlug(departmentCode?: string | null): DepartmentPortal["slug"] | null {
+  const slug = getDepartmentSlugFromCode(departmentCode);
+  if (slug && findDepartmentPortalBySlug(slug)) return slug as DepartmentPortal["slug"];
+  return null;
+}
 
 /** Whether this role may open this admin path (pathname without query). */
 export function canAccessAdminPath(
@@ -24,43 +37,44 @@ export function canAccessAdminPath(
   if (role === "governor_super_admin") return true;
 
   if (role === "ict_admin") {
-    return !p.startsWith("/admin/governor");
+    if (p.startsWith("/admin/governor")) return false;
+    const deptMatch = p.match(/^\/admin\/department(?:\/([^/]+))?/);
+    if (deptMatch) {
+      const requested = deptMatch[1];
+      if (!requested) return false;
+      return requested === "ict";
+    }
+    return pathAllowed(p, getDepartmentAllowedAdminPaths("ict"));
   }
 
   if (role === "information_office") {
     const deptSlug = getDepartmentSlugFromCode(departmentCode);
-    if (p.match(/^\/admin\/department\/([^/]+)/)) {
-      const requested = p.split("/")[3];
+    const deptMatch = p.match(/^\/admin\/department(?:\/([^/]+))?/);
+    if (deptMatch) {
+      const requested = deptMatch[1];
       return requested === "information" || requested === deptSlug;
     }
-    return (
-      p.startsWith("/admin/news") ||
-      p.startsWith("/admin/notifications") ||
-      p.startsWith("/admin/complaints") ||
-      p.startsWith("/admin/incidents") ||
-      p.startsWith("/admin/department")
-    );
+    return pathAllowed(p, getDepartmentAllowedAdminPaths("information"));
   }
 
   if (role === "department_admin" || role === "staff") {
-    const isInfoDept = departmentCode === "INFO";
-    const allowedPrefixes = [
-      "/admin/complaints",
-      "/admin/incidents",
-      "/admin/notifications",
-      ...(isInfoDept ? ["/admin/news"] : []),
-    ];
-
+    const userSlug = getStaffDepartmentSlug(departmentCode);
     const deptMatch = p.match(/^\/admin\/department(?:\/([^/]+))?/);
+
     if (deptMatch) {
       const requestedSlug = deptMatch[1];
-      const userSlug = getDepartmentSlugFromCode(departmentCode);
-      if (!requestedSlug) return true;
-      if (!userSlug) return true;
+      if (!requestedSlug) return false;
+      if (!userSlug) return false;
       return requestedSlug === userSlug;
     }
 
-    return allowedPrefixes.some((prefix) => p.startsWith(prefix));
+    if (!userSlug) {
+      return ["/admin/complaints", "/admin/incidents", "/admin/notifications"].some((prefix) =>
+        p.startsWith(prefix)
+      );
+    }
+
+    return pathAllowed(p, getDepartmentAllowedAdminPaths(userSlug));
   }
 
   return false;

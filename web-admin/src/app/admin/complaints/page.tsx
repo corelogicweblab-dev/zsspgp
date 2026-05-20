@@ -1,9 +1,15 @@
 "use client";
 
-import { useMemo, useState, useEffect, useCallback } from "react";
+import { Suspense, useMemo, useState, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { MOCK_COMPLAINTS } from "@/lib/mock-data";
 import { COMPLAINT_CATEGORIES, COMPLAINT_STATUSES } from "@/lib/constants";
+import {
+  filterComplaintsForDepartment,
+  getDepartmentComplaintCategories,
+} from "@/lib/department-dashboard-config";
+import { findDepartmentPortalBySlug } from "@/lib/department-portals";
 import { isMockMode } from "@/lib/env";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,7 +18,11 @@ import { Select } from "@/components/ui/select";
 import { formatDate, capitalize } from "@/lib/utils";
 import type { Complaint, ComplaintStatus } from "@/types";
 
-export default function AdminComplaintsPage() {
+function AdminComplaintsPageInner() {
+  const searchParams = useSearchParams();
+  const deptSlug = searchParams.get("dept");
+  const deptPortal = findDepartmentPortalBySlug(deptSlug);
+  const deptCategories = getDepartmentComplaintCategories(deptSlug);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<ComplaintStatus | "all">("all");
   const [rows, setRows] = useState<Complaint[]>(isMockMode() ? MOCK_COMPLAINTS : []);
@@ -21,7 +31,10 @@ export default function AdminComplaintsPage() {
 
   const load = useCallback(async () => {
     if (isMockMode()) {
-      setRows(MOCK_COMPLAINTS);
+      const mock = deptCategories?.length
+        ? filterComplaintsForDepartment(MOCK_COMPLAINTS, deptCategories)
+        : MOCK_COMPLAINTS;
+      setRows(mock);
       setLoading(false);
       return;
     }
@@ -35,14 +48,17 @@ export default function AdminComplaintsPage() {
         setRows([]);
         return;
       }
-      setRows((json.data as Complaint[]) ?? []);
+      const all = (json.data as Complaint[]) ?? [];
+      setRows(
+        deptCategories?.length ? filterComplaintsForDepartment(all, deptCategories) : all
+      );
     } catch {
       setLoadError("Could not load complaints.");
       setRows([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [deptCategories]);
 
   useEffect(() => {
     void load();
@@ -63,14 +79,16 @@ export default function AdminComplaintsPage() {
 
   const sourceNote = isMockMode() ? "demo data" : "live records (RLS applies by role)";
 
+  const title = deptPortal ? `${deptPortal.code} Complaints` : "Complaints Management";
+  const subtitle = deptPortal
+    ? `Queue for ${deptPortal.name} — department-specific categories only`
+    : "Review, assign, and resolve citizen complaints province-wide";
+
   return (
-    <AdminShell
-      title="Complaints Management"
-      subtitle="Review, assign, and resolve citizen complaints province-wide"
-    >
+    <AdminShell title={title} subtitle={subtitle}>
       <Card>
         <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-4">
-          <CardTitle>All Complaints</CardTitle>
+          <CardTitle>{deptPortal ? `${deptPortal.code} queue` : "All Complaints"}</CardTitle>
           {!isMockMode() && (
             <button
               type="button"
@@ -165,5 +183,13 @@ export default function AdminComplaintsPage() {
         </CardContent>
       </Card>
     </AdminShell>
+  );
+}
+
+export default function AdminComplaintsPage() {
+  return (
+    <Suspense fallback={<p className="p-8 text-center text-slate-400">Loading complaints…</p>}>
+      <AdminComplaintsPageInner />
+    </Suspense>
   );
 }

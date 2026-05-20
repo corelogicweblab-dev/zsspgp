@@ -82,6 +82,10 @@ export function getDepartmentDashboardPath(
   role: UserRole,
   opts?: { email?: string | null; departmentCode?: string | null }
 ): string | null {
+  if (role === "ict_admin") {
+    return "/admin/department/ict";
+  }
+
   const portal =
     findDepartmentPortalByEmail(opts?.email) ??
     findDepartmentPortalByCode(opts?.departmentCode);
@@ -92,7 +96,7 @@ export function getDepartmentDashboardPath(
     return "/admin/news";
   }
 
-  if (portal.roles.includes(role) || role === "ict_admin") {
+  if (portal.roles.includes(role)) {
     return `/admin/department/${portal.slug}`;
   }
 
